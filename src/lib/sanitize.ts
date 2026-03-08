@@ -24,3 +24,25 @@ export function escapeRegValue(str: string): string {
 export function isValidHex(str: string): boolean {
   return /^[0-9a-fA-F,\s]*$/.test(str);
 }
+
+/**
+ * Escape a string for embedding in a PowerShell double-quoted string.
+ * Escapes ", $, and backtick.
+ */
+export function escapePS(str: string): string {
+  return str
+    .replace(/`/g, '``')
+    .replace(/\$/g, '`$')
+    .replace(/"/g, '`"');
+}
+
+/**
+ * Escape a string for embedding in a CMD/batch double-quoted context.
+ * Escapes shell metacharacters with ^.
+ */
+export function escapeBatch(str: string): string {
+  return str
+    .replace(/%/g, '%%')
+    .replace(/"/g, '""')
+    .replace(/([&|<>^])/g, '^$1');
+}

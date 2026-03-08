@@ -4,6 +4,7 @@ import type { BuildStep } from '@/components/BuildStepReorder';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import { escapePS, escapeBatch } from '@/lib/sanitize';
 
 interface ExportData {
   customizations: { programs: string[]; tweaks: string[]; optimizations: string[] };
