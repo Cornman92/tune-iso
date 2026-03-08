@@ -409,7 +409,7 @@ const Index = () => {
               />
             </div>
 
-
+            <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
               <h3 className="text-sm font-medium text-foreground mb-2">Risk Levels</h3>
               <ul className="space-y-2 text-xs text-muted-foreground">
                 <li className="flex items-start gap-2">
