@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, MutableRefObject } from 'react';
 import { Database, Plus, Trash2, Copy, FileDown, ChevronDown, ChevronRight, FolderTree } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
