@@ -182,10 +182,28 @@ const Index = () => {
               <RegistryEditor isMounted={isMounted} />
             </section>
 
-            {/* 7. Windows Update */}
-            <section id="section-updates">
+            {/* 7. Services Manager */}
+            <section id="section-services">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">7</span>
+                Services Manager
+              </h2>
+              <ServicesManager isMounted={isMounted} />
+            </section>
+
+            {/* 8. Component Removal */}
+            <section id="section-components">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">8</span>
+                Component Removal
+              </h2>
+              <ComponentRemoval isMounted={isMounted} />
+            </section>
+
+            {/* 9. Windows Update */}
+            <section id="section-updates">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">9</span>
                 Windows Update Slipstream
               </h2>
               <WindowsUpdate
