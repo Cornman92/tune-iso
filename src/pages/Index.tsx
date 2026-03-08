@@ -216,6 +216,7 @@ const Index = () => {
               </h2>
               <WindowsUpdate
                 isMounted={isMounted}
+                onCountChange={setUpdateCount}
                 exportRef={exportUpdates}
                 importRef={importUpdates}
               />
