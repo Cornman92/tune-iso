@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, MutableRefObject } from 'react';
 import { Layers, Check, Info, Package, FileUp, Settings, FolderPlus, Trash2, Plus, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
