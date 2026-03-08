@@ -23,6 +23,7 @@ interface PowerShellExportProps {
   exportServices: MutableRefObject<() => string[]>;
   exportComponents: MutableRefObject<() => string[]>;
   exportRegistry: MutableRefObject<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>;
+  exportFeatures: MutableRefObject<() => WimFeatureExport[]>;
   isMounted: boolean;
   exportScriptRef?: MutableRefObject<() => void>;
   buildSteps: BuildStep[];
