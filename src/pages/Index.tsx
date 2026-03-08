@@ -10,7 +10,7 @@ import UnattendGenerator from '@/components/UnattendGenerator';
 import WindowsUpdate from '@/components/WindowsUpdate';
 import ProjectManager, { type ProjectData } from '@/components/ProjectManager';
 import TemplateManager from '@/components/TemplateManager';
-import WimEditor from '@/components/WimEditor';
+import WimEditor, { type WimFeatureExport } from '@/components/WimEditor';
 import RegistryEditor from '@/components/RegistryEditor';
 import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
