@@ -191,6 +191,7 @@ const Index = () => {
                 buildSteps={buildSteps}
               />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
+              <div className="h-6 w-px bg-border" />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <ThemeToggle toggleRef={themeToggleRef} />
               <Tooltip>
