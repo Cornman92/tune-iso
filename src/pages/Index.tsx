@@ -106,8 +106,18 @@ const Index = () => {
               <h1 className="text-lg font-semibold text-foreground">ISO Forge</h1>
               <p className="text-xs font-mono text-muted-foreground">Windows Image Customization Tool</p>
             </div>
-            <div className="ml-auto flex items-center gap-3">
+            <div className="ml-auto flex items-center gap-2">
+              <PowerShellExport
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportUpdates={exportUpdates}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                isMounted={isMounted}
+              />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
+              <ThemeToggle />
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
                 <Terminal className="w-4 h-4 text-primary" />
                 <span className="text-xs font-mono text-muted-foreground">v1.3.0</span>
