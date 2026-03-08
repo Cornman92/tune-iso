@@ -172,7 +172,7 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
     setOptions(defaultOptions.map(o => ({ ...o })));
   };
 
-  const enabledCount = options.filter(o => o.enabled).length;
+  const totalEnabled = enabledCount;
 
   const generateXML = (): string => {
     const enabled = options.filter(o => o.enabled);

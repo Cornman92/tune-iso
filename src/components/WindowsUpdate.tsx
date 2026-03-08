@@ -157,7 +157,7 @@ const WindowsUpdate = ({ isMounted, onCountChange, exportRef, importRef }: Windo
     return matchesSearch && matchesCategory;
   });
 
-  const enabledCount = updates.filter(u => u.enabled).length;
+  const uniqueCategories = ['all', ...Array.from(new Set(updates.map(u => u.category)))];
   const uniqueCategories = ['all', ...Array.from(new Set(updates.map(u => u.category)))];
 
   if (!isMounted) {
