@@ -34,6 +34,11 @@ const Index = () => {
   const [updateCount, setUpdateCount] = useState(0);
   const [unattendCount, setUnattendCount] = useState(0);
   const [activeSection, setActiveSection] = useState('source');
+  const [buildSteps, setBuildSteps] = useState<BuildStep[]>(() => DEFAULT_STEPS.map(s => ({ ...s })));
+
+  // Refs for keyboard shortcuts
+  const themeToggleRef = useRef<() => void>(() => {});
+  const exportScriptRef = useRef<() => void>(() => {});
 
   // Refs for export/import callbacks
   const exportCustomizations = useRef<() => { programs: string[]; tweaks: string[]; optimizations: string[] }>(() => ({ programs: [], tweaks: [], optimizations: [] }));
