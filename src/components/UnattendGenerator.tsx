@@ -239,11 +239,11 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         lines.push('    <component name="Microsoft-Windows-International-Core-WinPE">');
         regional.forEach(o => {
           const tag = o.xmlPath.split('/').pop();
-          lines.push(`      <${tag}>${o.value}</${tag}>`);
+          lines.push(`      <${tag}>${escapeXml(o.value)}</${tag}>`);
         });
         winpe.filter(o => o.id === 'setup-ui-language').forEach(o => {
           lines.push('      <SetupUILanguage>');
-          lines.push(`        <UILanguage>${o.value}</UILanguage>`);
+          lines.push(`        <UILanguage>${escapeXml(o.value)}</UILanguage>`);
           lines.push('      </SetupUILanguage>');
         });
         lines.push('    </component>');
