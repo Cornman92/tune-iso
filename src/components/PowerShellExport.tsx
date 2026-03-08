@@ -158,11 +158,11 @@ const PowerShellExport = ({
         add('Write-Step "Injecting Drivers"');
         drivers.forEach(d => {
           if (d.type === 'folder') {
-            add(`Write-Host "  Adding folder: ${d.path}" -ForegroundColor Yellow`);
-            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${d.path}" /Recurse`);
+            add(`Write-Host "  Adding folder: ${escapePS(d.path)}" -ForegroundColor Yellow`);
+            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${escapePS(d.path)}" /Recurse`);
           } else {
-            add(`Write-Host "  Adding driver: ${d.name}" -ForegroundColor Yellow`);
-            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${d.path}"`);
+            add(`Write-Host "  Adding driver: ${escapePS(d.name)}" -ForegroundColor Yellow`);
+            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${escapePS(d.path)}"`);
           }
         });
         blank();
