@@ -95,6 +95,28 @@ const PowerShellExport = ({
     let stepNum = 2;
 
     const sectionGenerators: Record<string, () => void> = {
+      features: () => {
+        if (features.length === 0) return;
+        const toEnable = features.filter(f => f.enabled);
+        const toDisable = features.filter(f => !f.enabled);
+        add('# ══════════════════════════════════════════════════════════');
+        add(`# STEP ${stepNum++}: Windows Features (${toEnable.length} enable, ${toDisable.length} disable)`);
+        add('# ══════════════════════════════════════════════════════════');
+        add('Write-Step "Configuring Windows Features"');
+        if (toEnable.length > 0) {
+          toEnable.forEach(f => {
+            add(`Write-Host "  Enabling: ${escapePS(f.name)}" -ForegroundColor Green`);
+            add(`DISM /Image:$MountDir /Enable-Feature /FeatureName:"${escapePS(f.id)}" /All /NoRestart`);
+          });
+        }
+        if (toDisable.length > 0) {
+          toDisable.forEach(f => {
+            add(`Write-Host "  Disabling: ${escapePS(f.name)}" -ForegroundColor Yellow`);
+            add(`DISM /Image:$MountDir /Disable-Feature /FeatureName:"${escapePS(f.id)}" /NoRestart`);
+          });
+        }
+        blank();
+      },
       components: () => {
         if (components.length === 0) return;
         add('# ══════════════════════════════════════════════════════════');
