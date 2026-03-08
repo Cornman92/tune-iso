@@ -102,9 +102,10 @@ const SERVICE_PRESETS: ServicePreset[] = [
 interface ServicesManagerProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
+  exportRef?: MutableRefObject<() => string[]>;
 }
 
-const ServicesManager = ({ isMounted, onCountChange }: ServicesManagerProps) => {
+const ServicesManager = ({ isMounted, onCountChange, exportRef }: ServicesManagerProps) => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<RiskLevel | 'all'>('all');
   const [disabledServices, setDisabledServices] = useState<Set<string>>(new Set());
