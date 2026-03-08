@@ -47,10 +47,15 @@ const PRESET_ENTRIES: RegistryEntry[] = [
 
 interface RegistryEditorProps {
   isMounted: boolean;
+  onCountChange?: (count: number) => void;
 }
 
-const RegistryEditor = ({ isMounted }: RegistryEditorProps) => {
+const RegistryEditor = ({ isMounted, onCountChange }: RegistryEditorProps) => {
   const [entries, setEntries] = useState<RegistryEntry[]>([]);
+
+  useEffect(() => {
+    onCountChange?.(entries.length);
+  }, [entries.length, onCountChange]);
   const [showForm, setShowForm] = useState(false);
   const [expandedPresets, setExpandedPresets] = useState(true);
   const [form, setForm] = useState<Omit<RegistryEntry, 'id'>>({

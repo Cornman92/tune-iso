@@ -131,13 +131,20 @@ const categoryOrder = ['regional', 'windows pe', 'disk', 'product', 'user', 'oob
 
 interface UnattendGeneratorProps {
   isMounted: boolean;
+  onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => { id: string; value: string; enabled: boolean }[]>;
   importRef?: MutableRefObject<(data: { id: string; value: string; enabled: boolean }[]) => void>;
 }
 
-const UnattendGenerator = ({ isMounted, exportRef, importRef }: UnattendGeneratorProps) => {
+const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: UnattendGeneratorProps) => {
   const [options, setOptions] = useState(defaultOptions);
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['oobe', 'user']);
+
+  const enabledCount = options.filter(o => o.enabled).length;
+
+  useEffect(() => {
+    onCountChange?.(enabledCount);
+  }, [enabledCount, onCountChange]);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
