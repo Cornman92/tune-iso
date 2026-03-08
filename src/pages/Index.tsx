@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Disc3, Terminal } from 'lucide-react';
+import { Disc3, Terminal, Keyboard } from 'lucide-react';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
 import CustomizationPanel from '@/components/CustomizationPanel';
@@ -17,6 +17,9 @@ import SectionSidebar from '@/components/SectionSidebar';
 import SummaryDashboard from '@/components/SummaryDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
 import PowerShellExport from '@/components/PowerShellExport';
+import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
+import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
