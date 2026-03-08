@@ -230,6 +230,7 @@ const Index = () => {
               </h2>
               <UnattendGenerator
                 isMounted={isMounted}
+                onCountChange={setUnattendCount}
                 exportRef={exportUnattend}
                 importRef={importUnattend}
               />
