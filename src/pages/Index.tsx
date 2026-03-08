@@ -1,5 +1,10 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Disc3, Terminal, Keyboard } from 'lucide-react';
+import GlobalSearch from '@/components/GlobalSearch';
+import { DEFAULT_FEATURES } from '@/components/WimEditor';
+import { COMPONENTS } from '@/components/ComponentRemoval';
+import { SERVICES } from '@/components/ServicesManager';
+import { PRESET_ENTRIES } from '@/components/RegistryEditor';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
 import CustomizationPanel from '@/components/CustomizationPanel';
