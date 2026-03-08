@@ -332,8 +332,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         const logonCount = user.find(o => o.id === 'auto-logon-count');
         lines.push('      <AutoLogon>');
         lines.push('        <Enabled>true</Enabled>');
-        lines.push(`        <Username>${userName?.value || 'User'}</Username>`);
-        if (logonCount) lines.push(`        <LogonCount>${logonCount.value}</LogonCount>`);
+        lines.push(`        <Username>${escapeXml(userName?.value || 'User')}</Username>`);
+        if (logonCount) lines.push(`        <LogonCount>${escapeXml(logonCount.value)}</LogonCount>`);
         lines.push('      </AutoLogon>');
       }
 
