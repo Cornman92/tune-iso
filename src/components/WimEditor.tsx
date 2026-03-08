@@ -42,33 +42,81 @@ interface WinFeature {
 }
 
 const DEFAULT_FEATURES: WinFeature[] = [
+  // Developer
   { id: 'wsl', name: 'Windows Subsystem for Linux', description: 'Run Linux binaries natively', enabled: false, category: 'Developer' },
   { id: 'hyperv', name: 'Hyper-V', description: 'Type-1 hypervisor for VMs', enabled: false, category: 'Developer' },
   { id: 'sandbox', name: 'Windows Sandbox', description: 'Disposable lightweight desktop', enabled: false, category: 'Developer' },
   { id: 'containers', name: 'Containers', description: 'Windows container support', enabled: false, category: 'Developer' },
+  { id: 'wsl-gui', name: 'WSLg (GUI Apps)', description: 'Run Linux GUI apps via WSL', enabled: false, category: 'Developer' },
+  { id: 'dev-mode', name: 'Developer Mode', description: 'Sideload apps & dev tools', enabled: false, category: 'Developer' },
+  { id: 'windows-developer-tools', name: 'Windows Developer Tools', description: 'Device Portal, discovery, SSH', enabled: false, category: 'Developer' },
+  { id: 'data-dedup', name: 'Data Deduplication', description: 'NTFS deduplication (Server feature)', enabled: false, category: 'Developer' },
+
+  // Networking
   { id: 'ssh-server', name: 'OpenSSH Server', description: 'SSH server for remote access', enabled: false, category: 'Networking' },
   { id: 'ssh-client', name: 'OpenSSH Client', description: 'SSH client for connecting', enabled: true, category: 'Networking' },
   { id: 'telnet', name: 'Telnet Client', description: 'Legacy remote terminal', enabled: false, category: 'Networking' },
   { id: 'nfs', name: 'NFS Client', description: 'Network File System support', enabled: false, category: 'Networking' },
   { id: 'tftp', name: 'TFTP Client', description: 'Trivial File Transfer Protocol', enabled: false, category: 'Networking' },
+  { id: 'snmp', name: 'SNMP', description: 'Simple Network Management Protocol', enabled: false, category: 'Networking' },
+  { id: 'ras-connection-manager', name: 'RAS Connection Manager', description: 'Remote access connection profiles', enabled: false, category: 'Networking' },
+  { id: 'cmak', name: 'Connection Manager Admin Kit', description: 'Create RAS connection profiles', enabled: false, category: 'Networking' },
+  { id: 'rip-listener', name: 'RIP Listener', description: 'Routing Information Protocol listener', enabled: false, category: 'Networking' },
+  { id: 'simple-tcpip', name: 'Simple TCP/IP Services', description: 'Legacy TCP services (echo, daytime)', enabled: false, category: 'Networking' },
+  { id: 'wins', name: 'WINS Client', description: 'Windows Internet Name Service', enabled: false, category: 'Networking' },
+  { id: 'smb-direct', name: 'SMB Direct (RDMA)', description: 'SMB over RDMA for high-speed transfers', enabled: false, category: 'Networking' },
+
+  // Frameworks
   { id: 'dotnet35', name: '.NET Framework 3.5', description: 'Legacy .NET for older apps', enabled: false, category: 'Frameworks' },
   { id: 'dotnet48', name: '.NET Framework 4.8', description: 'Latest .NET Framework', enabled: true, category: 'Frameworks' },
   { id: 'directplay', name: 'DirectPlay', description: 'Legacy gaming networking', enabled: false, category: 'Frameworks' },
+  { id: 'dotnet-wcf', name: 'WCF Services', description: 'Windows Communication Foundation', enabled: false, category: 'Frameworks' },
+  { id: 'dotnet-http-activation', name: 'HTTP Activation', description: '.NET HTTP activation for WCF', enabled: false, category: 'Frameworks' },
+  { id: 'msmq-activex', name: 'MSMQ ActiveX', description: 'COM scripting for MSMQ', enabled: false, category: 'Frameworks' },
+
+  // Media
   { id: 'mediaplayer', name: 'Windows Media Player', description: 'Legacy media player', enabled: true, category: 'Media' },
   { id: 'media-foundation', name: 'Media Foundation', description: 'Multimedia framework', enabled: true, category: 'Media' },
+  { id: 'media-playback', name: 'Windows Media Playback', description: 'Advanced media codecs', enabled: true, category: 'Media' },
+  { id: 'hevc-codec', name: 'HEVC Video Extensions', description: 'H.265 video codec support', enabled: false, category: 'Media' },
+  { id: 'webp-codec', name: 'WebP Image Extension', description: 'WebP image format support', enabled: false, category: 'Media' },
+  { id: 'raw-image-ext', name: 'Raw Image Extension', description: 'Camera RAW preview support', enabled: false, category: 'Media' },
+
+  // Printing
+  { id: 'print-pdf', name: 'Print to PDF', description: 'Microsoft Print to PDF', enabled: true, category: 'Printing' },
+  { id: 'lpr-client', name: 'LPR Print Client', description: 'Line Printer Remote protocol', enabled: false, category: 'Printing' },
+  { id: 'lpd-service', name: 'LPD Print Service', description: 'Line Printer Daemon service', enabled: false, category: 'Printing' },
+  { id: 'internet-printing', name: 'Internet Printing Client', description: 'Print via IPP protocol', enabled: false, category: 'Printing' },
+  { id: 'scan-management', name: 'Scan Management', description: 'Enterprise scan management', enabled: false, category: 'Printing' },
+
+  // Legacy
   { id: 'xps-viewer', name: 'XPS Viewer', description: 'XPS document viewer', enabled: false, category: 'Legacy' },
   { id: 'xps-printer', name: 'XPS Document Writer', description: 'Print to XPS format', enabled: false, category: 'Legacy' },
-  { id: 'print-pdf', name: 'Print to PDF', description: 'Microsoft Print to PDF', enabled: true, category: 'Legacy' },
   { id: 'wordpad', name: 'WordPad', description: 'Basic rich text editor', enabled: true, category: 'Legacy' },
   { id: 'ie-mode', name: 'Internet Explorer Mode', description: 'IE compatibility for Edge', enabled: false, category: 'Legacy' },
   { id: 'powershell2', name: 'PowerShell 2.0', description: 'Legacy PS engine (security risk)', enabled: false, category: 'Legacy' },
   { id: 'smb1', name: 'SMB 1.0/CIFS', description: 'Legacy file sharing (security risk)', enabled: false, category: 'Legacy' },
   { id: 'fax-scan', name: 'Windows Fax & Scan', description: 'Fax and scanning features', enabled: false, category: 'Legacy' },
   { id: 'steps-recorder', name: 'Steps Recorder', description: 'Problem steps recorder', enabled: false, category: 'Legacy' },
+  { id: 'math-recognizer', name: 'Math Recognizer', description: 'Handwriting math input panel', enabled: false, category: 'Legacy' },
+  { id: 'hello-face', name: 'Windows Hello Face', description: 'Facial recognition login', enabled: false, category: 'Legacy' },
+  { id: 'notepad-legacy', name: 'Notepad (Legacy)', description: 'Classic Notepad application', enabled: true, category: 'Legacy' },
+
+  // Enterprise
   { id: 'work-folders', name: 'Work Folders Client', description: 'Sync work files offline', enabled: false, category: 'Enterprise' },
   { id: 'rsat', name: 'RSAT Tools', description: 'Remote Server Administration', enabled: false, category: 'Enterprise' },
   { id: 'iis', name: 'Internet Information Services', description: 'Web server platform', enabled: false, category: 'Enterprise' },
   { id: 'msmq', name: 'MSMQ', description: 'Microsoft Message Queuing', enabled: false, category: 'Enterprise' },
+  { id: 'embedded-shell', name: 'Embedded Shell Launcher', description: 'Kiosk mode shell replacement', enabled: false, category: 'Enterprise' },
+  { id: 'assigned-access', name: 'Assigned Access', description: 'Single-app kiosk mode', enabled: false, category: 'Enterprise' },
+  { id: 'device-guard', name: 'Device Guard', description: 'Code integrity policies', enabled: false, category: 'Enterprise' },
+  { id: 'credential-guard', name: 'Credential Guard', description: 'Virtualization-based credential protection', enabled: false, category: 'Enterprise' },
+  { id: 'applocker', name: 'AppLocker', description: 'Application whitelisting', enabled: false, category: 'Enterprise' },
+  { id: 'branch-cache', name: 'BranchCache', description: 'WAN optimization for branch offices', enabled: false, category: 'Enterprise' },
+  { id: 'directaccess', name: 'DirectAccess Client', description: 'Always-on VPN alternative', enabled: false, category: 'Enterprise' },
+  { id: 'group-policy-management', name: 'Group Policy Management', description: 'GPO management console (GPMC)', enabled: false, category: 'Enterprise' },
+  { id: 'multipoint-connector', name: 'MultiPoint Connector', description: 'Multi-user station support', enabled: false, category: 'Enterprise' },
+  { id: 'storage-spaces', name: 'Storage Spaces', description: 'Software-defined storage pools', enabled: false, category: 'Enterprise' },
 ];
 
 // ── Package type ──

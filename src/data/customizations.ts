@@ -456,6 +456,13 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'disable-game-dvr', name: 'Disable Game DVR', description: 'Stop background game recording', enabled: false, category: 'performance', risk: 'safe' },
   { id: 'disable-game-bar', name: 'Disable Game Bar Tips', description: 'Stop Game Bar suggestions', enabled: false, category: 'performance', risk: 'safe' },
   { id: 'high-perf-timer', name: 'High Performance Timer', description: 'Set timer resolution to 0.5ms', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'disable-dynamic-tick', name: 'Disable Dynamic Tick', description: 'Force constant timer interrupts', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'disable-power-throttling', name: 'Disable Power Throttling', description: 'Prevent CPU throttling of background apps', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'thread-dpc-optimization', name: 'Optimize DPC Latency', description: 'Reduce Deferred Procedure Call latency', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'disable-meltdown', name: 'Disable Meltdown Mitigations', description: 'Trade security for perf (Intel CPUs)', enabled: false, category: 'performance', risk: 'aggressive' },
+  { id: 'irq-affinity', name: 'Set IRQ Affinity', description: 'Pin interrupts to specific CPU cores', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'disable-cfg', name: 'Disable Control Flow Guard', description: 'Remove CFG overhead (security tradeoff)', enabled: false, category: 'performance', risk: 'aggressive' },
+  { id: 'split-large-caches', name: 'Split Large Caches', description: 'Optimize L3 cache partitioning', enabled: false, category: 'performance', risk: 'moderate' },
 
   // Memory
   { id: 'disable-pagefile', name: 'Disable Page File', description: 'Remove virtual memory (16GB+ RAM)', enabled: false, category: 'memory', risk: 'aggressive' },
@@ -464,6 +471,9 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'disable-prefetch', name: 'Disable Prefetch', description: 'Stop app prefetching (SSD only)', enabled: false, category: 'memory', risk: 'moderate' },
   { id: 'memory-management', name: 'Optimize Memory Management', description: 'Tune kernel memory parameters', enabled: false, category: 'memory', risk: 'moderate' },
   { id: 'disable-memory-compression', name: 'Disable Memory Compression', description: 'Trade RAM for CPU cycles', enabled: false, category: 'memory', risk: 'moderate' },
+  { id: 'lock-pages-memory', name: 'Lock Pages in Memory', description: 'Prevent paging for critical processes', enabled: false, category: 'memory', risk: 'moderate' },
+  { id: 'increase-npp', name: 'Increase Non-Paged Pool', description: 'Larger kernel memory pool', enabled: false, category: 'memory', risk: 'moderate' },
+  { id: 'disable-swap-file', name: 'Disable swapfile.sys', description: 'Remove UWP app swap (SSD)', enabled: false, category: 'memory', risk: 'moderate' },
 
   // Storage
   { id: 'ssd-optimize', name: 'SSD Optimization Suite', description: 'TRIM, disable defrag, optimize I/O', enabled: false, category: 'storage', risk: 'safe' },
@@ -474,6 +484,10 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'disable-reserved-storage', name: 'Disable Reserved Storage', description: 'Reclaim 7GB+ reserved space', enabled: false, category: 'storage', risk: 'moderate' },
   { id: 'disable-storage-sense', name: 'Configure Storage Sense', description: 'Auto-clean temp files', enabled: false, category: 'storage', risk: 'safe' },
   { id: 'disable-last-access', name: 'Disable Last Access Timestamp', description: 'Reduce NTFS write overhead', enabled: false, category: 'storage', risk: 'safe' },
+  { id: 'enable-dedup', name: 'Enable Deduplication', description: 'NTFS data deduplication (Server feature)', enabled: false, category: 'storage', risk: 'moderate' },
+  { id: 'disable-8dot3', name: 'Disable 8.3 Name Generation', description: 'Skip legacy short filename creation', enabled: false, category: 'storage', risk: 'safe' },
+  { id: 'increase-ntfs-cache', name: 'Increase NTFS Cache', description: 'Larger MFT zone for performance', enabled: false, category: 'storage', risk: 'safe' },
+  { id: 'disable-encryption-warning', name: 'Disable Encryption Warning', description: 'Remove NTFS encryption warning prompts', enabled: false, category: 'storage', risk: 'safe' },
 
   // Network
   { id: 'network-optimize', name: 'Network Stack Optimization', description: 'Optimize TCP/IP parameters', enabled: false, category: 'network', risk: 'safe' },
@@ -487,6 +501,13 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'set-dns-google', name: 'Set DNS to Google', description: 'Use 8.8.8.8 / 8.8.4.4 DNS', enabled: false, category: 'network', risk: 'safe' },
   { id: 'set-dns-quad9', name: 'Set DNS to Quad9', description: 'Use 9.9.9.9 security-filtered DNS', enabled: false, category: 'network', risk: 'safe' },
   { id: 'disable-wifi-hotspot', name: 'Disable Mobile Hotspot', description: 'Prevent mobile hotspot auto-enable', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'rss-scaling', name: 'Enable RSS (Receive Side Scaling)', description: 'Distribute network processing across cores', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'rsc-offload', name: 'Enable RSC Offload', description: 'Receive Segment Coalescing for throughput', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'disable-netbios-tcp', name: 'Disable NetBIOS over TCP', description: 'Remove legacy name resolution', enabled: false, category: 'network', risk: 'moderate' },
+  { id: 'jumbo-frames', name: 'Enable Jumbo Frames', description: 'MTU 9014 for local network throughput', enabled: false, category: 'network', risk: 'moderate' },
+  { id: 'disable-qos-packet-scheduler', name: 'Disable QoS Packet Scheduler', description: 'Remove bandwidth reservation', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'set-dns-adguard', name: 'Set DNS to AdGuard', description: 'Use 94.140.14.14 ad-blocking DNS', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'congestion-ctcp', name: 'Enable CTCP', description: 'Compound TCP for high-latency links', enabled: false, category: 'network', risk: 'safe' },
 
   // Power
   { id: 'power-plan', name: 'Ultimate Performance Plan', description: 'Hidden ultimate power plan', enabled: false, category: 'power', risk: 'safe' },
@@ -496,18 +517,40 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'disable-sleep', name: 'Disable Sleep', description: 'Prevent system sleep mode', enabled: false, category: 'power', risk: 'safe' },
   { id: 'fast-boot', name: 'Enable Fast Boot', description: 'Hybrid shutdown for faster boot', enabled: false, category: 'power', risk: 'safe' },
   { id: 'disable-modern-standby', name: 'Disable Modern Standby', description: 'Use classic S3 sleep instead', enabled: false, category: 'power', risk: 'moderate' },
+  { id: 'disable-cpu-idle', name: 'Disable CPU Idle States', description: 'Keep CPU at max clocks always', enabled: false, category: 'power', risk: 'moderate' },
+  { id: 'min-processor-100', name: 'Min Processor State 100%', description: 'Lock CPU to max frequency', enabled: false, category: 'power', risk: 'moderate' },
+  { id: 'disable-hard-disk-timeout', name: 'Disable HDD Timeout', description: 'Prevent hard disk spin-down', enabled: false, category: 'power', risk: 'safe' },
 
   // GPU
   { id: 'gpu-scheduling', name: 'Hardware GPU Scheduling', description: 'Enable hardware-accelerated GPU scheduling', enabled: false, category: 'gpu', risk: 'safe' },
   { id: 'disable-dwm', name: 'Optimize DWM', description: 'Optimize Desktop Window Manager', enabled: false, category: 'gpu', risk: 'moderate' },
   { id: 'disable-gpu-preemption', name: 'Disable GPU Preemption', description: 'Reduce GPU latency for gaming', enabled: false, category: 'gpu', risk: 'moderate' },
   { id: 'force-p-state', name: 'Force Max GPU P-State', description: 'Lock GPU to highest performance', enabled: false, category: 'gpu', risk: 'moderate' },
+  { id: 'disable-hdcp', name: 'Disable HDCP', description: 'Remove HDCP overhead on output', enabled: false, category: 'gpu', risk: 'moderate' },
+  { id: 'profile-inspector', name: 'NVIDIA Profile Inspector Tweaks', description: 'Low-latency NVIDIA driver config', enabled: false, category: 'gpu', risk: 'moderate' },
+  { id: 'disable-gpu-power-saving', name: 'Disable GPU Power Saving', description: 'Force max performance GPU mode', enabled: false, category: 'gpu', risk: 'moderate' },
+  { id: 'vulkan-pre-cache', name: 'Disable Vulkan Pre-Cache', description: 'Skip Vulkan shader pre-caching', enabled: false, category: 'gpu', risk: 'safe' },
 
   // Boot
   { id: 'startup-optimize', name: 'Optimize Boot Sequence', description: 'Parallelize startup, reduce timeout', enabled: false, category: 'boot', risk: 'safe' },
   { id: 'disable-boot-logo', name: 'Disable Boot Logo', description: 'Skip Windows boot animation', enabled: false, category: 'boot', risk: 'safe' },
   { id: 'boot-timeout', name: 'Reduce Boot Timeout', description: 'Set boot menu timeout to 3s', enabled: false, category: 'boot', risk: 'safe' },
   { id: 'disable-boot-log', name: 'Disable Boot Logging', description: 'Skip boot log for faster start', enabled: false, category: 'boot', risk: 'safe' },
+  { id: 'num-processors-max', name: 'Use All Processors at Boot', description: 'BCDEdit numproc to max cores', enabled: false, category: 'boot', risk: 'safe' },
+  { id: 'disable-boot-ux', name: 'Disable Boot UX', description: 'Skip animated dots at boot', enabled: false, category: 'boot', risk: 'safe' },
+  { id: 'quiet-boot', name: 'Quiet Boot', description: 'Suppress all boot messages', enabled: false, category: 'boot', risk: 'safe' },
+
+  // Audio
+  { id: 'disable-audio-enhancements', name: 'Disable Audio Enhancements', description: 'Raw audio for lowest latency', enabled: false, category: 'audio', risk: 'safe' },
+  { id: 'exclusive-audio', name: 'Force Exclusive Mode Audio', description: 'Allow apps exclusive audio device access', enabled: false, category: 'audio', risk: 'safe' },
+  { id: 'wasapi-optimization', name: 'WASAPI Optimization', description: 'Low-latency audio endpoint config', enabled: false, category: 'audio', risk: 'safe' },
+
+  // Input
+  { id: 'raw-mouse-input', name: 'Raw Mouse Input', description: 'Disable mouse acceleration/smoothing', enabled: false, category: 'input', risk: 'safe' },
+  { id: 'disable-mouse-accel', name: 'Disable Mouse Acceleration', description: 'Linear 1:1 mouse movement', enabled: false, category: 'input', risk: 'safe' },
+  { id: 'keyboard-response', name: 'Fastest Keyboard Response', description: 'Reduce key repeat delay to minimum', enabled: false, category: 'input', risk: 'safe' },
+  { id: 'disable-touchpad-gestures', name: 'Disable Touchpad Gestures', description: 'Remove multi-finger touchpad gestures', enabled: false, category: 'input', risk: 'safe' },
+  { id: 'polling-rate-optimize', name: 'USB Polling Rate Optimization', description: 'Increase USB polling frequency', enabled: false, category: 'input', risk: 'moderate' },
 ];
 
 export interface Preset {
