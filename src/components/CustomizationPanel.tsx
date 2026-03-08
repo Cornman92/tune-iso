@@ -193,7 +193,7 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
 
       <div className="bg-card border border-border rounded-lg overflow-hidden animate-slide-in">
         {/* Tab Header */}
-        <div className="flex border-b border-border">
+        <div className={`flex border-b border-border ${isGlobalSearch ? 'opacity-50 pointer-events-none' : ''}`}>
           {categories.map(cat => {
             const Icon = cat.icon;
             const items = cat.id === 'programs' ? programs : cat.id === 'tweaks' ? tweaks : optimizations;
