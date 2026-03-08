@@ -355,9 +355,9 @@ const PowerShellExport = ({
         add('echo.');
         add('echo ══► Applying Customizations');
         add('echo ────────────────────────────────────────────────────');
-        customizations.programs.forEach(p => add(`echo   Program: ${p}`));
-        customizations.tweaks.forEach(t => add(`echo   Tweak: ${t}`));
-        customizations.optimizations.forEach(o => add(`echo   Optimization: ${o}`));
+        customizations.programs.forEach(p => add(`echo   Program: ${escapeBatch(p)}`));
+        customizations.tweaks.forEach(t => add(`echo   Tweak: ${escapeBatch(t)}`));
+        customizations.optimizations.forEach(o => add(`echo   Optimization: ${escapeBatch(o)}`));
         blank();
       },
     };
