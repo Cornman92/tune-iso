@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { BookmarkPlus, Trash2, Check, LayoutTemplate, ChevronDown } from 'lucide-react';
+import { projectDataSchema } from '@/lib/projectSchema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
