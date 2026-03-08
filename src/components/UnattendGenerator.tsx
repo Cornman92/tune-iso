@@ -140,6 +140,19 @@ const UnattendGenerator = ({ isMounted, exportRef, importRef }: UnattendGenerato
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['oobe', 'user']);
   const [copied, setCopied] = useState(false);
 
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => options.map(o => ({ id: o.id, value: o.value, enabled: o.enabled }));
+  }, [options, exportRef]);
+
+  useEffect(() => {
+    if (importRef) importRef.current = (data) => {
+      setOptions(prev => prev.map(o => {
+        const imported = data.find(d => d.id === o.id);
+        return imported ? { ...o, value: imported.value, enabled: imported.enabled } : o;
+      }));
+    };
+  }, [importRef]);
+
   const toggleCategory = (cat: string) => {
     setExpandedCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
   };
