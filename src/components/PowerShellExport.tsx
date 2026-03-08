@@ -327,11 +327,11 @@ const PowerShellExport = ({
         add('echo ────────────────────────────────────────────────────');
         drivers.forEach(d => {
           if (d.type === 'folder') {
-            add(`echo   Adding folder: ${d.path}`);
-            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${d.path}" /Recurse`);
+            add(`echo   Adding folder: ${escapeBatch(d.path)}`);
+            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${escapeBatch(d.path)}" /Recurse`);
           } else {
-            add(`echo   Adding driver: ${d.name}`);
-            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${d.path}"`);
+            add(`echo   Adding driver: ${escapeBatch(d.name)}`);
+            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${escapeBatch(d.path)}"`);
           }
         });
         blank();
