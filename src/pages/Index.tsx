@@ -202,6 +202,8 @@ const Index = () => {
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+S</kbd> Export Project</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+E</kbd> Export Script</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+D</kbd> Toggle Theme</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+Z</kbd> Undo</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+Y</kbd> Redo</p>
                 </TooltipContent>
               </Tooltip>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
