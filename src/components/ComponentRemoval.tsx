@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Trash2, Search, Shield, AlertTriangle, XOctagon, Package, CheckSquare, Square } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Trash2, Search, Shield, AlertTriangle, XOctagon, Package, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,6 @@ interface ComponentEntry {
 }
 
 const COMPONENTS: ComponentEntry[] = [
-  // Safe removals
   { id: 'cortana', name: 'Cortana', description: 'Voice assistant', size: '~80 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.549981C3F5F10' },
   { id: 'bing-weather', name: 'Weather', description: 'MSN Weather app', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.BingWeather' },
   { id: 'bing-news', name: 'News', description: 'MSN News app', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.BingNews' },
@@ -42,7 +41,6 @@ const COMPONENTS: ComponentEntry[] = [
   { id: 'clipchamp', name: 'Clipchamp', description: 'Video editor', size: '~100 MB', risk: 'safe', category: 'Apps', packageName: 'Clipchamp.Clipchamp' },
   { id: 'todo', name: 'Microsoft To Do', description: 'Task management app', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.Todos' },
   { id: 'powerautomate', name: 'Power Automate', description: 'Desktop automation', size: '~80 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.PowerAutomateDesktop' },
-  // Moderate
   { id: 'onedrive', name: 'OneDrive', description: 'Cloud storage integration — some apps depend on it', size: '~40 MB', risk: 'moderate', category: 'Cloud' },
   { id: 'edge', name: 'Microsoft Edge', description: 'Default browser — removing may break some web links', size: '~350 MB', risk: 'moderate', category: 'Browser' },
   { id: 'widgets', name: 'Widgets', description: 'Taskbar Widgets panel (Win 11)', size: '~50 MB', risk: 'moderate', category: 'UI', packageName: 'MicrosoftWindows.Client.WebExperience' },
@@ -50,7 +48,6 @@ const COMPONENTS: ComponentEntry[] = [
   { id: 'your-phone', name: 'Phone Link', description: 'Connect phone to PC', size: '~30 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.YourPhone' },
   { id: 'media-player', name: 'Media Player', description: 'Windows Media Player — some codecs may stop working', size: '~40 MB', risk: 'moderate', category: 'Media' },
   { id: 'store', name: 'Microsoft Store', description: 'App store — cannot install UWP apps without it', size: '~35 MB', risk: 'moderate', category: 'System', packageName: 'Microsoft.WindowsStore' },
-  // Aggressive
   { id: 'defender', name: 'Windows Defender', description: 'Built-in antivirus — system will be unprotected', size: '~200 MB', risk: 'aggressive', category: 'Security' },
   { id: 'windows-security', name: 'Windows Security', description: 'Security dashboard UI', size: '~30 MB', risk: 'aggressive', category: 'Security', packageName: 'Microsoft.SecHealthUI' },
   { id: 'search', name: 'Windows Search', description: 'Taskbar search and indexing — affects Start menu search', size: '~80 MB', risk: 'aggressive', category: 'System' },
@@ -64,14 +61,53 @@ const riskConfig: Record<RiskLevel, { color: string; badgeColor: string; icon: R
   aggressive: { color: 'text-destructive', badgeColor: 'border-destructive/30 text-destructive', icon: XOctagon, label: 'Aggressive' },
 };
 
-interface ComponentRemovalProps {
-  isMounted: boolean;
+interface ComponentPreset {
+  id: string;
+  name: string;
+  description: string;
+  components: string[];
 }
 
-const ComponentRemoval = ({ isMounted }: ComponentRemovalProps) => {
+const COMPONENT_PRESETS: ComponentPreset[] = [
+  {
+    id: 'gaming',
+    name: '🎮 Gaming PC',
+    description: 'Remove bloatware but keep Xbox Game Bar for captures',
+    components: ['cortana', 'bing-weather', 'bing-news', 'bing-finance', 'bing-sports', 'skype', 'gethelp', 'getstarted', 'feedback', 'maps', 'mixedreality', 'people', 'onenote', 'teams', 'clipchamp', 'todo', 'powerautomate', 'your-phone', 'widgets', 'copilot', 'recall'],
+  },
+  {
+    id: 'minimal',
+    name: '🔧 Minimal Install',
+    description: 'Strip everything possible for a bare-bones OS',
+    components: COMPONENTS.filter(c => c.risk === 'safe' || c.risk === 'moderate').map(c => c.id),
+  },
+  {
+    id: 'privacy',
+    name: '🔒 Privacy Focused',
+    description: 'Remove telemetry, AI, cloud, and tracking components',
+    components: ['cortana', 'feedback', 'onedrive', 'teams', 'copilot', 'recall', 'widgets', 'your-phone', 'bing-weather', 'bing-news', 'bing-finance', 'bing-sports', 'maps', 'people', 'clipchamp'],
+  },
+  {
+    id: 'workstation',
+    name: '💼 Workstation',
+    description: 'Remove consumer/gaming apps, keep productivity tools',
+    components: ['solitaire', 'xbox-app', 'xbox-bar', 'xbox-tcui', 'xbox-identity', 'xbox-speech', 'cortana', 'bing-sports', 'bing-finance', 'mixedreality', 'skype', 'clipchamp', 'recall', 'copilot'],
+  },
+];
+
+interface ComponentRemovalProps {
+  isMounted: boolean;
+  onCountChange?: (count: number) => void;
+}
+
+const ComponentRemoval = ({ isMounted, onCountChange }: ComponentRemovalProps) => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<RiskLevel | 'all'>('all');
   const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    onCountChange?.(selected.size);
+  }, [selected.size, onCountChange]);
 
   const toggle = (id: string) => {
     setSelected(prev => {
@@ -88,6 +124,10 @@ const ComponentRemoval = ({ isMounted }: ComponentRemovalProps) => {
       COMPONENTS.filter(c => c.risk === risk).forEach(c => next.add(c.id));
       return next;
     });
+  };
+
+  const applyPreset = (preset: ComponentPreset) => {
+    setSelected(new Set(preset.components));
   };
 
   const clearAll = () => setSelected(new Set());
@@ -130,6 +170,26 @@ const ComponentRemoval = ({ isMounted }: ComponentRemovalProps) => {
             )}
           </div>
           <Button variant="ghost" size="sm" onClick={clearAll} className="text-xs h-7">Clear All</Button>
+        </div>
+
+        {/* Presets */}
+        <div className="mb-3">
+          <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
+            <Sparkles className="w-3 h-3" /> Quick Presets
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {COMPONENT_PRESETS.map(preset => (
+              <button
+                key={preset.id}
+                onClick={() => applyPreset(preset)}
+                className="text-left p-2.5 rounded-lg border border-border bg-muted/30 hover:bg-muted/60 hover:border-primary/30 transition-all group"
+              >
+                <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors">{preset.name}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{preset.description}</p>
+                <p className="text-[10px] font-mono text-destructive mt-1">{preset.components.length} components</p>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="flex gap-2 mb-3">
