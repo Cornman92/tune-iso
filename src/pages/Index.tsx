@@ -187,7 +187,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">6</span>
                 Registry Editor
               </h2>
-              <RegistryEditor isMounted={isMounted} />
+              <RegistryEditor isMounted={isMounted} onCountChange={setRegistryCount} />
             </section>
 
             {/* 7. Services Manager */}
