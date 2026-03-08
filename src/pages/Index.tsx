@@ -44,7 +44,7 @@ const Index = () => {
         <WorkflowStepper currentStep={currentStep} />
 
         {/* Main Grid */}
-        <div className="grid gap-6 lg:grid-cols-[1fr,380px]">
+        <div className="grid gap-6 lg:grid-cols-[1fr,400px]">
           {/* Left Column - Main Actions */}
           <div className="space-y-6">
             {/* ISO Selection */}
