@@ -147,6 +147,7 @@ const Index = () => {
                 exportRegistry={exportRegistry}
                 isMounted={isMounted}
                 exportScriptRef={exportScriptRef}
+                buildSteps={buildSteps}
               />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
               <ThemeToggle toggleRef={themeToggleRef} />
