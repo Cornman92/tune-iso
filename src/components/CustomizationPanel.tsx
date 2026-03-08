@@ -1,4 +1,4 @@
-import { useState, useEffect, MutableRefObject } from 'react';
+import { useState, useEffect, useRef, useCallback, MutableRefObject } from 'react';
 import { Package, Wrench, Zap, ChevronDown, ChevronRight, Plus, Check, Search, X, Shield, AlertTriangle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
