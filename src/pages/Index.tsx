@@ -216,7 +216,7 @@ const Index = () => {
             {/* 8. Unattend */}
             <section id="section-unattend">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">8</span>
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">10</span>
                 Unattended Setup (autounattend.xml)
               </h2>
               <UnattendGenerator
