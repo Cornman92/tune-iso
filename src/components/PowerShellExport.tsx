@@ -190,15 +190,15 @@ const PowerShellExport = ({
         add('Write-Step "Applying Customizations"');
         if (customizations.programs.length > 0) {
           add(`Write-Host "  Programs to integrate: ${customizations.programs.length}" -ForegroundColor Yellow`);
-          customizations.programs.forEach(p => add(`Write-Host "    - ${p}" -ForegroundColor DarkGray`));
+          customizations.programs.forEach(p => add(`Write-Host "    - ${escapePS(p)}" -ForegroundColor DarkGray`));
         }
         if (customizations.tweaks.length > 0) {
           add(`Write-Host "  Tweaks enabled: ${customizations.tweaks.length}" -ForegroundColor Yellow`);
-          customizations.tweaks.forEach(t => add(`Write-Host "    - ${t}" -ForegroundColor DarkGray`));
+          customizations.tweaks.forEach(t => add(`Write-Host "    - ${escapePS(t)}" -ForegroundColor DarkGray`));
         }
         if (customizations.optimizations.length > 0) {
           add(`Write-Host "  Optimizations enabled: ${customizations.optimizations.length}" -ForegroundColor Yellow`);
-          customizations.optimizations.forEach(o => add(`Write-Host "    - ${o}" -ForegroundColor DarkGray`));
+          customizations.optimizations.forEach(o => add(`Write-Host "    - ${escapePS(o)}" -ForegroundColor DarkGray`));
         }
         blank();
       },
