@@ -50,7 +50,7 @@ const categories = [
   { id: 'optimizations', label: 'Optimizations', icon: Zap, color: 'text-success' },
 ];
 
-const CustomizationPanel = ({ isMounted }: CustomizationPanelProps) => {
+const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProps) => {
   const [activeTab, setActiveTab] = useState('programs');
   const [programs, setPrograms] = useState(defaultPrograms);
   const [tweaks, setTweaks] = useState(defaultTweaks);
