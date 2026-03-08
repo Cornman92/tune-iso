@@ -24,7 +24,7 @@ import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import useUndoRedo from '@/hooks/useUndoRedo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
+const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
