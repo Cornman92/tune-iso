@@ -17,6 +17,8 @@ import {
 interface CustomizationPanelProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
+  exportRef?: MutableRefObject<() => { programs: string[]; tweaks: string[]; optimizations: string[] }>;
+  importRef?: MutableRefObject<(data: { programs: string[]; tweaks: string[]; optimizations: string[] }) => void>;
 }
 
 const categories = [

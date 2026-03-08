@@ -129,7 +129,13 @@ const defaultOptions: AnswerOption[] = [
 
 const categoryOrder = ['regional', 'windows pe', 'disk', 'product', 'user', 'oobe', 'privacy (oobe)', 'first logon'];
 
-const UnattendGenerator = ({ isMounted }: { isMounted: boolean }) => {
+interface UnattendGeneratorProps {
+  isMounted: boolean;
+  exportRef?: MutableRefObject<() => { id: string; value: string; enabled: boolean }[]>;
+  importRef?: MutableRefObject<(data: { id: string; value: string; enabled: boolean }[]) => void>;
+}
+
+const UnattendGenerator = ({ isMounted, exportRef, importRef }: UnattendGeneratorProps) => {
   const [options, setOptions] = useState(defaultOptions);
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['oobe', 'user']);
   const [copied, setCopied] = useState(false);

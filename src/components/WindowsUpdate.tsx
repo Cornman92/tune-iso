@@ -21,6 +21,8 @@ export interface KBUpdate {
 
 interface WindowsUpdateProps {
   isMounted: boolean;
+  exportRef?: MutableRefObject<() => { kb: string; title: string; category: string; source: string; filePath?: string }[]>;
+  importRef?: MutableRefObject<(data: { kb: string; title: string; category: string; source: string; filePath?: string }[]) => void>;
 }
 
 const catalogUpdates: Omit<KBUpdate, 'id' | 'enabled' | 'source'>[] = [

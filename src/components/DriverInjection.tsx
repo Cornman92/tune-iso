@@ -16,6 +16,8 @@ export interface DriverEntry {
 
 interface DriverInjectionProps {
   isMounted: boolean;
+  exportRef?: MutableRefObject<() => { name: string; path: string; type: string }[]>;
+  importRef?: MutableRefObject<(data: { name: string; path: string; type: string }[]) => void>;
 }
 
 const DriverInjection = ({ isMounted }: DriverInjectionProps) => {
