@@ -98,23 +98,19 @@ const Index = () => {
 
             {/* Info Panel */}
             <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
-              <h3 className="text-sm font-medium text-foreground mb-2">Quick Tips</h3>
+              <h3 className="text-sm font-medium text-foreground mb-2">Quick Reference</h3>
               <ul className="space-y-2 text-xs text-muted-foreground">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary">•</span>
-                  Select a Windows ISO file to begin
+                  <span className="text-success">●</span>
+                  <span><strong className="text-foreground">Safe</strong> — No system impact</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary">•</span>
-                  Mount the ISO to enable customizations
+                  <span className="text-warning">●</span>
+                  <span><strong className="text-foreground">Moderate</strong> — May affect some features</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary">•</span>
-                  Toggle programs, tweaks, and optimizations
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary">•</span>
-                  Commit changes to generate new ISO
+                  <span className="text-destructive">●</span>
+                  <span><strong className="text-foreground">Aggressive</strong> — Trades stability for performance</span>
                 </li>
               </ul>
             </div>
