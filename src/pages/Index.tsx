@@ -190,6 +190,7 @@ const Index = () => {
                 exportScriptRef={exportScriptRef}
                 buildSteps={buildSteps}
               />
+              <ProjectManager onExport={handleExport} onImport={handleImport} />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <ThemeToggle toggleRef={themeToggleRef} />
               <Tooltip>
