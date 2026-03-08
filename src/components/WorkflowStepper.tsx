@@ -52,8 +52,6 @@ const WorkflowStepper = ({ currentStep }: WorkflowStepperProps) => {
                 w-8 sm:w-16 h-0.5 mx-1
                 ${step.id < currentStep ? 'bg-success' : 'bg-border'}
               `} />
-                ${step.id < currentStep ? 'bg-success' : 'bg-border'}
-              `} />
             )}
           </div>
         );
