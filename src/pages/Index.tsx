@@ -60,9 +60,13 @@ const Index = () => {
   const exportUnattend = useRef<() => { id: string; value: string; enabled: boolean }[]>(() => []);
   const importUnattend = useRef<(data: { id: string; value: string; enabled: boolean }[]) => void>(() => {});
   const exportServices = useRef<() => string[]>(() => []);
+  const importServices = useRef<(data: string[]) => void>(() => {});
   const exportComponents = useRef<() => string[]>(() => []);
+  const importComponents = useRef<(data: string[]) => void>(() => {});
   const exportRegistry = useRef<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>(() => []);
+  const importRegistry = useRef<(presetIds: string[]) => void>(() => {});
   const exportFeatures = useRef<() => WimFeatureExport[]>(() => []);
+  const importFeatures = useRef<(data: { id: string; enabled: boolean }[]) => void>(() => {});
 
   // Scroll spy
   useEffect(() => {
