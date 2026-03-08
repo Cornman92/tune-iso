@@ -395,7 +395,21 @@ const Index = () => {
               <BuildStepReorder steps={buildSteps} onReorder={setBuildSteps} />
             </div>
 
-            <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
+            <div className="mt-6">
+              <LiveScriptPreview
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportUpdates={exportUpdates}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+                buildSteps={buildSteps}
+                changeTrigger={scriptChangeTrigger}
+              />
+            </div>
+
+
               <h3 className="text-sm font-medium text-foreground mb-2">Risk Levels</h3>
               <ul className="space-y-2 text-xs text-muted-foreground">
                 <li className="flex items-start gap-2">
