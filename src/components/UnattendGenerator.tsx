@@ -124,10 +124,46 @@ const defaultOptions: AnswerOption[] = [
   { id: 'cmd-show-file-ext', label: 'Show File Extensions', description: 'Enable file extension visibility', type: 'boolean', category: 'first logon', defaultValue: 'true', value: 'true', xmlPath: 'FirstLogonCommands/ShowFileExtensions', enabled: true },
   { id: 'cmd-classic-context', label: 'Classic Context Menu', description: 'Restore Windows 10 right-click menu', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/ClassicContextMenu', enabled: false },
   { id: 'cmd-taskbar-left', label: 'Left-Align Taskbar', description: 'Move taskbar icons to the left', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/TaskbarLeftAlign', enabled: false },
+  { id: 'cmd-disable-widgets', label: 'Disable Widgets', description: 'Remove Widgets from taskbar', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/DisableWidgets', enabled: false },
+  { id: 'cmd-disable-cortana', label: 'Disable Cortana', description: 'Disable Cortana via registry', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/DisableCortana', enabled: false },
+  { id: 'cmd-disable-telemetry', label: 'Disable Telemetry', description: 'Set telemetry to Security level', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/DisableTelemetry', enabled: false },
+  { id: 'cmd-disable-onedrive', label: 'Remove OneDrive', description: 'Uninstall OneDrive on first login', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/RemoveOneDrive', enabled: false },
+  { id: 'cmd-enable-numlock', label: 'Enable NumLock', description: 'Turn on NumLock by default', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/EnableNumLock', enabled: false },
+  { id: 'cmd-disable-uac', label: 'Disable UAC Prompt', description: 'Disable User Account Control prompts', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/DisableUAC', enabled: false },
+  { id: 'cmd-power-high-perf', label: 'High Performance Power Plan', description: 'Set power plan to High Performance', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/HighPerformancePlan', enabled: false },
+  { id: 'cmd-disable-hibernation', label: 'Disable Hibernation', description: 'Remove hiberfil.sys to save space', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/DisableHibernation', enabled: false },
+  { id: 'cmd-enable-rdp', label: 'Enable Remote Desktop', description: 'Turn on RDP access', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/EnableRDP', enabled: false },
+  { id: 'cmd-install-winget', label: 'Install Winget Packages', description: 'Run winget package installation script', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/InstallWinget', enabled: false },
   { id: 'cmd-custom', label: 'Custom Command', description: 'Custom command to run at first logon', type: 'text', category: 'first logon', defaultValue: '', value: '', xmlPath: 'FirstLogonCommands/Custom', enabled: false },
+  { id: 'cmd-custom-2', label: 'Custom Command 2', description: 'Second custom command', type: 'text', category: 'first logon', defaultValue: '', value: '', xmlPath: 'FirstLogonCommands/Custom2', enabled: false },
+  { id: 'cmd-custom-3', label: 'Custom Command 3', description: 'Third custom command', type: 'text', category: 'first logon', defaultValue: '', value: '', xmlPath: 'FirstLogonCommands/Custom3', enabled: false },
+
+  // Network Configuration
+  { id: 'net-static-ip', label: 'Static IP Address', description: 'Set a static IP (leave blank for DHCP)', type: 'text', category: 'network', defaultValue: '', value: '', xmlPath: 'Microsoft-Windows-TCPIP/Interfaces/Interface/UnicastIpAddresses', enabled: false },
+  { id: 'net-dns-primary', label: 'Primary DNS', description: 'Primary DNS server address', type: 'text', category: 'network', defaultValue: '1.1.1.1', value: '1.1.1.1', xmlPath: 'Microsoft-Windows-DNS-Client/Interfaces/Interface/DNSServerSearchOrder/1', enabled: false },
+  { id: 'net-dns-secondary', label: 'Secondary DNS', description: 'Secondary DNS server address', type: 'text', category: 'network', defaultValue: '8.8.8.8', value: '8.8.8.8', xmlPath: 'Microsoft-Windows-DNS-Client/Interfaces/Interface/DNSServerSearchOrder/2', enabled: false },
+  { id: 'net-workgroup', label: 'Workgroup', description: 'Windows workgroup name', type: 'text', category: 'network', defaultValue: 'WORKGROUP', value: 'WORKGROUP', xmlPath: 'Microsoft-Windows-UnattendedJoin/Identification/JoinWorkgroup', enabled: false },
+  { id: 'net-domain-join', label: 'Domain Join', description: 'Active Directory domain to join', type: 'text', category: 'network', defaultValue: '', value: '', xmlPath: 'Microsoft-Windows-UnattendedJoin/Identification/JoinDomain', enabled: false },
+  { id: 'net-disable-ipv6', label: 'Disable IPv6', description: 'Turn off IPv6 during setup', type: 'boolean', category: 'network', defaultValue: 'false', value: 'false', xmlPath: 'Microsoft-Windows-TCPIP/DisableIPv6', enabled: false },
+
+  // Power Configuration
+  { id: 'power-scheme', label: 'Power Scheme', description: 'Default power plan after install', type: 'select', category: 'power', defaultValue: 'balanced', value: 'balanced', options: [
+    { value: 'balanced', label: 'Balanced' },
+    { value: 'high-performance', label: 'High Performance' },
+    { value: 'ultimate', label: 'Ultimate Performance' },
+    { value: 'power-saver', label: 'Power Saver' },
+  ], xmlPath: 'Microsoft-Windows-Shell-Setup/PowerScheme', enabled: false },
+  { id: 'power-lid-action', label: 'Lid Close Action', description: 'Action when laptop lid is closed', type: 'select', category: 'power', defaultValue: 'sleep', value: 'sleep', options: [
+    { value: 'nothing', label: 'Do Nothing' },
+    { value: 'sleep', label: 'Sleep' },
+    { value: 'hibernate', label: 'Hibernate' },
+    { value: 'shutdown', label: 'Shutdown' },
+  ], xmlPath: 'Microsoft-Windows-Shell-Setup/Power/LidCloseAction', enabled: false },
+  { id: 'power-sleep-timeout', label: 'Sleep Timeout (min)', description: 'Minutes before sleep (0 = never)', type: 'text', category: 'power', defaultValue: '0', value: '0', xmlPath: 'Microsoft-Windows-Shell-Setup/Power/SleepTimeout', enabled: false },
+  { id: 'power-display-timeout', label: 'Display Timeout (min)', description: 'Minutes before display off (0 = never)', type: 'text', category: 'power', defaultValue: '15', value: '15', xmlPath: 'Microsoft-Windows-Shell-Setup/Power/DisplayTimeout', enabled: false },
 ];
 
-const categoryOrder = ['regional', 'windows pe', 'disk', 'product', 'user', 'oobe', 'privacy (oobe)', 'first logon'];
+const categoryOrder = ['regional', 'windows pe', 'disk', 'product', 'user', 'oobe', 'privacy (oobe)', 'first logon', 'network', 'power'];
 
 interface UnattendGeneratorProps {
   isMounted: boolean;

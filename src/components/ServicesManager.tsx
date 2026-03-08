@@ -17,44 +17,100 @@ interface ServiceEntry {
 }
 
 const SERVICES: ServiceEntry[] = [
-  // Safe
+  // Telemetry - Safe
   { name: 'DiagTrack', displayName: 'Connected User Experiences and Telemetry', description: 'Windows telemetry data collection', risk: 'safe', category: 'Telemetry', defaultEnabled: true },
   { name: 'dmwappushservice', displayName: 'WAP Push Message Routing', description: 'Push messaging for telemetry', risk: 'safe', category: 'Telemetry', defaultEnabled: true },
-  { name: 'RetailDemo', displayName: 'Retail Demo Service', description: 'Retail demo experience for stores', risk: 'safe', category: 'Misc', defaultEnabled: true },
-  { name: 'MapsBroker', displayName: 'Downloaded Maps Manager', description: 'Manages offline maps', risk: 'safe', category: 'Apps', defaultEnabled: true },
+  { name: 'diagnosticshub.standardcollector.service', displayName: 'Diagnostics Hub Standard Collector', description: 'Collects diagnostic data', risk: 'safe', category: 'Telemetry', defaultEnabled: true },
+
+  // Privacy - Safe
   { name: 'lfsvc', displayName: 'Geolocation Service', description: 'Monitors device location', risk: 'safe', category: 'Privacy', defaultEnabled: true },
-  { name: 'SharedAccess', displayName: 'Internet Connection Sharing', description: 'NAT and sharing for home networks', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'RemoteRegistry', displayName: 'Remote Registry', description: 'Remote registry modification', risk: 'safe', category: 'Privacy', defaultEnabled: true },
+
+  // Apps - Safe
+  { name: 'MapsBroker', displayName: 'Downloaded Maps Manager', description: 'Manages offline maps', risk: 'safe', category: 'Apps', defaultEnabled: true },
   { name: 'WalletService', displayName: 'WalletService', description: 'Wallet objects used by clients', risk: 'safe', category: 'Apps', defaultEnabled: true },
+  { name: 'PhoneSvc', displayName: 'Phone Service', description: 'Manages telephony state', risk: 'safe', category: 'Apps', defaultEnabled: true },
+  { name: 'MessagingService', displayName: 'Messaging Service', description: 'SMS/MMS message management', risk: 'safe', category: 'Apps', defaultEnabled: true },
+  { name: 'PcaSvc', displayName: 'Program Compatibility Assistant', description: 'Detects compatibility issues with programs', risk: 'safe', category: 'Apps', defaultEnabled: true },
+
+  // Xbox - Safe
   { name: 'XblAuthManager', displayName: 'Xbox Live Auth Manager', description: 'Xbox Live authentication', risk: 'safe', category: 'Xbox', defaultEnabled: true },
   { name: 'XblGameSave', displayName: 'Xbox Live Game Save', description: 'Syncs Xbox game saves', risk: 'safe', category: 'Xbox', defaultEnabled: true },
   { name: 'XboxNetApiSvc', displayName: 'Xbox Live Networking Service', description: 'Xbox Live networking', risk: 'safe', category: 'Xbox', defaultEnabled: true },
   { name: 'XboxGipSvc', displayName: 'Xbox Accessory Management', description: 'Manages Xbox accessories', risk: 'safe', category: 'Xbox', defaultEnabled: true },
+  { name: 'BcastDVRUserService', displayName: 'GameDVR & Broadcast', description: 'Game recording and broadcast', risk: 'safe', category: 'Xbox', defaultEnabled: true },
+
+  // Media - Safe
   { name: 'WMPNetworkSvc', displayName: 'Windows Media Player Network', description: 'Shares Windows Media Player libraries', risk: 'safe', category: 'Media', defaultEnabled: true },
+
+  // Misc - Safe
+  { name: 'RetailDemo', displayName: 'Retail Demo Service', description: 'Retail demo experience for stores', risk: 'safe', category: 'Misc', defaultEnabled: true },
   { name: 'wisvc', displayName: 'Windows Insider Service', description: 'Windows Insider Program', risk: 'safe', category: 'Misc', defaultEnabled: true },
-  { name: 'PhoneSvc', displayName: 'Phone Service', description: 'Manages telephony state', risk: 'safe', category: 'Misc', defaultEnabled: true },
-  { name: 'RemoteRegistry', displayName: 'Remote Registry', description: 'Remote registry modification', risk: 'safe', category: 'Privacy', defaultEnabled: true },
-  // Moderate
-  { name: 'SysMain', displayName: 'SysMain (Superfetch)', description: 'Maintains and improves system performance (may cause disk usage on HDDs)', risk: 'moderate', category: 'Performance', defaultEnabled: true },
-  { name: 'WSearch', displayName: 'Windows Search', description: 'Content indexing and search (can be CPU-intensive)', risk: 'moderate', category: 'Performance', defaultEnabled: true },
-  { name: 'Fax', displayName: 'Fax', description: 'Send and receive faxes', risk: 'moderate', category: 'Misc', defaultEnabled: true },
-  { name: 'TabletInputService', displayName: 'Touch Keyboard and Handwriting', description: 'Pen and ink functionality', risk: 'moderate', category: 'Input', defaultEnabled: true },
-  { name: 'WbioSrvc', displayName: 'Windows Biometric Service', description: 'Fingerprint and face recognition', risk: 'moderate', category: 'Security', defaultEnabled: true },
-  { name: 'FrameServer', displayName: 'Windows Camera Frame Server', description: 'Manages access to camera frames', risk: 'moderate', category: 'Media', defaultEnabled: true },
-  { name: 'stisvc', displayName: 'Windows Image Acquisition', description: 'Scanner and camera image acquisition', risk: 'moderate', category: 'Media', defaultEnabled: true },
-  { name: 'Spooler', displayName: 'Print Spooler', description: 'Manages print jobs — disable if no printer', risk: 'moderate', category: 'Printing', defaultEnabled: true },
-  { name: 'BDESVC', displayName: 'BitLocker Drive Encryption', description: 'Encrypts drives with BitLocker', risk: 'moderate', category: 'Security', defaultEnabled: true },
-  { name: 'BluetoothUserService', displayName: 'Bluetooth User Support Service', description: 'Supports Bluetooth functionality', risk: 'moderate', category: 'Hardware', defaultEnabled: true },
+  { name: 'Fax', displayName: 'Fax', description: 'Send and receive faxes', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'TrkWks', displayName: 'Distributed Link Tracking Client', description: 'Maintains NTFS links across network', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'WpcMonSvc', displayName: 'Parental Controls', description: 'Family Safety monitoring', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'SCardSvr', displayName: 'Smart Card', description: 'Manages smart card access', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'ScDeviceEnum', displayName: 'Smart Card Device Enumeration', description: 'Enumerates smart card readers', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'SEMgrSvc', displayName: 'Payments and NFC/SE Manager', description: 'NFC-based payment management', risk: 'safe', category: 'Misc', defaultEnabled: true },
+
+  // Network - Safe/Moderate
+  { name: 'SharedAccess', displayName: 'Internet Connection Sharing', description: 'NAT and sharing for home networks', risk: 'safe', category: 'Network', defaultEnabled: true },
   { name: 'CDPSvc', displayName: 'Connected Devices Platform', description: 'Cross-device experiences', risk: 'moderate', category: 'Network', defaultEnabled: true },
   { name: 'NcbService', displayName: 'Network Connection Broker', description: 'Manages network connections for Store apps', risk: 'moderate', category: 'Network', defaultEnabled: true },
-  // Aggressive
+  { name: 'lmhosts', displayName: 'TCP/IP NetBIOS Helper', description: 'NetBIOS name resolution support', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'icssvc', displayName: 'Windows Mobile Hotspot Service', description: 'Mobile hotspot capability', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'WFDSConMgrSvc', displayName: 'Wi-Fi Direct Services', description: 'Miracast and Wi-Fi Direct connections', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'RmSvc', displayName: 'Radio Management Service', description: 'Manages radio states (airplane mode)', risk: 'moderate', category: 'Network', defaultEnabled: true },
+  { name: 'NcdAutoSetup', displayName: 'Network Connected Devices Auto-Setup', description: 'Auto-setup for network devices', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'WlanSvc', displayName: 'WLAN AutoConfig', description: 'Wi-Fi network configuration — disable only if wired', risk: 'moderate', category: 'Network', defaultEnabled: true },
+
+  // Performance - Moderate
+  { name: 'SysMain', displayName: 'SysMain (Superfetch)', description: 'Maintains and improves system performance (may cause disk usage on HDDs)', risk: 'moderate', category: 'Performance', defaultEnabled: true },
+  { name: 'WSearch', displayName: 'Windows Search', description: 'Content indexing and search (can be CPU-intensive)', risk: 'moderate', category: 'Performance', defaultEnabled: true },
+
+  // Input - Moderate
+  { name: 'TabletInputService', displayName: 'Touch Keyboard and Handwriting', description: 'Pen and ink functionality', risk: 'moderate', category: 'Input', defaultEnabled: true },
+  { name: 'SensorService', displayName: 'Sensor Service', description: 'Manages device sensors', risk: 'moderate', category: 'Input', defaultEnabled: true },
+  { name: 'SensorDataService', displayName: 'Sensor Data Service', description: 'Delivers sensor data', risk: 'moderate', category: 'Input', defaultEnabled: true },
+  { name: 'SensrSvc', displayName: 'Sensor Monitoring Service', description: 'Monitors and adapts to sensor data', risk: 'moderate', category: 'Input', defaultEnabled: true },
+
+  // Hardware - Moderate
+  { name: 'BluetoothUserService', displayName: 'Bluetooth User Support Service', description: 'Supports Bluetooth functionality', risk: 'moderate', category: 'Hardware', defaultEnabled: true },
+  { name: 'bthserv', displayName: 'Bluetooth Support Service', description: 'Discovery and association of Bluetooth', risk: 'moderate', category: 'Hardware', defaultEnabled: true },
+  { name: 'WiaRpc', displayName: 'Still Image Acquisition Events', description: 'Scanner event dispatching', risk: 'moderate', category: 'Hardware', defaultEnabled: true },
+  { name: 'irmon', displayName: 'Infrared Monitor', description: 'Infrared device support', risk: 'safe', category: 'Hardware', defaultEnabled: true },
+
+  // Media - Moderate
+  { name: 'FrameServer', displayName: 'Windows Camera Frame Server', description: 'Manages access to camera frames', risk: 'moderate', category: 'Media', defaultEnabled: true },
+  { name: 'stisvc', displayName: 'Windows Image Acquisition', description: 'Scanner and camera image acquisition', risk: 'moderate', category: 'Media', defaultEnabled: true },
+  { name: 'AudioEndpointBuilder', displayName: 'Windows Audio Endpoint Builder', description: 'Manages audio devices — disabling breaks audio', risk: 'aggressive', category: 'Media', defaultEnabled: true },
+
+  // Security - Moderate
+  { name: 'WbioSrvc', displayName: 'Windows Biometric Service', description: 'Fingerprint and face recognition', risk: 'moderate', category: 'Security', defaultEnabled: true },
+  { name: 'BDESVC', displayName: 'BitLocker Drive Encryption', description: 'Encrypts drives with BitLocker', risk: 'moderate', category: 'Security', defaultEnabled: true },
+
+  // Printing - Moderate
+  { name: 'Spooler', displayName: 'Print Spooler', description: 'Manages print jobs — disable if no printer', risk: 'moderate', category: 'Printing', defaultEnabled: true },
+  { name: 'PrintNotify', displayName: 'Printer Extensions and Notifications', description: 'Custom printer notifications', risk: 'moderate', category: 'Printing', defaultEnabled: true },
+
+  // System - Aggressive
   { name: 'wuauserv', displayName: 'Windows Update', description: 'Detects, downloads, installs updates — disabling stops all updates', risk: 'aggressive', category: 'System', defaultEnabled: true },
   { name: 'WaaSMedicSvc', displayName: 'Windows Update Medic Service', description: 'Repairs Windows Update components', risk: 'aggressive', category: 'System', defaultEnabled: true },
   { name: 'UsoSvc', displayName: 'Update Orchestrator Service', description: 'Manages Windows Updates — required for updates', risk: 'aggressive', category: 'System', defaultEnabled: true },
+  { name: 'DPS', displayName: 'Diagnostic Policy Service', description: 'Problem detection and troubleshooting', risk: 'aggressive', category: 'System', defaultEnabled: true },
+  { name: 'DoSvc', displayName: 'Delivery Optimization', description: 'Peer-to-peer update delivery', risk: 'moderate', category: 'System', defaultEnabled: true },
+  { name: 'BITS', displayName: 'Background Intelligent Transfer Service', description: 'Background file transfers — used by Windows Update', risk: 'aggressive', category: 'System', defaultEnabled: true },
+
+  // Security - Aggressive
   { name: 'SecurityHealthService', displayName: 'Windows Security Service', description: 'Windows Security / Defender health monitoring', risk: 'aggressive', category: 'Security', defaultEnabled: true },
   { name: 'WinDefend', displayName: 'Windows Defender Antivirus', description: 'Real-time antivirus protection', risk: 'aggressive', category: 'Security', defaultEnabled: true },
   { name: 'wscsvc', displayName: 'Security Center', description: 'Monitors and reports security health', risk: 'aggressive', category: 'Security', defaultEnabled: true },
+  { name: 'MpsSvc', displayName: 'Windows Firewall', description: 'Windows Defender Firewall — disabling removes firewall', risk: 'aggressive', category: 'Security', defaultEnabled: true },
+
+  // Telemetry - Aggressive
   { name: 'WerSvc', displayName: 'Windows Error Reporting', description: 'Reports errors to Microsoft', risk: 'aggressive', category: 'Telemetry', defaultEnabled: true },
-  { name: 'DPS', displayName: 'Diagnostic Policy Service', description: 'Problem detection and troubleshooting', risk: 'aggressive', category: 'System', defaultEnabled: true },
+
+  // UI - Aggressive
   { name: 'Themes', displayName: 'Themes', description: 'User experience theme management — disabling gives classic look', risk: 'aggressive', category: 'UI', defaultEnabled: true },
   { name: 'FontCache', displayName: 'Windows Font Cache', description: 'Optimizes font performance', risk: 'aggressive', category: 'UI', defaultEnabled: true },
 ];
