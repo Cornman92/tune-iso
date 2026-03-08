@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FolderArchive, Upload, Download, FileJson, Check, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { projectDataSchema } from '@/lib/projectSchema';
 
 interface BuildStepData {
   id: string;
