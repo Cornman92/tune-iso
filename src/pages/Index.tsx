@@ -41,6 +41,9 @@ const Index = () => {
   const importUpdates = useRef<(data: { kb: string; title: string; category: string; source: string; filePath?: string }[]) => void>(() => {});
   const exportUnattend = useRef<() => { id: string; value: string; enabled: boolean }[]>(() => []);
   const importUnattend = useRef<(data: { id: string; value: string; enabled: boolean }[]) => void>(() => {});
+  const exportServices = useRef<() => string[]>(() => []);
+  const exportComponents = useRef<() => string[]>(() => []);
+  const exportRegistry = useRef<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>(() => []);
 
   // Scroll spy
   useEffect(() => {
