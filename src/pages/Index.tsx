@@ -89,8 +89,9 @@ const Index = () => {
       drivers: exportDrivers.current(),
       updates: exportUpdates.current(),
       unattend: exportUnattend.current(),
+      buildSteps,
     };
-  }, [selectedFile]);
+  }, [selectedFile, buildSteps]);
 
   const handleImport = useCallback((data: ProjectData) => {
     if (data.customizations) importCustomizations.current(data.customizations);
