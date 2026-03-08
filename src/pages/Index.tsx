@@ -89,14 +89,16 @@ const Index = () => {
       drivers: exportDrivers.current(),
       updates: exportUpdates.current(),
       unattend: exportUnattend.current(),
+      buildSteps,
     };
-  }, [selectedFile]);
+  }, [selectedFile, buildSteps]);
 
   const handleImport = useCallback((data: ProjectData) => {
     if (data.customizations) importCustomizations.current(data.customizations);
     if (data.drivers) importDrivers.current(data.drivers);
     if (data.updates) importUpdates.current(data.updates);
     if (data.unattend) importUnattend.current(data.unattend);
+    if (data.buildSteps) setBuildSteps(data.buildSteps);
   }, []);
 
   // Wire up keyboard shortcuts
@@ -145,6 +147,7 @@ const Index = () => {
                 exportRegistry={exportRegistry}
                 isMounted={isMounted}
                 exportScriptRef={exportScriptRef}
+                buildSteps={buildSteps}
               />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
               <ThemeToggle toggleRef={themeToggleRef} />
