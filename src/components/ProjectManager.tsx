@@ -3,6 +3,12 @@ import { FolderArchive, Upload, Download, FileJson, Check, AlertTriangle } from 
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
+interface BuildStepData {
+  id: string;
+  label: string;
+  enabled: boolean;
+}
+
 interface ProjectData {
   version: string;
   name: string;
@@ -29,6 +35,7 @@ interface ProjectData {
     value: string;
     enabled: boolean;
   }[];
+  buildSteps?: BuildStepData[];
 }
 
 interface ProjectManagerProps {

@@ -98,6 +98,7 @@ const Index = () => {
     if (data.drivers) importDrivers.current(data.drivers);
     if (data.updates) importUpdates.current(data.updates);
     if (data.unattend) importUnattend.current(data.unattend);
+    if (data.buildSteps) setBuildSteps(data.buildSteps);
   }, []);
 
   // Wire up keyboard shortcuts
