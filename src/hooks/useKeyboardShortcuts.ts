@@ -4,9 +4,11 @@ interface ShortcutHandlers {
   onExportProject: () => void;
   onExportScript: () => void;
   onToggleTheme: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
 }
 
-const useKeyboardShortcuts = ({ onExportProject, onExportScript, onToggleTheme }: ShortcutHandlers) => {
+const useKeyboardShortcuts = ({ onExportProject, onExportScript, onToggleTheme, onUndo, onRedo }: ShortcutHandlers) => {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const mod = e.ctrlKey || e.metaKey;
@@ -25,12 +27,24 @@ const useKeyboardShortcuts = ({ onExportProject, onExportScript, onToggleTheme }
           e.preventDefault();
           onToggleTheme();
           break;
+        case 'z':
+          e.preventDefault();
+          if (e.shiftKey) {
+            onRedo?.();
+          } else {
+            onUndo?.();
+          }
+          break;
+        case 'y':
+          e.preventDefault();
+          onRedo?.();
+          break;
       }
     };
 
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [onExportProject, onExportScript, onToggleTheme]);
+  }, [onExportProject, onExportScript, onToggleTheme, onUndo, onRedo]);
 };
 
 export default useKeyboardShortcuts;
