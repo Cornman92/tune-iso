@@ -228,7 +228,7 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search ${activeTab}...`}
+              placeholder={isGlobalSearch ? `Searching all categories...` : `Search ${activeTab}...`}
               className="pl-9 pr-8 h-9 font-mono text-sm bg-muted/30"
             />
             {searchQuery && (
