@@ -36,6 +36,7 @@ const PowerShellExport = ({
   exportServices,
   exportComponents,
   exportRegistry,
+  exportFeatures,
   isMounted,
   exportScriptRef,
   buildSteps,
