@@ -55,6 +55,7 @@ const Index = () => {
   const exportServices = useRef<() => string[]>(() => []);
   const exportComponents = useRef<() => string[]>(() => []);
   const exportRegistry = useRef<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>(() => []);
+  const exportFeatures = useRef<() => WimFeatureExport[]>(() => []);
 
   // Scroll spy
   useEffect(() => {
