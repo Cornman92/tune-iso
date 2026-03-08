@@ -186,6 +186,13 @@ const Index = () => {
               <p className="text-xs font-mono text-muted-foreground">Windows Image Customization Tool</p>
             </div>
             <div className="ml-auto flex items-center gap-2">
+              <GlobalSearch
+                wimFeatures={DEFAULT_FEATURES}
+                components={COMPONENTS}
+                services={SERVICES}
+                registryPresets={PRESET_ENTRIES}
+              />
+              <div className="h-6 w-px bg-border" />
               <PowerShellExport
                 exportCustomizations={exportCustomizations}
                 exportDrivers={exportDrivers}
