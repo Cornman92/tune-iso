@@ -32,6 +32,7 @@ const PowerShellExport = ({
   exportComponents,
   exportRegistry,
   isMounted,
+  exportScriptRef,
 }: PowerShellExportProps) => {
 
   const generateScript = useCallback((): string => {
