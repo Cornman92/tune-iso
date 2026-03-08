@@ -306,6 +306,23 @@ const PowerShellExport = ({
     const enabledSteps = buildSteps.filter(s => s.enabled);
 
     const batSections: Record<string, () => void> = {
+      features: () => {
+        if (features.length === 0) return;
+        const toEnable = features.filter(f => f.enabled);
+        const toDisable = features.filter(f => !f.enabled);
+        add('echo.');
+        add(`echo ══► Configuring Windows Features (${toEnable.length} enable, ${toDisable.length} disable)`);
+        add('echo ────────────────────────────────────────────────────');
+        toEnable.forEach(f => {
+          add(`echo   Enabling: ${escapeBatch(f.name)}`);
+          add(`DISM /Image:%MountDir% /Enable-Feature /FeatureName:"${escapeBatch(f.id)}" /All /NoRestart`);
+        });
+        toDisable.forEach(f => {
+          add(`echo   Disabling: ${escapeBatch(f.name)}`);
+          add(`DISM /Image:%MountDir% /Disable-Feature /FeatureName:"${escapeBatch(f.id)}" /NoRestart`);
+        });
+        blank();
+      },
       components: () => {
         if (components.length === 0) return;
         add('echo.');
