@@ -175,6 +175,7 @@ const Index = () => {
               </h2>
               <DriverInjection
                 isMounted={isMounted}
+                onCountChange={setDriverCount}
                 exportRef={exportDrivers}
                 importRef={importDrivers}
               />
