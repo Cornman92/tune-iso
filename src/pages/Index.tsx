@@ -1,5 +1,10 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Disc3, Terminal, Keyboard } from 'lucide-react';
+import GlobalSearch from '@/components/GlobalSearch';
+import { DEFAULT_FEATURES } from '@/components/WimEditor';
+import { COMPONENTS } from '@/components/ComponentRemoval';
+import { SERVICES } from '@/components/ServicesManager';
+import { PRESET_ENTRIES } from '@/components/RegistryEditor';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
 import CustomizationPanel from '@/components/CustomizationPanel';
@@ -181,6 +186,13 @@ const Index = () => {
               <p className="text-xs font-mono text-muted-foreground">Windows Image Customization Tool</p>
             </div>
             <div className="ml-auto flex items-center gap-2">
+              <GlobalSearch
+                wimFeatures={DEFAULT_FEATURES}
+                components={COMPONENTS}
+                services={SERVICES}
+                registryPresets={PRESET_ENTRIES}
+              />
+              <div className="h-6 w-px bg-border" />
               <PowerShellExport
                 exportCustomizations={exportCustomizations}
                 exportDrivers={exportDrivers}
@@ -204,7 +216,8 @@ const Index = () => {
                     <Keyboard className="w-3.5 h-3.5 text-muted-foreground" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs font-mono space-y-1 p-3">
+                 <TooltipContent side="bottom" className="text-xs font-mono space-y-1 p-3">
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+K</kbd> Global Search</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+S</kbd> Export Project</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+E</kbd> Export Script</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+D</kbd> Toggle Theme</p>

@@ -41,7 +41,7 @@ interface WinFeature {
   category: string;
 }
 
-const DEFAULT_FEATURES: WinFeature[] = [
+export const DEFAULT_FEATURES: WinFeature[] = [
   // Developer
   { id: 'wsl', name: 'Windows Subsystem for Linux', description: 'Run Linux binaries natively', enabled: false, category: 'Developer' },
   { id: 'hyperv', name: 'Hyper-V', description: 'Type-1 hypervisor for VMs', enabled: false, category: 'Developer' },
