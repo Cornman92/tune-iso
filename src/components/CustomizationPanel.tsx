@@ -93,9 +93,14 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
     }
   };
 
+  const isGlobalSearch = searchQuery.trim().length > 0;
+
   const getGroupedItems = () => {
-    const items = getItems();
     const query = searchQuery.toLowerCase().trim();
+    // When searching, search across ALL tabs; otherwise show active tab only
+    const items = isGlobalSearch
+      ? [...programs, ...tweaks, ...optimizations]
+      : getItems();
     const filtered = query
       ? items.filter(item =>
           item.name.toLowerCase().includes(query) ||
@@ -108,6 +113,12 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
       acc[item.category].push(item);
       return acc;
     }, {} as Record<string, CustomizationItem[]>);
+  };
+
+  const getItemType = (itemId: string): 'programs' | 'tweaks' | 'optimizations' => {
+    if (programs.some(p => p.id === itemId)) return 'programs';
+    if (tweaks.some(t => t.id === itemId)) return 'tweaks';
+    return 'optimizations';
   };
 
   const enabledCount = [...programs, ...tweaks, ...optimizations].filter(i => i.enabled).length;
