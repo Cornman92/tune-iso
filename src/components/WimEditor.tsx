@@ -151,7 +151,7 @@ interface WimEditorProps {
 
 type WimTab = 'editions' | 'features' | 'packages' | 'compression' | 'files';
 
-const WimEditor = ({ isMounted, exportFeaturesRef }: WimEditorProps) => {
+const WimEditor = ({ isMounted, exportFeaturesRef, importFeaturesRef }: WimEditorProps) => {
   const [activeTab, setActiveTab] = useState<WimTab>('editions');
 
   // Edition state
