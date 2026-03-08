@@ -1,4 +1,4 @@
-import { useState, useEffect, MutableRefObject } from 'react';
+import { useState, useEffect, useRef, useCallback, MutableRefObject } from 'react';
 import { Package, Wrench, Zap, ChevronDown, ChevronRight, Plus, Check, Search, X, Shield, AlertTriangle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -47,6 +47,19 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showPresets, setShowPresets] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Ctrl+K shortcut to focus search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   useEffect(() => {
     if (exportRef) exportRef.current = () => ({
@@ -167,6 +180,9 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
   }
 
   const grouped = getGroupedItems();
+  const searchResultCount = isGlobalSearch
+    ? Object.values(grouped).reduce((sum, items) => sum + items.length, 0)
+    : 0;
 
   return (
     <div className="space-y-4">
@@ -226,19 +242,32 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
+              ref={searchInputRef}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={isGlobalSearch ? `Searching all categories...` : `Search ${activeTab}...`}
-              className="pl-9 pr-8 h-9 font-mono text-sm bg-muted/30"
+              placeholder={isGlobalSearch ? `Searching all categories...` : `Search ${activeTab}... (Ctrl+K)`}
+              className="pl-9 pr-24 h-9 font-mono text-sm bg-muted/30"
             />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+              {isGlobalSearch && (
+                <Badge variant="secondary" className="text-[10px] font-mono h-5 px-1.5">
+                  {searchResultCount} found
+                </Badge>
+              )}
+              {!searchQuery && (
+                <kbd className="hidden sm:inline-flex h-5 items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground">
+                  ⌘K
+                </kbd>
+              )}
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
