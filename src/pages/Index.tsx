@@ -118,10 +118,49 @@ const Index = () => {
     URL.revokeObjectURL(url);
   }, [handleExport]);
 
+  // Undo/Redo system
+  const getSnapshot = useCallback((): ProjectData => {
+    return {
+      version: '1.3.0',
+      name: selectedFile?.name?.replace('.iso', '') || 'iso-forge-project',
+      exportedAt: new Date().toISOString(),
+      customizations: exportCustomizations.current(),
+      drivers: exportDrivers.current(),
+      updates: exportUpdates.current(),
+      unattend: exportUnattend.current(),
+      buildSteps,
+    };
+  }, [selectedFile, buildSteps]);
+
+  const applySnapshot = useCallback((snapshot: ProjectData) => {
+    if (snapshot.customizations) importCustomizations.current(snapshot.customizations);
+    if (snapshot.drivers) importDrivers.current(snapshot.drivers);
+    if (snapshot.updates) importUpdates.current(snapshot.updates);
+    if (snapshot.unattend) importUnattend.current(snapshot.unattend);
+    if (snapshot.buildSteps) setBuildSteps(snapshot.buildSteps);
+  }, []);
+
+  const { pushState, undo, redo } = useUndoRedo<ProjectData>({
+    getSnapshot,
+    applySnapshot,
+  });
+
+  // Push state on meaningful changes (debounced via counts)
+  const prevCounts = useRef('');
+  useEffect(() => {
+    const key = `${customizationCount}-${driverCount}-${registryCount}-${serviceCount}-${componentCount}-${updateCount}-${unattendCount}-${buildSteps.map(s => `${s.id}:${s.enabled}`).join(',')}`;
+    if (prevCounts.current && prevCounts.current !== key) {
+      pushState();
+    }
+    prevCounts.current = key;
+  }, [customizationCount, driverCount, registryCount, serviceCount, componentCount, updateCount, unattendCount, buildSteps, pushState]);
+
   useKeyboardShortcuts({
     onExportProject: handleExportProjectKb,
     onExportScript: useCallback(() => exportScriptRef.current(), []),
     onToggleTheme: useCallback(() => themeToggleRef.current(), []),
+    onUndo: undo,
+    onRedo: redo,
   });
 
   return (
