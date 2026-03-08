@@ -27,6 +27,11 @@ import ThemeToggle from '@/components/ThemeToggle';
 import PowerShellExport from '@/components/PowerShellExport';
 import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
 import LiveScriptPreview from '@/components/LiveScriptPreview';
+import DependencyWarnings from '@/components/DependencyWarnings';
+import IsoSizeEstimator from '@/components/IsoSizeEstimator';
+import BuildDiffView from '@/components/BuildDiffView';
+import MarkdownExport from '@/components/MarkdownExport';
+import ScriptValidator from '@/components/ScriptValidator';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import useUndoRedo from '@/hooks/useUndoRedo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -222,6 +227,16 @@ const Index = () => {
                 importFeatures={importFeatures}
                 isMounted={isMounted}
               />
+              <MarkdownExport
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportUpdates={exportUpdates}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+                isMounted={isMounted}
+              />
               <div className="h-6 w-px bg-border" />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <div className="h-6 w-px bg-border" />
@@ -399,6 +414,44 @@ const Index = () => {
                 registryCount={registryCount}
                 serviceCount={serviceCount}
                 componentCount={componentCount}
+                updateCount={updateCount}
+                unattendCount={unattendCount}
+              />
+            </div>
+
+            <div className="mt-6">
+              <IsoSizeEstimator
+                removedComponents={exportComponents.current()}
+                driverCount={driverCount}
+                updateCount={updateCount}
+              />
+            </div>
+
+            <div className="mt-6">
+              <DependencyWarnings
+                disabledServices={exportServices.current()}
+                removedComponents={exportComponents.current()}
+              />
+            </div>
+
+            <div className="mt-6">
+              <ScriptValidator
+                customizations={exportCustomizations.current()}
+                disabledServices={exportServices.current()}
+                removedComponents={exportComponents.current()}
+                registryEntries={exportRegistry.current()}
+                driverCount={driverCount}
+                isMounted={isMounted}
+              />
+            </div>
+
+            <div className="mt-6">
+              <BuildDiffView
+                customizations={exportCustomizations.current()}
+                disabledServices={exportServices.current()}
+                removedComponents={exportComponents.current()}
+                registryEntries={exportRegistry.current()}
+                driverCount={driverCount}
                 updateCount={updateCount}
                 unattendCount={unattendCount}
               />
