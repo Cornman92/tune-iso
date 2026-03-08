@@ -188,6 +188,7 @@ const Index = () => {
                 exportServices={exportServices}
                 exportComponents={exportComponents}
                 exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
                 isMounted={isMounted}
                 exportScriptRef={exportScriptRef}
                 buildSteps={buildSteps}
