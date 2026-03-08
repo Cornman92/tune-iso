@@ -1,6 +1,7 @@
 import { useCallback, MutableRefObject, useState } from 'react';
 import { FileDown, ChevronDown } from 'lucide-react';
 import type { BuildStep } from '@/components/BuildStepReorder';
+import type { WimFeatureExport } from '@/components/WimEditor';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
@@ -22,6 +23,7 @@ interface PowerShellExportProps {
   exportServices: MutableRefObject<() => string[]>;
   exportComponents: MutableRefObject<() => string[]>;
   exportRegistry: MutableRefObject<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>;
+  exportFeatures: MutableRefObject<() => WimFeatureExport[]>;
   isMounted: boolean;
   exportScriptRef?: MutableRefObject<() => void>;
   buildSteps: BuildStep[];
@@ -34,6 +36,7 @@ const PowerShellExport = ({
   exportServices,
   exportComponents,
   exportRegistry,
+  exportFeatures,
   isMounted,
   exportScriptRef,
   buildSteps,
@@ -46,6 +49,7 @@ const PowerShellExport = ({
     const services = exportServices.current();
     const components = exportComponents.current();
     const registry = exportRegistry.current();
+    const features = exportFeatures.current();
 
     const lines: string[] = [];
     const add = (s: string) => lines.push(s);
@@ -91,6 +95,28 @@ const PowerShellExport = ({
     let stepNum = 2;
 
     const sectionGenerators: Record<string, () => void> = {
+      features: () => {
+        if (features.length === 0) return;
+        const toEnable = features.filter(f => f.enabled);
+        const toDisable = features.filter(f => !f.enabled);
+        add('# ══════════════════════════════════════════════════════════');
+        add(`# STEP ${stepNum++}: Windows Features (${toEnable.length} enable, ${toDisable.length} disable)`);
+        add('# ══════════════════════════════════════════════════════════');
+        add('Write-Step "Configuring Windows Features"');
+        if (toEnable.length > 0) {
+          toEnable.forEach(f => {
+            add(`Write-Host "  Enabling: ${escapePS(f.name)}" -ForegroundColor Green`);
+            add(`DISM /Image:$MountDir /Enable-Feature /FeatureName:"${escapePS(f.id)}" /All /NoRestart`);
+          });
+        }
+        if (toDisable.length > 0) {
+          toDisable.forEach(f => {
+            add(`Write-Host "  Disabling: ${escapePS(f.name)}" -ForegroundColor Yellow`);
+            add(`DISM /Image:$MountDir /Disable-Feature /FeatureName:"${escapePS(f.id)}" /NoRestart`);
+          });
+        }
+        blank();
+      },
       components: () => {
         if (components.length === 0) return;
         add('# ══════════════════════════════════════════════════════════');
@@ -229,7 +255,7 @@ const PowerShellExport = ({
     add('Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Green');
 
     return lines.join('\r\n');
-  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, buildSteps]);
+  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, exportFeatures, buildSteps]);
 
   const generateBatch = useCallback((): string => {
     const customizations = exportCustomizations.current();
@@ -238,6 +264,7 @@ const PowerShellExport = ({
     const services = exportServices.current();
     const components = exportComponents.current();
     const registry = exportRegistry.current();
+    const features = exportFeatures.current();
 
     const lines: string[] = [];
     const add = (s: string) => lines.push(s);
@@ -279,6 +306,23 @@ const PowerShellExport = ({
     const enabledSteps = buildSteps.filter(s => s.enabled);
 
     const batSections: Record<string, () => void> = {
+      features: () => {
+        if (features.length === 0) return;
+        const toEnable = features.filter(f => f.enabled);
+        const toDisable = features.filter(f => !f.enabled);
+        add('echo.');
+        add(`echo ══► Configuring Windows Features (${toEnable.length} enable, ${toDisable.length} disable)`);
+        add('echo ────────────────────────────────────────────────────');
+        toEnable.forEach(f => {
+          add(`echo   Enabling: ${escapeBatch(f.name)}`);
+          add(`DISM /Image:%MountDir% /Enable-Feature /FeatureName:"${escapeBatch(f.id)}" /All /NoRestart`);
+        });
+        toDisable.forEach(f => {
+          add(`echo   Disabling: ${escapeBatch(f.name)}`);
+          add(`DISM /Image:%MountDir% /Disable-Feature /FeatureName:"${escapeBatch(f.id)}" /NoRestart`);
+        });
+        blank();
+      },
       components: () => {
         if (components.length === 0) return;
         add('echo.');
@@ -390,7 +434,7 @@ const PowerShellExport = ({
     add('pause');
 
     return lines.join('\r\n');
-  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, buildSteps]);
+  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, exportFeatures, buildSteps]);
 
   const downloadFile = (content: string, filename: string) => {
     const blob = new Blob([content], { type: 'text/plain' });

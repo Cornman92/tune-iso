@@ -10,6 +10,7 @@ export interface BuildStep {
 }
 
 const DEFAULT_STEPS: BuildStep[] = [
+  { id: 'features', label: 'Windows Features', enabled: true },
   { id: 'components', label: 'Remove Components', enabled: true },
   { id: 'services', label: 'Disable Services', enabled: true },
   { id: 'registry', label: 'Registry Tweaks', enabled: true },

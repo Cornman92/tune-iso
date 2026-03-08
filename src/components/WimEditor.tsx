@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, MutableRefObject } from 'react';
 import { Layers, Check, Info, Package, FileUp, Settings, FolderPlus, Trash2, Plus, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -137,13 +137,20 @@ interface InjectedFile {
   type: 'file' | 'folder';
 }
 
+export interface WimFeatureExport {
+  id: string;
+  name: string;
+  enabled: boolean;
+}
+
 interface WimEditorProps {
   isMounted: boolean;
+  exportFeaturesRef?: MutableRefObject<() => WimFeatureExport[]>;
 }
 
 type WimTab = 'editions' | 'features' | 'packages' | 'compression' | 'files';
 
-const WimEditor = ({ isMounted }: WimEditorProps) => {
+const WimEditor = ({ isMounted, exportFeaturesRef }: WimEditorProps) => {
   const [activeTab, setActiveTab] = useState<WimTab>('editions');
 
   // Edition state
@@ -154,6 +161,14 @@ const WimEditor = ({ isMounted }: WimEditorProps) => {
   const [features, setFeatures] = useState<WinFeature[]>(DEFAULT_FEATURES);
   const [featureSearch, setFeatureSearch] = useState('');
 
+  // Export features ref
+  useEffect(() => {
+    if (exportFeaturesRef) {
+      exportFeaturesRef.current = () => features
+        .filter(f => f.enabled !== DEFAULT_FEATURES.find(d => d.id === f.id)?.enabled)
+        .map(f => ({ id: f.id, name: f.name, enabled: f.enabled }));
+    }
+  }, [features, exportFeaturesRef]);
   // Package state
   const [packages, setPackages] = useState<WimPackage[]>([]);
   const [pkgName, setPkgName] = useState('');

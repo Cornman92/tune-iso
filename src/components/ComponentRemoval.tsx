@@ -191,7 +191,11 @@ const ComponentRemoval = ({ isMounted, onCountChange, exportRef }: ComponentRemo
   }, [selected.size, onCountChange]);
 
   useEffect(() => {
-    if (exportRef) exportRef.current = () => [...selected];
+    if (exportRef) exportRef.current = () => {
+      return COMPONENTS
+        .filter(c => selected.has(c.id))
+        .map(c => c.packageName || c.id);
+    };
   }, [selected, exportRef]);
 
   const toggle = (id: string) => {

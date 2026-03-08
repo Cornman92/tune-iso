@@ -10,7 +10,7 @@ import UnattendGenerator from '@/components/UnattendGenerator';
 import WindowsUpdate from '@/components/WindowsUpdate';
 import ProjectManager, { type ProjectData } from '@/components/ProjectManager';
 import TemplateManager from '@/components/TemplateManager';
-import WimEditor from '@/components/WimEditor';
+import WimEditor, { type WimFeatureExport } from '@/components/WimEditor';
 import RegistryEditor from '@/components/RegistryEditor';
 import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
@@ -55,6 +55,7 @@ const Index = () => {
   const exportServices = useRef<() => string[]>(() => []);
   const exportComponents = useRef<() => string[]>(() => []);
   const exportRegistry = useRef<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>(() => []);
+  const exportFeatures = useRef<() => WimFeatureExport[]>(() => []);
 
   // Scroll spy
   useEffect(() => {
@@ -187,6 +188,7 @@ const Index = () => {
                 exportServices={exportServices}
                 exportComponents={exportComponents}
                 exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
                 isMounted={isMounted}
                 exportScriptRef={exportScriptRef}
                 buildSteps={buildSteps}
@@ -257,7 +259,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">3</span>
                 WIM Edition Manager
               </h2>
-              <WimEditor isMounted={isMounted} />
+              <WimEditor isMounted={isMounted} exportFeaturesRef={exportFeatures} />
             </section>
 
             {/* 3b. ISO Metadata */}
