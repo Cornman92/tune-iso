@@ -23,7 +23,7 @@ interface RegistryEntry {
 
 const HIVES = ['HKLM\\SOFTWARE', 'HKLM\\SYSTEM', 'HKCU\\SOFTWARE', 'HKCU\\Control Panel', 'HKLM\\DEFAULT', 'HKU\\.DEFAULT'];
 
-const PRESET_ENTRIES: RegistryEntry[] = [
+export const PRESET_ENTRIES: RegistryEntry[] = [
   { id: 'p1', hive: 'HKLM\\SOFTWARE', keyPath: 'Microsoft\\Windows\\CurrentVersion\\Policies\\System', valueName: 'EnableLUA', valueType: 'REG_DWORD', valueData: '0', description: 'Disable UAC prompts' },
   { id: 'p2', hive: 'HKLM\\SOFTWARE', keyPath: 'Policies\\Microsoft\\Windows\\WindowsUpdate\\AU', valueName: 'NoAutoUpdate', valueType: 'REG_DWORD', valueData: '1', description: 'Disable auto Windows Update' },
   { id: 'p3', hive: 'HKLM\\SOFTWARE', keyPath: 'Policies\\Microsoft\\Windows Defender', valueName: 'DisableAntiSpyware', valueType: 'REG_DWORD', valueData: '1', description: 'Disable Windows Defender' },

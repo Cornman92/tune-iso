@@ -16,7 +16,7 @@ interface ServiceEntry {
   defaultEnabled: boolean;
 }
 
-const SERVICES: ServiceEntry[] = [
+export const SERVICES: ServiceEntry[] = [
   // Telemetry - Safe
   { name: 'DiagTrack', displayName: 'Connected User Experiences and Telemetry', description: 'Windows telemetry data collection', risk: 'safe', category: 'Telemetry', defaultEnabled: true },
   { name: 'dmwappushservice', displayName: 'WAP Push Message Routing', description: 'Push messaging for telemetry', risk: 'safe', category: 'Telemetry', defaultEnabled: true },

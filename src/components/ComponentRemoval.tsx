@@ -17,7 +17,7 @@ interface ComponentEntry {
   packageName?: string;
 }
 
-const COMPONENTS: ComponentEntry[] = [
+export const COMPONENTS: ComponentEntry[] = [
   // Apps
   { id: 'cortana', name: 'Cortana', description: 'Voice assistant', size: '~80 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.549981C3F5F10' },
   { id: 'bing-weather', name: 'Weather', description: 'MSN Weather app', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.BingWeather' },
