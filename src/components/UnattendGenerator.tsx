@@ -294,10 +294,10 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
       lines.push('    <component name="Microsoft-Windows-Shell-Setup">');
 
       const compName = user.find(o => o.id === 'computer-name');
-      if (compName) lines.push(`      <ComputerName>${compName.value}</ComputerName>`);
+      if (compName) lines.push(`      <ComputerName>${escapeXml(compName.value)}</ComputerName>`);
 
       const tz = options.find(o => o.id === 'timezone' && o.enabled);
-      if (tz) lines.push(`      <TimeZone>${tz.value}</TimeZone>`);
+      if (tz) lines.push(`      <TimeZone>${escapeXml(tz.value)}</TimeZone>`);
 
       // OOBE
       if (oobe.length > 0) {
