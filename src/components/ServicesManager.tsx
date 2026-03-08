@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, MutableRefObject } from 'react';
 import { Cog, Search, Shield, AlertTriangle, XOctagon, ToggleLeft, ToggleRight, Filter, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
