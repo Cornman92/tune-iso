@@ -25,6 +25,7 @@ import SummaryDashboard from '@/components/SummaryDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
 import PowerShellExport from '@/components/PowerShellExport';
 import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
+import LiveScriptPreview from '@/components/LiveScriptPreview';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import useUndoRedo from '@/hooks/useUndoRedo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
