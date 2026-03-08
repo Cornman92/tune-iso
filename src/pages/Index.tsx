@@ -15,7 +15,7 @@ import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
 import SectionSidebar from '@/components/SectionSidebar';
 
-const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'updates', 'unattend', 'build'];
+const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
