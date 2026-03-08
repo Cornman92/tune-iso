@@ -25,6 +25,7 @@ import SummaryDashboard from '@/components/SummaryDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
 import PowerShellExport from '@/components/PowerShellExport';
 import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
+import LiveScriptPreview from '@/components/LiveScriptPreview';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import useUndoRedo from '@/hooks/useUndoRedo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -161,6 +162,8 @@ const Index = () => {
     }
     prevCounts.current = key;
   }, [customizationCount, driverCount, registryCount, serviceCount, componentCount, updateCount, unattendCount, buildSteps, pushState]);
+
+  const scriptChangeTrigger = `${customizationCount}-${driverCount}-${registryCount}-${serviceCount}-${componentCount}-${updateCount}-${buildSteps.map(s => `${s.id}:${s.enabled}`).join(',')}`;
 
   useKeyboardShortcuts({
     onExportProject: handleExportProjectKb,
@@ -390,6 +393,20 @@ const Index = () => {
 
             <div className="mt-6">
               <BuildStepReorder steps={buildSteps} onReorder={setBuildSteps} />
+            </div>
+
+            <div className="mt-6">
+              <LiveScriptPreview
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportUpdates={exportUpdates}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+                buildSteps={buildSteps}
+                changeTrigger={scriptChangeTrigger}
+              />
             </div>
 
             <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
