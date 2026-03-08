@@ -216,7 +216,8 @@ const Index = () => {
                     <Keyboard className="w-3.5 h-3.5 text-muted-foreground" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs font-mono space-y-1 p-3">
+                 <TooltipContent side="bottom" className="text-xs font-mono space-y-1 p-3">
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+K</kbd> Global Search</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+S</kbd> Export Project</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+E</kbd> Export Script</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+D</kbd> Toggle Theme</p>
