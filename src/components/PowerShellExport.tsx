@@ -285,8 +285,8 @@ const PowerShellExport = ({
         add(`echo ══► Removing Components (${components.length} packages)`);
         add('echo ────────────────────────────────────────────────────');
         components.forEach(c => {
-          add(`echo   Removing: ${c}`);
-          add(`FOR /F "tokens=3 delims=: " %%P IN ('DISM /Image:%MountDir% /Get-ProvisionedAppxPackages ^| findstr /i "${c}"') DO (`);
+          add(`echo   Removing: ${escapeBatch(c)}`);
+          add(`FOR /F "tokens=3 delims=: " %%P IN ('DISM /Image:%MountDir% /Get-ProvisionedAppxPackages ^| findstr /i "${escapeBatch(c)}"') DO (`);
           add(`    DISM /Image:%MountDir% /Remove-ProvisionedAppxPackage /PackageName:%%P`);
           add(')');
         });
