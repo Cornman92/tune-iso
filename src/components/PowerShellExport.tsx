@@ -120,7 +120,7 @@ const PowerShellExport = ({
         add('# ══════════════════════════════════════════════════════════');
         add('Write-Step "Disabling Windows Services"');
         add('$servicesToDisable = @(');
-        services.forEach(s => add(`    "${s}"`));
+        services.forEach(s => add(`    "${escapePS(s)}"`));
         add(')');
         blank();
         add('foreach ($svc in $servicesToDisable) {');
