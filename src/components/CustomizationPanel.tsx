@@ -56,6 +56,11 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
         e.preventDefault();
         searchInputRef.current?.focus();
       }
+      if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
+        e.preventDefault();
+        setSearchQuery('');
+        searchInputRef.current?.blur();
+      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
