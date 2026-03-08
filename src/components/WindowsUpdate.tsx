@@ -76,7 +76,7 @@ const categoryLabels: Record<string, string> = {
   custom: 'MSU',
 };
 
-const WindowsUpdate = ({ isMounted }: WindowsUpdateProps) => {
+const WindowsUpdate = ({ isMounted, exportRef, importRef }: WindowsUpdateProps) => {
   const [updates, setUpdates] = useState<KBUpdate[]>(
     catalogUpdates.map((u, i) => ({
       ...u,
@@ -90,6 +90,28 @@ const WindowsUpdate = ({ isMounted }: WindowsUpdateProps) => {
   const [manualKb, setManualKb] = useState('');
   const [manualPath, setManualPath] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
+
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => updates.filter(u => u.enabled).map(u => ({
+      kb: u.kb, title: u.title, category: u.category, source: u.source, filePath: u.filePath,
+    }));
+  }, [updates, exportRef]);
+
+  useEffect(() => {
+    if (importRef) importRef.current = (data) => {
+      setUpdates(prev => {
+        const updated = prev.map(u => ({ ...u, enabled: data.some(d => d.kb === u.kb) }));
+        const newKbs = data.filter(d => !prev.some(u => u.kb === d.kb));
+        const newEntries: KBUpdate[] = newKbs.map((d, i) => ({
+          id: `wu-import-${Date.now()}-${i}`,
+          kb: d.kb, title: d.title, description: 'Imported from project',
+          date: '', size: 'Unknown', category: d.category as any,
+          enabled: true, source: d.source as any, filePath: d.filePath,
+        }));
+        return [...updated, ...newEntries];
+      });
+    };
+  }, [importRef]);
 
   const toggleUpdate = (id: string) => {
     setUpdates(prev => prev.map(u => u.id === id ? { ...u, enabled: !u.enabled } : u));
