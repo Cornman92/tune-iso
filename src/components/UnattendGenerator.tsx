@@ -354,8 +354,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
           else if (o.id === 'cmd-custom' && o.value) cmd = o.value;
           if (cmd) {
             lines.push(`        <SynchronousCommand wcm:action="add"><Order>${order}</Order>`);
-            lines.push(`          <CommandLine>cmd /c ${cmd}</CommandLine>`);
-            lines.push(`          <Description>${o.label}</Description></SynchronousCommand>`);
+            lines.push(`          <CommandLine>cmd /c ${escapeXml(cmd)}</CommandLine>`);
+            lines.push(`          <Description>${escapeXml(o.label)}</Description></SynchronousCommand>`);
             order++;
           }
         });

@@ -116,17 +116,18 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef }: RegistryEditorP
     Object.entries(grouped).forEach(([key, vals]) => {
       lines.push(`[${key}]`);
       vals.forEach(v => {
+        const safeName = escapeRegValue(v.valueName);
         if (v.valueType === 'REG_SZ' || v.valueType === 'REG_EXPAND_SZ') {
-          lines.push(`"${v.valueName}"="${v.valueData}"`);
+          lines.push(`"${safeName}"="${escapeRegValue(v.valueData)}"`);
         } else if (v.valueType === 'REG_DWORD') {
           const hex = parseInt(v.valueData).toString(16).padStart(8, '0');
-          lines.push(`"${v.valueName}"=dword:${hex}`);
+          lines.push(`"${safeName}"=dword:${hex}`);
         } else if (v.valueType === 'REG_QWORD') {
-          lines.push(`"${v.valueName}"=hex(b):${v.valueData}`);
+          lines.push(`"${safeName}"=hex(b):${v.valueData}`);
         } else if (v.valueType === 'REG_BINARY') {
-          lines.push(`"${v.valueName}"=hex:${v.valueData}`);
+          lines.push(`"${safeName}"=hex:${v.valueData}`);
         } else if (v.valueType === 'REG_MULTI_SZ') {
-          lines.push(`"${v.valueName}"=hex(7):${v.valueData}`);
+          lines.push(`"${safeName}"=hex(7):${v.valueData}`);
         }
       });
       lines.push('');

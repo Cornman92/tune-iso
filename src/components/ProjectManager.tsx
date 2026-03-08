@@ -76,13 +76,18 @@ const ProjectManager = ({ onExport, onImport }: ProjectManagerProps) => {
     reader.onload = (ev) => {
       try {
         const text = ev.target?.result as string;
-        const data = JSON.parse(text) as ProjectData;
+        const raw = JSON.parse(text);
 
-        if (!data.version || !data.customizations) {
-          toast.error('Invalid project file format');
+        const result = projectDataSchema.safeParse(raw);
+        if (!result.success) {
+          const firstError = result.error.issues[0];
+          toast.error('Invalid project file', {
+            description: `${firstError.path.join('.')}: ${firstError.message}`,
+          });
           return;
         }
 
+        const data = result.data as ProjectData;
         onImport(data);
         setLastAction('import');
         toast.success(`Loaded project: ${data.name || 'Untitled'}`, {
