@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Package, Wrench, Zap, Palette, ChevronDown, ChevronRight, Plus, Check } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Package, Wrench, Zap, Palette, ChevronDown, ChevronRight, Plus, Check, Search, X } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 
 interface CustomizationItem {
   id: string;
@@ -56,6 +57,7 @@ const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProp
   const [tweaks, setTweaks] = useState(defaultTweaks);
   const [optimizations, setOptimizations] = useState(defaultOptimizations);
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['browsers', 'privacy', 'performance']);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleItem = (id: string, type: 'programs' | 'tweaks' | 'optimizations') => {
     const setter = type === 'programs' ? setPrograms : type === 'tweaks' ? setTweaks : setOptimizations;
@@ -85,7 +87,15 @@ const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProp
 
   const getGroupedItems = () => {
     const items = getItems();
-    return items.reduce((acc, item) => {
+    const query = searchQuery.toLowerCase().trim();
+    const filtered = query
+      ? items.filter(item =>
+          item.name.toLowerCase().includes(query) ||
+          item.description.toLowerCase().includes(query) ||
+          item.category.toLowerCase().includes(query)
+        )
+      : items;
+    return filtered.reduce((acc, item) => {
       if (!acc[item.category]) acc[item.category] = [];
       acc[item.category].push(item);
       return acc;
@@ -144,64 +154,92 @@ const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProp
         })}
       </div>
 
+      {/* Search */}
+      <div className="px-4 pt-3 pb-1">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search customizations..."
+            className="pl-9 pr-8 h-9 font-mono text-sm bg-muted/30"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Content */}
       <div className="p-4 max-h-[400px] overflow-y-auto">
-        {Object.entries(getGroupedItems()).map(([category, items]) => (
-          <div key={category} className="mb-4">
-            <button
-              onClick={() => toggleCategory(category)}
-              className="flex items-center gap-2 mb-2 w-full text-left group"
-            >
-              {expandedCategories.includes(category) ? (
-                <ChevronDown className="w-4 h-4 text-muted-foreground" />
-              ) : (
-                <ChevronRight className="w-4 h-4 text-muted-foreground" />
-              )}
-              <span className="text-sm font-mono text-muted-foreground uppercase tracking-wider group-hover:text-foreground transition-colors">
-                {category}
-              </span>
-              <div className="flex-1 h-px bg-border" />
-            </button>
-            
-            {expandedCategories.includes(category) && (
-              <div className="space-y-2 ml-6">
-                {items.map(item => (
-                  <div
-                    key={item.id}
-                    className={`
-                      flex items-center justify-between p-3 rounded-lg transition-all
-                      ${item.enabled 
-                        ? 'bg-primary/10 border border-primary/30' 
-                        : 'bg-muted/30 hover:bg-muted/50'
-                      }
-                    `}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`
-                        w-8 h-8 rounded-lg flex items-center justify-center
-                        ${item.enabled ? 'bg-primary/20' : 'bg-muted'}
-                      `}>
-                        {item.enabled ? (
-                          <Check className="w-4 h-4 text-primary" />
-                        ) : (
-                          <Plus className="w-4 h-4 text-muted-foreground" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm text-foreground">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">{item.description}</p>
-                      </div>
-                    </div>
-                    <Switch
-                      checked={item.enabled}
-                      onCheckedChange={() => toggleItem(item.id, activeTab as 'programs' | 'tweaks' | 'optimizations')}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+        {Object.keys(getGroupedItems()).length === 0 && searchQuery ? (
+          <div className="py-8 text-center">
+            <Search className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">No results for "{searchQuery}"</p>
           </div>
-        ))}
+        ) : (
+          Object.entries(getGroupedItems()).map(([category, items]) => (
+            <div key={category} className="mb-4">
+              <button
+                onClick={() => toggleCategory(category)}
+                className="flex items-center gap-2 mb-2 w-full text-left group"
+              >
+                {(searchQuery || expandedCategories.includes(category)) ? (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                )}
+                <span className="text-sm font-mono text-muted-foreground uppercase tracking-wider group-hover:text-foreground transition-colors">
+                  {category}
+                </span>
+                <div className="flex-1 h-px bg-border" />
+              </button>
+              
+              {(searchQuery || expandedCategories.includes(category)) && (
+                <div className="space-y-2 ml-6">
+                  {items.map(item => (
+                    <div
+                      key={item.id}
+                      className={`
+                        flex items-center justify-between p-3 rounded-lg transition-all
+                        ${item.enabled 
+                          ? 'bg-primary/10 border border-primary/30' 
+                          : 'bg-muted/30 hover:bg-muted/50'
+                        }
+                      `}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`
+                          w-8 h-8 rounded-lg flex items-center justify-center
+                          ${item.enabled ? 'bg-primary/20' : 'bg-muted'}
+                        `}>
+                          {item.enabled ? (
+                            <Check className="w-4 h-4 text-primary" />
+                          ) : (
+                            <Plus className="w-4 h-4 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm text-foreground">{item.name}</p>
+                          <p className="text-xs text-muted-foreground">{item.description}</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={item.enabled}
+                        onCheckedChange={() => toggleItem(item.id, activeTab as 'programs' | 'tweaks' | 'optimizations')}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
 
       {/* Footer */}
