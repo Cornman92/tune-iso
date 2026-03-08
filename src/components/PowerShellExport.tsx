@@ -312,8 +312,8 @@ const PowerShellExport = ({
         add('REG LOAD "HKLM\\OFFLINE_SYSTEM" "%MountDir%\\Windows\\System32\\config\\SYSTEM"');
         add('REG LOAD "HKLM\\OFFLINE_DEFAULT" "%MountDir%\\Windows\\System32\\config\\DEFAULT"');
         registry.forEach(r => {
-          add(`echo   Setting: ${r.valueName}`);
-          add(`REG ADD "${r.hive}\\${r.keyPath}" /v "${r.valueName}" /t ${r.valueType} /d "${r.valueData}" /f >nul`);
+          add(`echo   Setting: ${escapeBatch(r.valueName)}`);
+          add(`REG ADD "${escapeBatch(r.hive)}\\${escapeBatch(r.keyPath)}" /v "${escapeBatch(r.valueName)}" /t ${r.valueType} /d "${escapeBatch(r.valueData)}" /f >nul`);
         });
         add('REG UNLOAD "HKLM\\OFFLINE_SOFTWARE"');
         add('REG UNLOAD "HKLM\\OFFLINE_SYSTEM"');
