@@ -275,11 +275,11 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
                       <div className="flex-1 h-px bg-border" />
                     </button>
                     {isExpanded && (
-                      <Button
+                        <Button
                         variant="ghost"
                         size="sm"
                         className="h-6 text-[10px] font-mono px-2"
-                        onClick={() => toggleAllInCategory(category, activeTab as any)}
+                        onClick={() => toggleAllInCategory(category, isGlobalSearch ? getItemType(items[0].id) : activeTab as any)}
                       >
                         {enabledInCat === items.length ? 'None' : 'All'}
                       </Button>
