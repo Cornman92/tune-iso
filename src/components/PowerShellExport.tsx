@@ -4,6 +4,7 @@ import type { BuildStep } from '@/components/BuildStepReorder';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import { escapePS, escapeBatch } from '@/lib/sanitize';
 
 interface ExportData {
   customizations: { programs: string[]; tweaks: string[]; optimizations: string[] };
@@ -97,7 +98,7 @@ const PowerShellExport = ({
         add('# ══════════════════════════════════════════════════════════');
         add('Write-Step "Removing Provisioned App Packages"');
         add('$packages = @(');
-        components.forEach(c => add(`    "${c}"`));
+        components.forEach(c => add(`    "${escapePS(c)}"`));
         add(')');
         blank();
         add('$installed = (DISM /Image:$MountDir /Get-ProvisionedAppxPackages | Select-String "PackageName" | ForEach-Object { ($_ -split ":")[1].Trim() })');
@@ -119,7 +120,7 @@ const PowerShellExport = ({
         add('# ══════════════════════════════════════════════════════════');
         add('Write-Step "Disabling Windows Services"');
         add('$servicesToDisable = @(');
-        services.forEach(s => add(`    "${s}"`));
+        services.forEach(s => add(`    "${escapePS(s)}"`));
         add(')');
         blank();
         add('foreach ($svc in $servicesToDisable) {');
@@ -140,8 +141,8 @@ const PowerShellExport = ({
         blank();
         registry.forEach(r => {
           const regType = r.valueType === 'REG_SZ' ? 'REG_SZ' : r.valueType;
-          add(`Write-Host "  Setting: ${r.valueName}" -ForegroundColor Yellow`);
-          add(`REG ADD "${r.hive}\\${r.keyPath}" /v "${r.valueName}" /t ${regType} /d "${r.valueData}" /f | Out-Null`);
+          add(`Write-Host "  Setting: ${escapePS(r.valueName)}" -ForegroundColor Yellow`);
+          add(`REG ADD "${escapePS(r.hive)}\\${escapePS(r.keyPath)}" /v "${escapePS(r.valueName)}" /t ${regType} /d "${escapePS(r.valueData)}" /f | Out-Null`);
         });
         blank();
         add('REG UNLOAD "HKLM\\OFFLINE_SOFTWARE"');
@@ -157,11 +158,11 @@ const PowerShellExport = ({
         add('Write-Step "Injecting Drivers"');
         drivers.forEach(d => {
           if (d.type === 'folder') {
-            add(`Write-Host "  Adding folder: ${d.path}" -ForegroundColor Yellow`);
-            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${d.path}" /Recurse`);
+            add(`Write-Host "  Adding folder: ${escapePS(d.path)}" -ForegroundColor Yellow`);
+            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${escapePS(d.path)}" /Recurse`);
           } else {
-            add(`Write-Host "  Adding driver: ${d.name}" -ForegroundColor Yellow`);
-            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${d.path}"`);
+            add(`Write-Host "  Adding driver: ${escapePS(d.name)}" -ForegroundColor Yellow`);
+            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${escapePS(d.path)}"`);
           }
         });
         blank();
@@ -175,9 +176,9 @@ const PowerShellExport = ({
         const order = ['servicing', 'cumulative', 'dotnet', 'security', 'driver', 'feature', 'custom'];
         const sorted = [...updates].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category));
         sorted.forEach(u => {
-          const path = u.filePath || `$UpdateDir\\${u.kb}.msu`;
-          add(`Write-Host "  Applying: ${u.kb} - ${u.title}" -ForegroundColor Yellow`);
-          add(`DISM /Image:$MountDir /Add-Package /PackagePath:"${path}"`);
+          const path = u.filePath || `$UpdateDir\\${escapePS(u.kb)}.msu`;
+          add(`Write-Host "  Applying: ${escapePS(u.kb)} - ${escapePS(u.title)}" -ForegroundColor Yellow`);
+          add(`DISM /Image:$MountDir /Add-Package /PackagePath:"${u.filePath ? escapePS(u.filePath) : path}"`);
         });
         blank();
       },
@@ -189,15 +190,15 @@ const PowerShellExport = ({
         add('Write-Step "Applying Customizations"');
         if (customizations.programs.length > 0) {
           add(`Write-Host "  Programs to integrate: ${customizations.programs.length}" -ForegroundColor Yellow`);
-          customizations.programs.forEach(p => add(`Write-Host "    - ${p}" -ForegroundColor DarkGray`));
+          customizations.programs.forEach(p => add(`Write-Host "    - ${escapePS(p)}" -ForegroundColor DarkGray`));
         }
         if (customizations.tweaks.length > 0) {
           add(`Write-Host "  Tweaks enabled: ${customizations.tweaks.length}" -ForegroundColor Yellow`);
-          customizations.tweaks.forEach(t => add(`Write-Host "    - ${t}" -ForegroundColor DarkGray`));
+          customizations.tweaks.forEach(t => add(`Write-Host "    - ${escapePS(t)}" -ForegroundColor DarkGray`));
         }
         if (customizations.optimizations.length > 0) {
           add(`Write-Host "  Optimizations enabled: ${customizations.optimizations.length}" -ForegroundColor Yellow`);
-          customizations.optimizations.forEach(o => add(`Write-Host "    - ${o}" -ForegroundColor DarkGray`));
+          customizations.optimizations.forEach(o => add(`Write-Host "    - ${escapePS(o)}" -ForegroundColor DarkGray`));
         }
         blank();
       },
@@ -284,8 +285,8 @@ const PowerShellExport = ({
         add(`echo ══► Removing Components (${components.length} packages)`);
         add('echo ────────────────────────────────────────────────────');
         components.forEach(c => {
-          add(`echo   Removing: ${c}`);
-          add(`FOR /F "tokens=3 delims=: " %%P IN ('DISM /Image:%MountDir% /Get-ProvisionedAppxPackages ^| findstr /i "${c}"') DO (`);
+          add(`echo   Removing: ${escapeBatch(c)}`);
+          add(`FOR /F "tokens=3 delims=: " %%P IN ('DISM /Image:%MountDir% /Get-ProvisionedAppxPackages ^| findstr /i "${escapeBatch(c)}"') DO (`);
           add(`    DISM /Image:%MountDir% /Remove-ProvisionedAppxPackage /PackageName:%%P`);
           add(')');
         });
@@ -297,8 +298,8 @@ const PowerShellExport = ({
         add(`echo ══► Disabling Services (${services.length} services)`);
         add('echo ────────────────────────────────────────────────────');
         services.forEach(s => {
-          add(`echo   Disabling: ${s}`);
-          add(`REG ADD "HKLM\\SYSTEM\\ControlSet001\\Services\\${s}" /v Start /t REG_DWORD /d 4 /f >nul`);
+          add(`echo   Disabling: ${escapeBatch(s)}`);
+          add(`REG ADD "HKLM\\SYSTEM\\ControlSet001\\Services\\${escapeBatch(s)}" /v Start /t REG_DWORD /d 4 /f >nul`);
         });
         blank();
       },
@@ -311,8 +312,8 @@ const PowerShellExport = ({
         add('REG LOAD "HKLM\\OFFLINE_SYSTEM" "%MountDir%\\Windows\\System32\\config\\SYSTEM"');
         add('REG LOAD "HKLM\\OFFLINE_DEFAULT" "%MountDir%\\Windows\\System32\\config\\DEFAULT"');
         registry.forEach(r => {
-          add(`echo   Setting: ${r.valueName}`);
-          add(`REG ADD "${r.hive}\\${r.keyPath}" /v "${r.valueName}" /t ${r.valueType} /d "${r.valueData}" /f >nul`);
+          add(`echo   Setting: ${escapeBatch(r.valueName)}`);
+          add(`REG ADD "${escapeBatch(r.hive)}\\${escapeBatch(r.keyPath)}" /v "${escapeBatch(r.valueName)}" /t ${r.valueType} /d "${escapeBatch(r.valueData)}" /f >nul`);
         });
         add('REG UNLOAD "HKLM\\OFFLINE_SOFTWARE"');
         add('REG UNLOAD "HKLM\\OFFLINE_SYSTEM"');
@@ -326,11 +327,11 @@ const PowerShellExport = ({
         add('echo ────────────────────────────────────────────────────');
         drivers.forEach(d => {
           if (d.type === 'folder') {
-            add(`echo   Adding folder: ${d.path}`);
-            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${d.path}" /Recurse`);
+            add(`echo   Adding folder: ${escapeBatch(d.path)}`);
+            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${escapeBatch(d.path)}" /Recurse`);
           } else {
-            add(`echo   Adding driver: ${d.name}`);
-            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${d.path}"`);
+            add(`echo   Adding driver: ${escapeBatch(d.name)}`);
+            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${escapeBatch(d.path)}"`);
           }
         });
         blank();
@@ -343,9 +344,9 @@ const PowerShellExport = ({
         const order = ['servicing', 'cumulative', 'dotnet', 'security', 'driver', 'feature', 'custom'];
         const sorted = [...updates].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category));
         sorted.forEach(u => {
-          const path = u.filePath || `%UpdateDir%\\${u.kb}.msu`;
-          add(`echo   Applying: ${u.kb} - ${u.title}`);
-          add(`DISM /Image:%MountDir% /Add-Package /PackagePath:"${path}"`);
+          const path = u.filePath || `%UpdateDir%\\${escapeBatch(u.kb)}.msu`;
+          add(`echo   Applying: ${escapeBatch(u.kb)} - ${escapeBatch(u.title)}`);
+          add(`DISM /Image:%MountDir% /Add-Package /PackagePath:"${u.filePath ? escapeBatch(u.filePath) : path}"`);
         });
         blank();
       },
@@ -354,9 +355,9 @@ const PowerShellExport = ({
         add('echo.');
         add('echo ══► Applying Customizations');
         add('echo ────────────────────────────────────────────────────');
-        customizations.programs.forEach(p => add(`echo   Program: ${p}`));
-        customizations.tweaks.forEach(t => add(`echo   Tweak: ${t}`));
-        customizations.optimizations.forEach(o => add(`echo   Optimization: ${o}`));
+        customizations.programs.forEach(p => add(`echo   Program: ${escapeBatch(p)}`));
+        customizations.tweaks.forEach(t => add(`echo   Tweak: ${escapeBatch(t)}`));
+        customizations.optimizations.forEach(o => add(`echo   Optimization: ${escapeBatch(o)}`));
         blank();
       },
     };
