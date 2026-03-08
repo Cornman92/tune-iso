@@ -158,7 +158,6 @@ const WindowsUpdate = ({ isMounted, onCountChange, exportRef, importRef }: Windo
   });
 
   const uniqueCategories = ['all', ...Array.from(new Set(updates.map(u => u.category)))];
-  const uniqueCategories = ['all', ...Array.from(new Set(updates.map(u => u.category)))];
 
   if (!isMounted) {
     return (
