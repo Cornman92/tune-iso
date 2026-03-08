@@ -170,6 +170,18 @@ const WimEditor = ({ isMounted, exportFeaturesRef, importFeaturesRef }: WimEdito
         .map(f => ({ id: f.id, name: f.name, enabled: f.enabled }));
     }
   }, [features, exportFeaturesRef]);
+
+  // Import features ref
+  useEffect(() => {
+    if (importFeaturesRef) {
+      importFeaturesRef.current = (data: { id: string; enabled: boolean }[]) => {
+        setFeatures(prev => prev.map(f => {
+          const override = data.find(d => d.id === f.id);
+          return override ? { ...f, enabled: override.enabled } : f;
+        }));
+      };
+    }
+  }, [importFeaturesRef]);
   // Package state
   const [packages, setPackages] = useState<WimPackage[]>([]);
   const [pkgName, setPkgName] = useState('');
