@@ -398,6 +398,11 @@ const PowerShellExport = ({
     toast.success('Batch script exported');
   };
 
+  // Expose PS1 export for keyboard shortcut
+  if (exportScriptRef) {
+    exportScriptRef.current = handleExportPS1;
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
