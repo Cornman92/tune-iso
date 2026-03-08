@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Package, Wrench, Zap, Palette, ChevronDown, ChevronRight, Plus, Check } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ interface CustomizationItem {
 
 interface CustomizationPanelProps {
   isMounted: boolean;
+  onCountChange?: (count: number) => void;
 }
 
 const defaultPrograms: CustomizationItem[] = [
@@ -49,7 +50,7 @@ const categories = [
   { id: 'optimizations', label: 'Optimizations', icon: Zap, color: 'text-success' },
 ];
 
-const CustomizationPanel = ({ isMounted }: CustomizationPanelProps) => {
+const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProps) => {
   const [activeTab, setActiveTab] = useState('programs');
   const [programs, setPrograms] = useState(defaultPrograms);
   const [tweaks, setTweaks] = useState(defaultTweaks);
@@ -92,6 +93,10 @@ const CustomizationPanel = ({ isMounted }: CustomizationPanelProps) => {
   };
 
   const enabledCount = [...programs, ...tweaks, ...optimizations].filter(i => i.enabled).length;
+
+  useEffect(() => {
+    onCountChange?.(enabledCount);
+  }, [enabledCount, onCountChange]);
 
   if (!isMounted) {
     return (

@@ -81,7 +81,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">3</span>
                 Customizations
               </h2>
-              <CustomizationPanel isMounted={isMounted} />
+              <CustomizationPanel isMounted={isMounted} onCountChange={setCustomizationCount} />
             </section>
           </div>
 
