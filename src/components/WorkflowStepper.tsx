@@ -49,7 +49,9 @@ const WorkflowStepper = ({ currentStep }: WorkflowStepperProps) => {
             
             {index < steps.length - 1 && (
               <div className={`
-                w-16 sm:w-24 h-0.5 mx-2
+                w-8 sm:w-16 h-0.5 mx-1
+                ${step.id < currentStep ? 'bg-success' : 'bg-border'}
+              `} />
                 ${step.id < currentStep ? 'bg-success' : 'bg-border'}
               `} />
             )}
