@@ -137,13 +137,18 @@ interface InjectedFile {
   type: 'file' | 'folder';
 }
 
-interface WimEditorProps {
-  isMounted: boolean;
+export interface WimFeatureExport {
+  id: string;
+  name: string;
+  enabled: boolean;
 }
 
-type WimTab = 'editions' | 'features' | 'packages' | 'compression' | 'files';
+interface WimEditorProps {
+  isMounted: boolean;
+  exportFeaturesRef?: MutableRefObject<() => WimFeatureExport[]>;
+}
 
-const WimEditor = ({ isMounted }: WimEditorProps) => {
+const WimEditor = ({ isMounted, exportFeaturesRef }: WimEditorProps) => {
   const [activeTab, setActiveTab] = useState<WimTab>('editions');
 
   // Edition state
