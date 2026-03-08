@@ -98,7 +98,7 @@ const PowerShellExport = ({
         add('# ══════════════════════════════════════════════════════════');
         add('Write-Step "Removing Provisioned App Packages"');
         add('$packages = @(');
-        components.forEach(c => add(`    "${c}"`));
+        components.forEach(c => add(`    "${escapePS(c)}"`));
         add(')');
         blank();
         add('$installed = (DISM /Image:$MountDir /Get-ProvisionedAppxPackages | Select-String "PackageName" | ForEach-Object { ($_ -split ":")[1].Trim() })');
