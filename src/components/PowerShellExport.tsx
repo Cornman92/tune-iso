@@ -255,7 +255,7 @@ const PowerShellExport = ({
     add('Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Green');
 
     return lines.join('\r\n');
-  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, buildSteps]);
+  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, exportFeatures, buildSteps]);
 
   const generateBatch = useCallback((): string => {
     const customizations = exportCustomizations.current();
