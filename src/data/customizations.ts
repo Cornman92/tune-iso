@@ -167,6 +167,8 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'virtualbox', name: 'VirtualBox', description: 'Free virtualization platform', enabled: false, category: 'virtualization', risk: 'safe' },
   { id: 'vmware-player', name: 'VMware Workstation Player', description: 'Free VM player', enabled: false, category: 'virtualization', risk: 'safe' },
   { id: 'sandboxie-plus', name: 'Sandboxie-Plus', description: 'Application sandboxing', enabled: false, category: 'virtualization', risk: 'safe' },
+  { id: 'qemu', name: 'QEMU', description: 'Open-source machine emulator', enabled: false, category: 'virtualization', risk: 'safe' },
+  { id: 'proxmox-ve', name: 'Proxmox VE Client', description: 'Proxmox management client', enabled: false, category: 'virtualization', risk: 'safe' },
 
   // Runtimes & Frameworks
   { id: 'dotnet-desktop', name: '.NET Desktop Runtime', description: '.NET 8 desktop runtime', enabled: false, category: 'runtimes', risk: 'safe' },
@@ -177,6 +179,11 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'vulkan-rt', name: 'Vulkan Runtime', description: 'Vulkan graphics API runtime', enabled: false, category: 'runtimes', risk: 'safe' },
   { id: 'xna-framework', name: 'XNA Framework', description: 'Microsoft XNA for older games', enabled: false, category: 'runtimes', risk: 'safe' },
   { id: 'webview2', name: 'WebView2 Runtime', description: 'Edge-based web rendering runtime', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'dotnet6-runtime', name: '.NET 6 Runtime', description: '.NET 6 LTS runtime', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'dotnet7-runtime', name: '.NET 7 Runtime', description: '.NET 7 runtime', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'msys2', name: 'MSYS2', description: 'Unix-like environment for Windows', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'perl', name: 'Strawberry Perl', description: 'Perl programming language', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'ruby', name: 'Ruby (RubyInstaller)', description: 'Ruby language installer', enabled: false, category: 'runtimes', risk: 'safe' },
 
   // System Tools
   { id: 'wiztree', name: 'WizTree', description: 'Fastest disk space analyzer', enabled: false, category: 'system tools', risk: 'safe' },
@@ -191,6 +198,13 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'throttlestop', name: 'ThrottleStop', description: 'CPU undervolting & monitoring', enabled: false, category: 'system tools', risk: 'safe' },
   { id: 'driver-booster', name: 'Driver Booster Free', description: 'Auto driver updater', enabled: false, category: 'system tools', risk: 'safe' },
   { id: 'snappy-driver', name: 'Snappy Driver Installer', description: 'Offline driver installer', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'aida64', name: 'AIDA64', description: 'System benchmarking & diagnostics', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'cinebench', name: 'Cinebench', description: 'CPU/GPU rendering benchmark', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'disk2vhd', name: 'Disk2VHD', description: 'Convert physical disk to VHD', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'sysmon', name: 'Sysmon', description: 'Sysinternals system monitor', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'bginfo', name: 'BGInfo', description: 'Desktop wallpaper system info', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'ntlite', name: 'NTLite', description: 'Windows image configurator', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'mdt', name: 'Microsoft Deployment Toolkit', description: 'OS deployment framework', enabled: false, category: 'system tools', risk: 'safe' },
 
   // Customization
   { id: 'open-shell', name: 'Open-Shell', description: 'Classic Start menu replacement', enabled: false, category: 'customization', risk: 'safe' },
@@ -202,6 +216,13 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'eartrumpet', name: 'EarTrumpet', description: 'Per-app volume control', enabled: false, category: 'customization', risk: 'safe' },
   { id: 'files-app', name: 'Files App', description: 'Modern file explorer replacement', enabled: false, category: 'customization', risk: 'safe' },
   { id: 'modernflyouts', name: 'ModernFlyouts', description: 'Modern volume/brightness flyouts', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'windhawk', name: 'Windhawk', description: 'System-wide code injection for mods', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'taskbarx', name: 'TaskbarX', description: 'Center taskbar icons & customize', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'powertoys-run', name: 'PowerToys Run', description: 'Spotlight-like app launcher', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'wallpaper-engine', name: 'Wallpaper Engine', description: 'Animated wallpaper (Steam)', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'winaero-tweaker', name: 'Winaero Tweaker', description: 'All-in-one Windows customization', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'uxtheme-patcher', name: 'UxTheme Patcher', description: 'Enable custom visual themes', enabled: false, category: 'customization', risk: 'moderate' },
+  { id: 'rectify11', name: 'Rectify11', description: 'UI consistency patches for Win11', enabled: false, category: 'customization', risk: 'moderate' },
 
   // Fonts
   { id: 'font-firacode', name: 'Fira Code', description: 'Monospaced font with ligatures', enabled: false, category: 'fonts', risk: 'safe' },
@@ -214,6 +235,11 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'font-sourcecodepro', name: 'Source Code Pro', description: 'Adobe monospaced font', enabled: false, category: 'fonts', risk: 'safe' },
   { id: 'font-hack', name: 'Hack', description: 'Open-source coding font', enabled: false, category: 'fonts', risk: 'safe' },
   { id: 'font-meslo', name: 'Meslo LG', description: 'Customized Apple Menlo font', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-monaspace', name: 'Monaspace', description: 'GitHub monospace font family', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-recursive', name: 'Recursive', description: 'Variable font for code & UI', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-comic-mono', name: 'Comic Mono', description: 'Monospaced Comic Sans alternative', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-victor-mono', name: 'Victor Mono', description: 'Clean monospace with cursive italics', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-geist-mono', name: 'Geist Mono', description: 'Vercel monospace font', enabled: false, category: 'fonts', risk: 'safe' },
 
   // Cloud & Backup
   { id: 'nextcloud-client', name: 'Nextcloud Client', description: 'Self-hosted cloud sync client', enabled: false, category: 'cloud & backup', risk: 'safe' },
@@ -223,6 +249,26 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'megasync', name: 'MEGA Sync', description: 'MEGA cloud storage client', enabled: false, category: 'cloud & backup', risk: 'safe' },
   { id: 'dropbox', name: 'Dropbox', description: 'Cloud file hosting client', enabled: false, category: 'cloud & backup', risk: 'safe' },
   { id: 'google-drive', name: 'Google Drive Desktop', description: 'Google cloud storage client', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'backblaze', name: 'Backblaze', description: 'Unlimited cloud backup service', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'borgbackup', name: 'BorgBackup', description: 'Deduplicating backup with compression', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'veeam-agent', name: 'Veeam Agent Free', description: 'Enterprise backup for Windows', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'macrium-reflect', name: 'Macrium Reflect Free', description: 'Disk imaging & cloning', enabled: false, category: 'cloud & backup', risk: 'safe' },
+
+  // Remote Access
+  { id: 'rustdesk', name: 'RustDesk', description: 'Open-source remote desktop', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'anydesk', name: 'AnyDesk', description: 'Fast remote desktop client', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'parsec', name: 'Parsec', description: 'Low-latency remote desktop for gaming', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'moonlight', name: 'Moonlight', description: 'NVIDIA GameStream client', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'sunshine', name: 'Sunshine', description: 'Open-source game streaming server', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'tailscale', name: 'Tailscale', description: 'WireGuard-based mesh VPN', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'zerotier', name: 'ZeroTier', description: 'Software-defined networking', enabled: false, category: 'remote access', risk: 'safe' },
+
+  // Education & Science
+  { id: 'octave', name: 'GNU Octave', description: 'MATLAB-compatible numerical computing', enabled: false, category: 'education', risk: 'safe' },
+  { id: 'r-project', name: 'R (CRAN)', description: 'Statistical computing language', enabled: false, category: 'education', risk: 'safe' },
+  { id: 'rstudio', name: 'RStudio Desktop', description: 'IDE for R language', enabled: false, category: 'education', risk: 'safe' },
+  { id: 'jupyter', name: 'Jupyter Notebook', description: 'Interactive computing notebooks', enabled: false, category: 'education', risk: 'safe' },
+  { id: 'geogebra', name: 'GeoGebra', description: 'Math visualization & graphing', enabled: false, category: 'education', risk: 'safe' },
 ];
 
 export const defaultTweaks: CustomizationItem[] = [
