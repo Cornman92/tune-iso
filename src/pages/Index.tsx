@@ -22,6 +22,12 @@ const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [customizationCount, setCustomizationCount] = useState(0);
+  const [driverCount, setDriverCount] = useState(0);
+  const [registryCount, setRegistryCount] = useState(0);
+  const [serviceCount, setServiceCount] = useState(0);
+  const [componentCount, setComponentCount] = useState(0);
+  const [updateCount, setUpdateCount] = useState(0);
+  const [unattendCount, setUnattendCount] = useState(0);
   const [activeSection, setActiveSection] = useState('source');
 
   // Refs for export/import callbacks
