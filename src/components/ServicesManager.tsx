@@ -1,10 +1,9 @@
-import { useState, useMemo } from 'react';
-import { Cog, Search, Shield, AlertTriangle, XOctagon, ToggleLeft, ToggleRight, Filter } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Cog, Search, Shield, AlertTriangle, XOctagon, ToggleLeft, ToggleRight, Filter, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 type RiskLevel = 'safe' | 'moderate' | 'aggressive';
 
@@ -66,14 +65,55 @@ const riskConfig: Record<RiskLevel, { color: string; icon: React.ElementType; la
   aggressive: { color: 'text-destructive', icon: XOctagon, label: 'Aggressive' },
 };
 
-interface ServicesManagerProps {
-  isMounted: boolean;
+interface ServicePreset {
+  id: string;
+  name: string;
+  description: string;
+  services: string[];
 }
 
-const ServicesManager = ({ isMounted }: ServicesManagerProps) => {
+const SERVICE_PRESETS: ServicePreset[] = [
+  {
+    id: 'gaming',
+    name: '🎮 Gaming PC',
+    description: 'Disable telemetry, Xbox cloud services, and indexing for max FPS',
+    services: ['DiagTrack', 'dmwappushservice', 'WSearch', 'SysMain', 'WerSvc', 'MapsBroker', 'lfsvc', 'RetailDemo', 'wisvc', 'PhoneSvc', 'WalletService', 'Fax', 'TabletInputService', 'WMPNetworkSvc', 'SharedAccess'],
+  },
+  {
+    id: 'minimal',
+    name: '🔧 Minimal Install',
+    description: 'Disable everything safe + moderate for a lean system',
+    services: SERVICES.filter(s => s.risk === 'safe' || s.risk === 'moderate').map(s => s.name),
+  },
+  {
+    id: 'privacy',
+    name: '🔒 Privacy Focused',
+    description: 'Disable all telemetry, tracking, and remote services',
+    services: ['DiagTrack', 'dmwappushservice', 'lfsvc', 'RemoteRegistry', 'WerSvc', 'CDPSvc', 'wisvc', 'MapsBroker', 'WMPNetworkSvc', 'SharedAccess', 'PhoneSvc', 'NcbService'],
+  },
+  {
+    id: 'workstation',
+    name: '💼 Workstation',
+    description: 'Keep productivity services, disable gaming and consumer features',
+    services: ['XblAuthManager', 'XblGameSave', 'XboxNetApiSvc', 'XboxGipSvc', 'RetailDemo', 'WalletService', 'DiagTrack', 'dmwappushservice', 'wisvc', 'WMPNetworkSvc'],
+  },
+];
+
+interface ServicesManagerProps {
+  isMounted: boolean;
+  onCountChange?: (count: number) => void;
+}
+
+const ServicesManager = ({ isMounted, onCountChange }: ServicesManagerProps) => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<RiskLevel | 'all'>('all');
   const [disabledServices, setDisabledServices] = useState<Set<string>>(new Set());
+
+  const disabledCount = disabledServices.size;
+
+  useEffect(() => {
+    onCountChange?.(disabledCount);
+  }, [disabledCount, onCountChange]);
 
   const toggleService = (name: string) => {
     setDisabledServices(prev => {
@@ -90,6 +130,10 @@ const ServicesManager = ({ isMounted }: ServicesManagerProps) => {
       SERVICES.filter(s => s.risk === risk).forEach(s => next.add(s.name));
       return next;
     });
+  };
+
+  const applyPreset = (preset: ServicePreset) => {
+    setDisabledServices(new Set(preset.services));
   };
 
   const enableAll = () => setDisabledServices(new Set());
@@ -111,8 +155,6 @@ const ServicesManager = ({ isMounted }: ServicesManagerProps) => {
     return cats;
   }, [filtered]);
 
-  const disabledCount = disabledServices.size;
-
   return (
     <div className={`bg-card border border-border rounded-lg overflow-hidden ${!isMounted ? 'opacity-50 pointer-events-none' : ''}`}>
       <div className="p-4 border-b border-border">
@@ -127,6 +169,26 @@ const ServicesManager = ({ isMounted }: ServicesManagerProps) => {
           <Button variant="ghost" size="sm" onClick={enableAll} className="text-xs h-7">
             <ToggleRight className="w-3 h-3 mr-1" /> Enable All
           </Button>
+        </div>
+
+        {/* Presets */}
+        <div className="mb-3">
+          <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
+            <Sparkles className="w-3 h-3" /> Quick Presets
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {SERVICE_PRESETS.map(preset => (
+              <button
+                key={preset.id}
+                onClick={() => applyPreset(preset)}
+                className="text-left p-2.5 rounded-lg border border-border bg-muted/30 hover:bg-muted/60 hover:border-primary/30 transition-all group"
+              >
+                <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors">{preset.name}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{preset.description}</p>
+                <p className="text-[10px] font-mono text-primary mt-1">{preset.services.length} services</p>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="flex gap-2 mb-3">

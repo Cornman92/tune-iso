@@ -21,6 +21,7 @@ export interface KBUpdate {
 
 interface WindowsUpdateProps {
   isMounted: boolean;
+  onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => { kb: string; title: string; category: string; source: string; filePath?: string }[]>;
   importRef?: MutableRefObject<(data: { kb: string; title: string; category: string; source: string; filePath?: string }[]) => void>;
 }
@@ -76,7 +77,7 @@ const categoryLabels: Record<string, string> = {
   custom: 'MSU',
 };
 
-const WindowsUpdate = ({ isMounted, exportRef, importRef }: WindowsUpdateProps) => {
+const WindowsUpdate = ({ isMounted, onCountChange, exportRef, importRef }: WindowsUpdateProps) => {
   const [updates, setUpdates] = useState<KBUpdate[]>(
     catalogUpdates.map((u, i) => ({
       ...u,
@@ -90,6 +91,12 @@ const WindowsUpdate = ({ isMounted, exportRef, importRef }: WindowsUpdateProps) 
   const [manualKb, setManualKb] = useState('');
   const [manualPath, setManualPath] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
+
+  const enabledCount = updates.filter(u => u.enabled).length;
+
+  useEffect(() => {
+    onCountChange?.(enabledCount);
+  }, [enabledCount, onCountChange]);
 
   useEffect(() => {
     if (exportRef) exportRef.current = () => updates.filter(u => u.enabled).map(u => ({
@@ -150,7 +157,6 @@ const WindowsUpdate = ({ isMounted, exportRef, importRef }: WindowsUpdateProps) 
     return matchesSearch && matchesCategory;
   });
 
-  const enabledCount = updates.filter(u => u.enabled).length;
   const uniqueCategories = ['all', ...Array.from(new Set(updates.map(u => u.category)))];
 
   if (!isMounted) {

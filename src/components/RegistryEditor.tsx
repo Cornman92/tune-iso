@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Database, Plus, Trash2, Copy, FileDown, ChevronDown, ChevronRight, FolderTree } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -47,10 +47,15 @@ const PRESET_ENTRIES: RegistryEntry[] = [
 
 interface RegistryEditorProps {
   isMounted: boolean;
+  onCountChange?: (count: number) => void;
 }
 
-const RegistryEditor = ({ isMounted }: RegistryEditorProps) => {
+const RegistryEditor = ({ isMounted, onCountChange }: RegistryEditorProps) => {
   const [entries, setEntries] = useState<RegistryEntry[]>([]);
+
+  useEffect(() => {
+    onCountChange?.(entries.length);
+  }, [entries.length, onCountChange]);
   const [showForm, setShowForm] = useState(false);
   const [expandedPresets, setExpandedPresets] = useState(true);
   const [form, setForm] = useState<Omit<RegistryEntry, 'id'>>({

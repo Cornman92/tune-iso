@@ -14,6 +14,7 @@ import RegistryEditor from '@/components/RegistryEditor';
 import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
 import SectionSidebar from '@/components/SectionSidebar';
+import SummaryDashboard from '@/components/SummaryDashboard';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
@@ -21,6 +22,12 @@ const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [customizationCount, setCustomizationCount] = useState(0);
+  const [driverCount, setDriverCount] = useState(0);
+  const [registryCount, setRegistryCount] = useState(0);
+  const [serviceCount, setServiceCount] = useState(0);
+  const [componentCount, setComponentCount] = useState(0);
+  const [updateCount, setUpdateCount] = useState(0);
+  const [unattendCount, setUnattendCount] = useState(0);
   const [activeSection, setActiveSection] = useState('source');
 
   // Refs for export/import callbacks
@@ -168,6 +175,7 @@ const Index = () => {
               </h2>
               <DriverInjection
                 isMounted={isMounted}
+                onCountChange={setDriverCount}
                 exportRef={exportDrivers}
                 importRef={importDrivers}
               />
@@ -179,7 +187,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">6</span>
                 Registry Editor
               </h2>
-              <RegistryEditor isMounted={isMounted} />
+              <RegistryEditor isMounted={isMounted} onCountChange={setRegistryCount} />
             </section>
 
             {/* 7. Services Manager */}
@@ -188,7 +196,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">7</span>
                 Services Manager
               </h2>
-              <ServicesManager isMounted={isMounted} />
+              <ServicesManager isMounted={isMounted} onCountChange={setServiceCount} />
             </section>
 
             {/* 8. Component Removal */}
@@ -197,7 +205,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">8</span>
                 Component Removal
               </h2>
-              <ComponentRemoval isMounted={isMounted} />
+              <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} />
             </section>
 
             {/* 9. Windows Update */}
@@ -208,6 +216,7 @@ const Index = () => {
               </h2>
               <WindowsUpdate
                 isMounted={isMounted}
+                onCountChange={setUpdateCount}
                 exportRef={exportUpdates}
                 importRef={importUpdates}
               />
@@ -221,6 +230,7 @@ const Index = () => {
               </h2>
               <UnattendGenerator
                 isMounted={isMounted}
+                onCountChange={setUnattendCount}
                 exportRef={exportUnattend}
                 importRef={importUnattend}
               />
@@ -234,6 +244,18 @@ const Index = () => {
               Build Output
             </h2>
             <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
+
+            <div className="mt-6">
+              <SummaryDashboard
+                customizationCount={customizationCount}
+                driverCount={driverCount}
+                registryCount={registryCount}
+                serviceCount={serviceCount}
+                componentCount={componentCount}
+                updateCount={updateCount}
+                unattendCount={unattendCount}
+              />
+            </div>
 
             <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
               <h3 className="text-sm font-medium text-foreground mb-2">Risk Levels</h3>

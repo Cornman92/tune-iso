@@ -16,14 +16,19 @@ export interface DriverEntry {
 
 interface DriverInjectionProps {
   isMounted: boolean;
+  onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => { name: string; path: string; type: string }[]>;
   importRef?: MutableRefObject<(data: { name: string; path: string; type: string }[]) => void>;
 }
 
-const DriverInjection = ({ isMounted, exportRef, importRef }: DriverInjectionProps) => {
+const DriverInjection = ({ isMounted, onCountChange, exportRef, importRef }: DriverInjectionProps) => {
   const [drivers, setDrivers] = useState<DriverEntry[]>([]);
   const [manualPath, setManualPath] = useState('');
   const [recurse, setRecurse] = useState(true);
+
+  useEffect(() => {
+    onCountChange?.(drivers.length);
+  }, [drivers.length, onCountChange]);
 
   useEffect(() => {
     if (exportRef) exportRef.current = () => drivers.map(d => ({ name: d.name, path: d.path, type: d.type }));
