@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Package, Wrench, Zap, Palette, ChevronDown, ChevronRight, Plus, Check } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Package, Wrench, Zap, Palette, ChevronDown, ChevronRight, Plus, Check, Search, X } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 
 interface CustomizationItem {
   id: string;
