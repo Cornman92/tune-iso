@@ -211,6 +211,7 @@ interface ServicesManagerProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => string[]>;
+  importRef?: MutableRefObject<(data: string[]) => void>;
 }
 
 const ServicesManager = ({ isMounted, onCountChange, exportRef }: ServicesManagerProps) => {
