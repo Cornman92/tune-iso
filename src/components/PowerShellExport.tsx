@@ -141,8 +141,8 @@ const PowerShellExport = ({
         blank();
         registry.forEach(r => {
           const regType = r.valueType === 'REG_SZ' ? 'REG_SZ' : r.valueType;
-          add(`Write-Host "  Setting: ${r.valueName}" -ForegroundColor Yellow`);
-          add(`REG ADD "${r.hive}\\${r.keyPath}" /v "${r.valueName}" /t ${regType} /d "${r.valueData}" /f | Out-Null`);
+          add(`Write-Host "  Setting: ${escapePS(r.valueName)}" -ForegroundColor Yellow`);
+          add(`REG ADD "${escapePS(r.hive)}\\${escapePS(r.keyPath)}" /v "${escapePS(r.valueName)}" /t ${regType} /d "${escapePS(r.valueData)}" /f | Out-Null`);
         });
         blank();
         add('REG UNLOAD "HKLM\\OFFLINE_SOFTWARE"');
