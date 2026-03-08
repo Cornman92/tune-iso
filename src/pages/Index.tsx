@@ -230,7 +230,7 @@ const Index = () => {
           {/* Right Column */}
           <div className="lg:sticky lg:top-24 lg:self-start" id="section-build">
             <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-              <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">9</span>
+              <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">11</span>
               Build Output
             </h2>
             <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
