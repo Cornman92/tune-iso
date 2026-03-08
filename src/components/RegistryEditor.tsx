@@ -50,6 +50,7 @@ interface RegistryEditorProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>;
+  importRef?: MutableRefObject<(presetIds: string[]) => void>;
 }
 
 const RegistryEditor = ({ isMounted, onCountChange, exportRef }: RegistryEditorProps) => {
