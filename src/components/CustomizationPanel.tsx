@@ -93,9 +93,14 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
     }
   };
 
+  const isGlobalSearch = searchQuery.trim().length > 0;
+
   const getGroupedItems = () => {
-    const items = getItems();
     const query = searchQuery.toLowerCase().trim();
+    // When searching, search across ALL tabs; otherwise show active tab only
+    const items = isGlobalSearch
+      ? [...programs, ...tweaks, ...optimizations]
+      : getItems();
     const filtered = query
       ? items.filter(item =>
           item.name.toLowerCase().includes(query) ||
@@ -108,6 +113,12 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
       acc[item.category].push(item);
       return acc;
     }, {} as Record<string, CustomizationItem[]>);
+  };
+
+  const getItemType = (itemId: string): 'programs' | 'tweaks' | 'optimizations' => {
+    if (programs.some(p => p.id === itemId)) return 'programs';
+    if (tweaks.some(t => t.id === itemId)) return 'tweaks';
+    return 'optimizations';
   };
 
   const enabledCount = [...programs, ...tweaks, ...optimizations].filter(i => i.enabled).length;
@@ -182,7 +193,7 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
 
       <div className="bg-card border border-border rounded-lg overflow-hidden animate-slide-in">
         {/* Tab Header */}
-        <div className="flex border-b border-border">
+        <div className={`flex border-b border-border ${isGlobalSearch ? 'opacity-50 pointer-events-none' : ''}`}>
           {categories.map(cat => {
             const Icon = cat.icon;
             const items = cat.id === 'programs' ? programs : cat.id === 'tweaks' ? tweaks : optimizations;
@@ -217,7 +228,7 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search ${activeTab}...`}
+              placeholder={isGlobalSearch ? `Searching all categories...` : `Search ${activeTab}...`}
               className="pl-9 pr-8 h-9 font-mono text-sm bg-muted/30"
             />
             {searchQuery && (
@@ -264,11 +275,11 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
                       <div className="flex-1 h-px bg-border" />
                     </button>
                     {isExpanded && (
-                      <Button
+                        <Button
                         variant="ghost"
                         size="sm"
                         className="h-6 text-[10px] font-mono px-2"
-                        onClick={() => toggleAllInCategory(category, activeTab as any)}
+                        onClick={() => toggleAllInCategory(category, isGlobalSearch ? getItemType(items[0].id) : activeTab as any)}
                       >
                         {enabledInCat === items.length ? 'None' : 'All'}
                       </Button>
@@ -320,7 +331,7 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
                             </div>
                             <Switch
                               checked={item.enabled}
-                              onCheckedChange={() => toggleItem(item.id, activeTab as 'programs' | 'tweaks' | 'optimizations')}
+                              onCheckedChange={() => toggleItem(item.id, isGlobalSearch ? getItemType(item.id) : activeTab as 'programs' | 'tweaks' | 'optimizations')}
                               className="shrink-0 ml-2"
                             />
                           </div>
