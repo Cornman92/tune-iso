@@ -254,8 +254,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
           const style = disk.find(o => o.id === 'partition-style')?.value || 'GPT';
           lines.push('      <DiskConfiguration>');
           lines.push('        <Disk wcm:action="add">');
-          lines.push(`          <DiskID>${disk.find(o => o.id === 'disk-id')?.value || '0'}</DiskID>`);
-          lines.push(`          <WillWipeDisk>${disk.find(o => o.id === 'wipe-disk')?.value || 'true'}</WillWipeDisk>`);
+          lines.push(`          <DiskID>${escapeXml(disk.find(o => o.id === 'disk-id')?.value || '0')}</DiskID>`);
+          lines.push(`          <WillWipeDisk>${escapeXml(disk.find(o => o.id === 'wipe-disk')?.value || 'true')}</WillWipeDisk>`);
           if (style === 'GPT') {
             lines.push('          <CreatePartitions>');
             lines.push('            <CreatePartition wcm:action="add"><Order>1</Order><Type>EFI</Type><Size>' + (disk.find(o => o.id === 'efi-size')?.value || '300') + '</Size></CreatePartition>');
