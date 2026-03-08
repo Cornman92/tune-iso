@@ -1,4 +1,4 @@
-import { HardDrive, Disc, Settings, Save, Check } from 'lucide-react';
+import { HardDrive, Disc, Settings, HardDriveDownload, FileCode, Save, Check } from 'lucide-react';
 
 interface WorkflowStepperProps {
   currentStep: number;
@@ -8,7 +8,9 @@ const steps = [
   { id: 1, label: 'Select ISO', icon: HardDrive },
   { id: 2, label: 'Mount', icon: Disc },
   { id: 3, label: 'Customize', icon: Settings },
-  { id: 4, label: 'Commit', icon: Save },
+  { id: 4, label: 'Drivers', icon: HardDriveDownload },
+  { id: 5, label: 'Unattend', icon: FileCode },
+  { id: 6, label: 'Build', icon: Save },
 ];
 
 const WorkflowStepper = ({ currentStep }: WorkflowStepperProps) => {
@@ -47,7 +49,7 @@ const WorkflowStepper = ({ currentStep }: WorkflowStepperProps) => {
             
             {index < steps.length - 1 && (
               <div className={`
-                w-16 sm:w-24 h-0.5 mx-2
+                w-8 sm:w-16 h-0.5 mx-1
                 ${step.id < currentStep ? 'bg-success' : 'bg-border'}
               `} />
             )}
