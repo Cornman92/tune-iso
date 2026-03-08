@@ -344,9 +344,9 @@ const PowerShellExport = ({
         const order = ['servicing', 'cumulative', 'dotnet', 'security', 'driver', 'feature', 'custom'];
         const sorted = [...updates].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category));
         sorted.forEach(u => {
-          const path = u.filePath || `%UpdateDir%\\${u.kb}.msu`;
-          add(`echo   Applying: ${u.kb} - ${u.title}`);
-          add(`DISM /Image:%MountDir% /Add-Package /PackagePath:"${path}"`);
+          const path = u.filePath || `%UpdateDir%\\${escapeBatch(u.kb)}.msu`;
+          add(`echo   Applying: ${escapeBatch(u.kb)} - ${escapeBatch(u.title)}`);
+          add(`DISM /Image:%MountDir% /Add-Package /PackagePath:"${u.filePath ? escapeBatch(u.filePath) : path}"`);
         });
         blank();
       },
