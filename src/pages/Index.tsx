@@ -163,6 +163,8 @@ const Index = () => {
     prevCounts.current = key;
   }, [customizationCount, driverCount, registryCount, serviceCount, componentCount, updateCount, unattendCount, buildSteps, pushState]);
 
+  const scriptChangeTrigger = `${customizationCount}-${driverCount}-${registryCount}-${serviceCount}-${componentCount}-${updateCount}-${buildSteps.map(s => `${s.id}:${s.enabled}`).join(',')}`;
+
   useKeyboardShortcuts({
     onExportProject: handleExportProjectKb,
     onExportScript: useCallback(() => exportScriptRef.current(), []),
