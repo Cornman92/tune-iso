@@ -264,6 +264,7 @@ const PowerShellExport = ({
     const services = exportServices.current();
     const components = exportComponents.current();
     const registry = exportRegistry.current();
+    const features = exportFeatures.current();
 
     const lines: string[] = [];
     const add = (s: string) => lines.push(s);
