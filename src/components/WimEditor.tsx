@@ -148,6 +148,8 @@ interface WimEditorProps {
   exportFeaturesRef?: MutableRefObject<() => WimFeatureExport[]>;
 }
 
+type WimTab = 'editions' | 'features' | 'packages' | 'compression' | 'files';
+
 const WimEditor = ({ isMounted, exportFeaturesRef }: WimEditorProps) => {
   const [activeTab, setActiveTab] = useState<WimTab>('editions');
 
