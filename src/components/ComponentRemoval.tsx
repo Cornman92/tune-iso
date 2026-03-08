@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, MutableRefObject } from 'react';
 import { Trash2, Search, Shield, AlertTriangle, XOctagon, Package, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -98,9 +98,10 @@ const COMPONENT_PRESETS: ComponentPreset[] = [
 interface ComponentRemovalProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
+  exportRef?: MutableRefObject<() => string[]>;
 }
 
-const ComponentRemoval = ({ isMounted, onCountChange }: ComponentRemovalProps) => {
+const ComponentRemoval = ({ isMounted, onCountChange, exportRef }: ComponentRemovalProps) => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<RiskLevel | 'all'>('all');
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -108,6 +109,10 @@ const ComponentRemoval = ({ isMounted, onCountChange }: ComponentRemovalProps) =
   useEffect(() => {
     onCountChange?.(selected.size);
   }, [selected.size, onCountChange]);
+
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => [...selected];
+  }, [selected, exportRef]);
 
   const toggle = (id: string) => {
     setSelected(prev => {

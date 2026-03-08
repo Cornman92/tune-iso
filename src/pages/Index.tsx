@@ -15,6 +15,8 @@ import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
 import SectionSidebar from '@/components/SectionSidebar';
 import SummaryDashboard from '@/components/SummaryDashboard';
+import ThemeToggle from '@/components/ThemeToggle';
+import PowerShellExport from '@/components/PowerShellExport';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
@@ -39,6 +41,9 @@ const Index = () => {
   const importUpdates = useRef<(data: { kb: string; title: string; category: string; source: string; filePath?: string }[]) => void>(() => {});
   const exportUnattend = useRef<() => { id: string; value: string; enabled: boolean }[]>(() => []);
   const importUnattend = useRef<(data: { id: string; value: string; enabled: boolean }[]) => void>(() => {});
+  const exportServices = useRef<() => string[]>(() => []);
+  const exportComponents = useRef<() => string[]>(() => []);
+  const exportRegistry = useRef<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>(() => []);
 
   // Scroll spy
   useEffect(() => {
@@ -101,8 +106,18 @@ const Index = () => {
               <h1 className="text-lg font-semibold text-foreground">ISO Forge</h1>
               <p className="text-xs font-mono text-muted-foreground">Windows Image Customization Tool</p>
             </div>
-            <div className="ml-auto flex items-center gap-3">
+            <div className="ml-auto flex items-center gap-2">
+              <PowerShellExport
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportUpdates={exportUpdates}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                isMounted={isMounted}
+              />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
+              <ThemeToggle />
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
                 <Terminal className="w-4 h-4 text-primary" />
                 <span className="text-xs font-mono text-muted-foreground">v1.3.0</span>
@@ -187,7 +202,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">6</span>
                 Registry Editor
               </h2>
-              <RegistryEditor isMounted={isMounted} onCountChange={setRegistryCount} />
+              <RegistryEditor isMounted={isMounted} onCountChange={setRegistryCount} exportRef={exportRegistry} />
             </section>
 
             {/* 7. Services Manager */}
@@ -196,7 +211,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">7</span>
                 Services Manager
               </h2>
-              <ServicesManager isMounted={isMounted} onCountChange={setServiceCount} />
+              <ServicesManager isMounted={isMounted} onCountChange={setServiceCount} exportRef={exportServices} />
             </section>
 
             {/* 8. Component Removal */}
@@ -205,7 +220,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">8</span>
                 Component Removal
               </h2>
-              <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} />
+              <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} exportRef={exportComponents} />
             </section>
 
             {/* 9. Windows Update */}

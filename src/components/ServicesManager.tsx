@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, MutableRefObject } from 'react';
 import { Cog, Search, Shield, AlertTriangle, XOctagon, ToggleLeft, ToggleRight, Filter, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -102,9 +102,10 @@ const SERVICE_PRESETS: ServicePreset[] = [
 interface ServicesManagerProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
+  exportRef?: MutableRefObject<() => string[]>;
 }
 
-const ServicesManager = ({ isMounted, onCountChange }: ServicesManagerProps) => {
+const ServicesManager = ({ isMounted, onCountChange, exportRef }: ServicesManagerProps) => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<RiskLevel | 'all'>('all');
   const [disabledServices, setDisabledServices] = useState<Set<string>>(new Set());
@@ -114,6 +115,10 @@ const ServicesManager = ({ isMounted, onCountChange }: ServicesManagerProps) => 
   useEffect(() => {
     onCountChange?.(disabledCount);
   }, [disabledCount, onCountChange]);
+
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => [...disabledServices];
+  }, [disabledServices, exportRef]);
 
   const toggleService = (name: string) => {
     setDisabledServices(prev => {
