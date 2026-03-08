@@ -176,9 +176,9 @@ const PowerShellExport = ({
         const order = ['servicing', 'cumulative', 'dotnet', 'security', 'driver', 'feature', 'custom'];
         const sorted = [...updates].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category));
         sorted.forEach(u => {
-          const path = u.filePath || `$UpdateDir\\${u.kb}.msu`;
-          add(`Write-Host "  Applying: ${u.kb} - ${u.title}" -ForegroundColor Yellow`);
-          add(`DISM /Image:$MountDir /Add-Package /PackagePath:"${path}"`);
+          const path = u.filePath || `$UpdateDir\\${escapePS(u.kb)}.msu`;
+          add(`Write-Host "  Applying: ${escapePS(u.kb)} - ${escapePS(u.title)}" -ForegroundColor Yellow`);
+          add(`DISM /Image:$MountDir /Add-Package /PackagePath:"${u.filePath ? escapePS(u.filePath) : path}"`);
         });
         blank();
       },
