@@ -99,6 +99,27 @@ const Index = () => {
     if (data.unattend) importUnattend.current(data.unattend);
   }, []);
 
+  // Wire up keyboard shortcuts
+  const handleExportProjectKb = useCallback(() => {
+    const data = handleExport();
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.name || 'iso-forge-project'}_${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [handleExport]);
+
+  useKeyboardShortcuts({
+    onExportProject: handleExportProjectKb,
+    onExportScript: useCallback(() => exportScriptRef.current(), []),
+    onToggleTheme: useCallback(() => themeToggleRef.current(), []),
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <SectionSidebar activeSection={activeSection} isMounted={isMounted} hasFile={!!selectedFile} />
@@ -123,9 +144,22 @@ const Index = () => {
                 exportComponents={exportComponents}
                 exportRegistry={exportRegistry}
                 isMounted={isMounted}
+                exportScriptRef={exportScriptRef}
               />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
-              <ThemeToggle />
+              <ThemeToggle toggleRef={themeToggleRef} />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-muted/50 border border-border cursor-help">
+                    <Keyboard className="w-3.5 h-3.5 text-muted-foreground" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs font-mono space-y-1 p-3">
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+S</kbd> Export Project</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+E</kbd> Export Script</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+D</kbd> Toggle Theme</p>
+                </TooltipContent>
+              </Tooltip>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
                 <Terminal className="w-4 h-4 text-primary" />
                 <span className="text-xs font-mono text-muted-foreground">v1.3.0</span>
