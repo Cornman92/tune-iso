@@ -1,5 +1,6 @@
 import { useState, useEffect, MutableRefObject } from 'react';
 import { Database, Plus, Trash2, Copy, FileDown, ChevronDown, ChevronRight, FolderTree } from 'lucide-react';
+import { escapeRegValue, isValidHex } from '@/lib/sanitize';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -77,6 +78,10 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef }: RegistryEditorP
       toast.error('Key path and value name are required');
       return;
     }
+    if ((form.valueType === 'REG_DWORD' || form.valueType === 'REG_BINARY' || form.valueType === 'REG_QWORD') && form.valueData && !isValidHex(form.valueData)) {
+      toast.error(`${form.valueType} value must contain only valid hex digits`);
+      return;
+    }
     setEntries(prev => [...prev, { ...form, id: crypto.randomUUID() }]);
     setForm({ hive: 'HKLM\\SOFTWARE', keyPath: '', valueName: '', valueType: 'REG_DWORD', valueData: '', description: '' });
     setShowForm(false);
@@ -111,17 +116,18 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef }: RegistryEditorP
     Object.entries(grouped).forEach(([key, vals]) => {
       lines.push(`[${key}]`);
       vals.forEach(v => {
+        const safeName = escapeRegValue(v.valueName);
         if (v.valueType === 'REG_SZ' || v.valueType === 'REG_EXPAND_SZ') {
-          lines.push(`"${v.valueName}"="${v.valueData}"`);
+          lines.push(`"${safeName}"="${escapeRegValue(v.valueData)}"`);
         } else if (v.valueType === 'REG_DWORD') {
           const hex = parseInt(v.valueData).toString(16).padStart(8, '0');
-          lines.push(`"${v.valueName}"=dword:${hex}`);
+          lines.push(`"${safeName}"=dword:${hex}`);
         } else if (v.valueType === 'REG_QWORD') {
-          lines.push(`"${v.valueName}"=hex(b):${v.valueData}`);
+          lines.push(`"${safeName}"=hex(b):${v.valueData}`);
         } else if (v.valueType === 'REG_BINARY') {
-          lines.push(`"${v.valueName}"=hex:${v.valueData}`);
+          lines.push(`"${safeName}"=hex:${v.valueData}`);
         } else if (v.valueType === 'REG_MULTI_SZ') {
-          lines.push(`"${v.valueName}"=hex(7):${v.valueData}`);
+          lines.push(`"${safeName}"=hex(7):${v.valueData}`);
         }
       });
       lines.push('');

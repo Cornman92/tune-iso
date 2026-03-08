@@ -1,5 +1,6 @@
 import { useState, useEffect, MutableRefObject } from 'react';
 import { FileCode, Copy, ChevronDown, ChevronRight, Check, RotateCcw } from 'lucide-react';
+import { escapeXml } from '@/lib/sanitize';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -238,11 +239,11 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         lines.push('    <component name="Microsoft-Windows-International-Core-WinPE">');
         regional.forEach(o => {
           const tag = o.xmlPath.split('/').pop();
-          lines.push(`      <${tag}>${o.value}</${tag}>`);
+          lines.push(`      <${tag}>${escapeXml(o.value)}</${tag}>`);
         });
         winpe.filter(o => o.id === 'setup-ui-language').forEach(o => {
           lines.push('      <SetupUILanguage>');
-          lines.push(`        <UILanguage>${o.value}</UILanguage>`);
+          lines.push(`        <UILanguage>${escapeXml(o.value)}</UILanguage>`);
           lines.push('      </SetupUILanguage>');
         });
         lines.push('    </component>');
@@ -253,8 +254,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
           const style = disk.find(o => o.id === 'partition-style')?.value || 'GPT';
           lines.push('      <DiskConfiguration>');
           lines.push('        <Disk wcm:action="add">');
-          lines.push(`          <DiskID>${disk.find(o => o.id === 'disk-id')?.value || '0'}</DiskID>`);
-          lines.push(`          <WillWipeDisk>${disk.find(o => o.id === 'wipe-disk')?.value || 'true'}</WillWipeDisk>`);
+          lines.push(`          <DiskID>${escapeXml(disk.find(o => o.id === 'disk-id')?.value || '0')}</DiskID>`);
+          lines.push(`          <WillWipeDisk>${escapeXml(disk.find(o => o.id === 'wipe-disk')?.value || 'true')}</WillWipeDisk>`);
           if (style === 'GPT') {
             lines.push('          <CreatePartitions>');
             lines.push('            <CreatePartition wcm:action="add"><Order>1</Order><Type>EFI</Type><Size>' + (disk.find(o => o.id === 'efi-size')?.value || '300') + '</Size></CreatePartition>');
@@ -266,8 +267,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
           lines.push('      </DiskConfiguration>');
         }
         product.forEach(o => {
-          if (o.id === 'accept-eula') lines.push(`      <UserData><AcceptEula>${o.value}</AcceptEula></UserData>`);
-          if (o.id === 'product-key' && o.value) lines.push(`      <UserData><ProductKey><Key>${o.value}</Key></ProductKey></UserData>`);
+          if (o.id === 'accept-eula') lines.push(`      <UserData><AcceptEula>${escapeXml(o.value)}</AcceptEula></UserData>`);
+          if (o.id === 'product-key' && o.value) lines.push(`      <UserData><ProductKey><Key>${escapeXml(o.value)}</Key></ProductKey></UserData>`);
         });
         // Bypass checks
         const bypasses = winpe.filter(o => o.id.startsWith('bypass-') && o.value === 'true');
@@ -293,21 +294,17 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
       lines.push('    <component name="Microsoft-Windows-Shell-Setup">');
 
       const compName = user.find(o => o.id === 'computer-name');
-      if (compName) lines.push(`      <ComputerName>${compName.value}</ComputerName>`);
+      if (compName) lines.push(`      <ComputerName>${escapeXml(compName.value)}</ComputerName>`);
 
       const tz = options.find(o => o.id === 'timezone' && o.enabled);
-      if (tz) lines.push(`      <TimeZone>${tz.value}</TimeZone>`);
+      if (tz) lines.push(`      <TimeZone>${escapeXml(tz.value)}</TimeZone>`);
 
       // OOBE
       if (oobe.length > 0) {
         lines.push('      <OOBE>');
         oobe.forEach(o => {
           const tag = o.xmlPath.split('/').pop();
-          if (o.type === 'boolean') {
-            lines.push(`        <${tag}>${o.value}</${tag}>`);
-          } else {
-            lines.push(`        <${tag}>${o.value}</${tag}>`);
-          }
+          lines.push(`        <${tag}>${escapeXml(o.value)}</${tag}>`);
         });
         lines.push('      </OOBE>');
       }
@@ -319,10 +316,10 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         lines.push('      <UserAccounts>');
         lines.push('        <LocalAccounts>');
         lines.push('          <LocalAccount wcm:action="add">');
-        lines.push(`            <Name>${userName.value}</Name>`);
+        lines.push(`            <Name>${escapeXml(userName.value)}</Name>`);
         lines.push('            <Group>Administrators</Group>');
         if (userPass?.enabled && userPass.value) {
-          lines.push(`            <Password><Value>${userPass.value}</Value><PlainText>true</PlainText></Password>`);
+          lines.push(`            <Password><Value>${escapeXml(userPass.value)}</Value><PlainText>true</PlainText></Password>`);
         }
         lines.push('          </LocalAccount>');
         lines.push('        </LocalAccounts>');
@@ -335,8 +332,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         const logonCount = user.find(o => o.id === 'auto-logon-count');
         lines.push('      <AutoLogon>');
         lines.push('        <Enabled>true</Enabled>');
-        lines.push(`        <Username>${userName?.value || 'User'}</Username>`);
-        if (logonCount) lines.push(`        <LogonCount>${logonCount.value}</LogonCount>`);
+        lines.push(`        <Username>${escapeXml(userName?.value || 'User')}</Username>`);
+        if (logonCount) lines.push(`        <LogonCount>${escapeXml(logonCount.value)}</LogonCount>`);
         lines.push('      </AutoLogon>');
       }
 
@@ -357,8 +354,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
           else if (o.id === 'cmd-custom' && o.value) cmd = o.value;
           if (cmd) {
             lines.push(`        <SynchronousCommand wcm:action="add"><Order>${order}</Order>`);
-            lines.push(`          <CommandLine>cmd /c ${cmd}</CommandLine>`);
-            lines.push(`          <Description>${o.label}</Description></SynchronousCommand>`);
+            lines.push(`          <CommandLine>cmd /c ${escapeXml(cmd)}</CommandLine>`);
+            lines.push(`          <Description>${escapeXml(o.label)}</Description></SynchronousCommand>`);
             order++;
           }
         });

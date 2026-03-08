@@ -17,7 +17,13 @@ const PresetManager = ({ onApplyPreset, onSavePreset }: PresetManagerProps) => {
   const [customPresets, setCustomPresets] = useState<Preset[]>(() => {
     try {
       const saved = localStorage.getItem('iso-forge-presets');
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((p: any) =>
+        p && typeof p.id === 'string' && typeof p.name === 'string' &&
+        Array.isArray(p.programs) && Array.isArray(p.tweaks) && Array.isArray(p.optimizations)
+      );
     } catch { return []; }
   });
   const [appliedId, setAppliedId] = useState<string | null>(null);
