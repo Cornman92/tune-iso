@@ -14,6 +14,7 @@ import WimEditor from '@/components/WimEditor';
 import RegistryEditor from '@/components/RegistryEditor';
 import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
+import IsoMetadataEditor from '@/components/IsoMetadataEditor';
 import SectionSidebar from '@/components/SectionSidebar';
 import SummaryDashboard from '@/components/SummaryDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
