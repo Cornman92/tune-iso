@@ -331,7 +331,7 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
                             </div>
                             <Switch
                               checked={item.enabled}
-                              onCheckedChange={() => toggleItem(item.id, activeTab as 'programs' | 'tweaks' | 'optimizations')}
+                              onCheckedChange={() => toggleItem(item.id, isGlobalSearch ? getItemType(item.id) : activeTab as 'programs' | 'tweaks' | 'optimizations')}
                               className="shrink-0 ml-2"
                             />
                           </div>
