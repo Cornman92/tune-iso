@@ -298,8 +298,8 @@ const PowerShellExport = ({
         add(`echo ══► Disabling Services (${services.length} services)`);
         add('echo ────────────────────────────────────────────────────');
         services.forEach(s => {
-          add(`echo   Disabling: ${s}`);
-          add(`REG ADD "HKLM\\SYSTEM\\ControlSet001\\Services\\${s}" /v Start /t REG_DWORD /d 4 /f >nul`);
+          add(`echo   Disabling: ${escapeBatch(s)}`);
+          add(`REG ADD "HKLM\\SYSTEM\\ControlSet001\\Services\\${escapeBatch(s)}" /v Start /t REG_DWORD /d 4 /f >nul`);
         });
         blank();
       },
