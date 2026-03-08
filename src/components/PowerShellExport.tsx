@@ -434,7 +434,7 @@ const PowerShellExport = ({
     add('pause');
 
     return lines.join('\r\n');
-  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, buildSteps]);
+  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, exportFeatures, buildSteps]);
 
   const downloadFile = (content: string, filename: string) => {
     const blob = new Blob([content], { type: 'text/plain' });
