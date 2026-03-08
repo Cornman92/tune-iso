@@ -193,6 +193,7 @@ const Index = () => {
               <ProjectManager onExport={handleExport} onImport={handleImport} />
               <div className="h-6 w-px bg-border" />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
+              <div className="h-6 w-px bg-border" />
               <ThemeToggle toggleRef={themeToggleRef} />
               <Tooltip>
                 <TooltipTrigger asChild>
