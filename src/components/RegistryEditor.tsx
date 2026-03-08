@@ -78,6 +78,10 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef }: RegistryEditorP
       toast.error('Key path and value name are required');
       return;
     }
+    if ((form.valueType === 'REG_DWORD' || form.valueType === 'REG_BINARY' || form.valueType === 'REG_QWORD') && form.valueData && !isValidHex(form.valueData)) {
+      toast.error(`${form.valueType} value must contain only valid hex digits`);
+      return;
+    }
     setEntries(prev => [...prev, { ...form, id: crypto.randomUUID() }]);
     setForm({ hive: 'HKLM\\SOFTWARE', keyPath: '', valueName: '', valueType: 'REG_DWORD', valueData: '', description: '' });
     setShowForm(false);
