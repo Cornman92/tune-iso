@@ -179,6 +179,7 @@ interface ComponentRemovalProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => string[]>;
+  importRef?: MutableRefObject<(data: string[]) => void>;
 }
 
 const ComponentRemoval = ({ isMounted, onCountChange, exportRef }: ComponentRemovalProps) => {
