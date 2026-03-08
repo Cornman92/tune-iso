@@ -21,6 +21,7 @@ interface PowerShellExportProps {
   exportComponents: MutableRefObject<() => string[]>;
   exportRegistry: MutableRefObject<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>;
   isMounted: boolean;
+  exportScriptRef?: MutableRefObject<() => void>;
 }
 
 const PowerShellExport = ({
@@ -31,6 +32,7 @@ const PowerShellExport = ({
   exportComponents,
   exportRegistry,
   isMounted,
+  exportScriptRef,
 }: PowerShellExportProps) => {
 
   const generateScript = useCallback((): string => {
@@ -395,6 +397,11 @@ const PowerShellExport = ({
     downloadFile(generateBatch(), 'ISO_Forge_Build.bat');
     toast.success('Batch script exported');
   };
+
+  // Expose PS1 export for keyboard shortcut
+  if (exportScriptRef) {
+    exportScriptRef.current = handleExportPS1;
+  }
 
   return (
     <DropdownMenu>

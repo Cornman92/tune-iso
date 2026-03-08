@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Disc3, Terminal } from 'lucide-react';
+import { Disc3, Terminal, Keyboard } from 'lucide-react';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
 import CustomizationPanel from '@/components/CustomizationPanel';
@@ -17,6 +17,9 @@ import SectionSidebar from '@/components/SectionSidebar';
 import SummaryDashboard from '@/components/SummaryDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
 import PowerShellExport from '@/components/PowerShellExport';
+import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
+import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
@@ -31,6 +34,11 @@ const Index = () => {
   const [updateCount, setUpdateCount] = useState(0);
   const [unattendCount, setUnattendCount] = useState(0);
   const [activeSection, setActiveSection] = useState('source');
+  const [buildSteps, setBuildSteps] = useState<BuildStep[]>(() => DEFAULT_STEPS.map(s => ({ ...s })));
+
+  // Refs for keyboard shortcuts
+  const themeToggleRef = useRef<() => void>(() => {});
+  const exportScriptRef = useRef<() => void>(() => {});
 
   // Refs for export/import callbacks
   const exportCustomizations = useRef<() => { programs: string[]; tweaks: string[]; optimizations: string[] }>(() => ({ programs: [], tweaks: [], optimizations: [] }));
@@ -91,6 +99,27 @@ const Index = () => {
     if (data.unattend) importUnattend.current(data.unattend);
   }, []);
 
+  // Wire up keyboard shortcuts
+  const handleExportProjectKb = useCallback(() => {
+    const data = handleExport();
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.name || 'iso-forge-project'}_${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [handleExport]);
+
+  useKeyboardShortcuts({
+    onExportProject: handleExportProjectKb,
+    onExportScript: useCallback(() => exportScriptRef.current(), []),
+    onToggleTheme: useCallback(() => themeToggleRef.current(), []),
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <SectionSidebar activeSection={activeSection} isMounted={isMounted} hasFile={!!selectedFile} />
@@ -115,9 +144,22 @@ const Index = () => {
                 exportComponents={exportComponents}
                 exportRegistry={exportRegistry}
                 isMounted={isMounted}
+                exportScriptRef={exportScriptRef}
               />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
-              <ThemeToggle />
+              <ThemeToggle toggleRef={themeToggleRef} />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-muted/50 border border-border cursor-help">
+                    <Keyboard className="w-3.5 h-3.5 text-muted-foreground" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs font-mono space-y-1 p-3">
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+S</kbd> Export Project</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+E</kbd> Export Script</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+D</kbd> Toggle Theme</p>
+                </TooltipContent>
+              </Tooltip>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
                 <Terminal className="w-4 h-4 text-primary" />
                 <span className="text-xs font-mono text-muted-foreground">v1.3.0</span>
@@ -270,6 +312,10 @@ const Index = () => {
                 updateCount={updateCount}
                 unattendCount={unattendCount}
               />
+            </div>
+
+            <div className="mt-6">
+              <BuildStepReorder steps={buildSteps} onReorder={setBuildSteps} />
             </div>
 
             <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
