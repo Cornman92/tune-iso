@@ -1,5 +1,5 @@
 import { useState, MutableRefObject } from 'react';
-import { Gamepad2, Building2, Monitor, Sparkles, Check, RotateCcw } from 'lucide-react';
+import { Gamepad2, Building2, Monitor, Sparkles, Check, RotateCcw, ShieldCheck, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
