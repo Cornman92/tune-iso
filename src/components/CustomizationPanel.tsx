@@ -14,6 +14,7 @@ interface CustomizationItem {
 
 interface CustomizationPanelProps {
   isMounted: boolean;
+  onCountChange?: (count: number) => void;
 }
 
 const defaultPrograms: CustomizationItem[] = [
