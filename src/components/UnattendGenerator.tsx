@@ -1,10 +1,16 @@
 import { useState, useEffect, MutableRefObject } from 'react';
-import { FileCode, Copy, ChevronDown, ChevronRight, Check, RotateCcw } from 'lucide-react';
+import {
+  FileCode, Copy, Check, RotateCcw, Globe, HardDrive, Key, User, MonitorSmartphone,
+  ShieldCheck, Terminal, Wifi, Zap, ChevronRight, Cpu, Eye, EyeOff
+} from 'lucide-react';
 import { escapeXml } from '@/lib/sanitize';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 
 interface AnswerOption {
@@ -45,7 +51,7 @@ const defaultOptions: AnswerOption[] = [
   ], xmlPath: 'Microsoft-Windows-Shell-Setup/TimeZone', enabled: true },
   { id: 'geo-id', label: 'GeoID', description: 'Geographic location ID (244 = US)', type: 'text', category: 'regional', defaultValue: '244', value: '244', xmlPath: 'Microsoft-Windows-International-Core/GeoID', enabled: false },
 
-  // Disk Configuration
+  // Disk
   { id: 'disk-id', label: 'Disk Number', description: 'Target disk number (usually 0)', type: 'text', category: 'disk', defaultValue: '0', value: '0', xmlPath: 'DiskConfiguration/Disk/DiskID', enabled: true },
   { id: 'partition-style', label: 'Partition Style', description: 'GPT (UEFI) or MBR (Legacy BIOS)', type: 'select', category: 'disk', defaultValue: 'GPT', value: 'GPT', options: [
     { value: 'GPT', label: 'GPT (UEFI)' },
@@ -56,7 +62,7 @@ const defaultOptions: AnswerOption[] = [
   { id: 'recovery-size', label: 'Recovery Partition Size (MB)', description: 'Windows Recovery partition', type: 'text', category: 'disk', defaultValue: '1024', value: '1024', xmlPath: 'DiskConfiguration/Disk/Partitions/Recovery/Size', enabled: false },
   { id: 'install-to-partition', label: 'Install Partition Number', description: 'Partition to install Windows (usually 3)', type: 'text', category: 'disk', defaultValue: '3', value: '3', xmlPath: 'ImageInstall/OSImage/InstallTo/PartitionID', enabled: true },
 
-  // Product Key & Edition
+  // Product
   { id: 'product-key', label: 'Product Key', description: 'Windows license key (or generic KMS key)', type: 'text', category: 'product', defaultValue: '', value: '', xmlPath: 'Microsoft-Windows-Setup/UserData/ProductKey/Key', enabled: false },
   { id: 'accept-eula', label: 'Accept EULA', description: 'Auto-accept license agreement', type: 'boolean', category: 'product', defaultValue: 'true', value: 'true', xmlPath: 'Microsoft-Windows-Setup/UserData/AcceptEula', enabled: true },
   { id: 'image-index', label: 'Image Index', description: 'WIM image index (6=Pro, 1=Home, etc.)', type: 'select', category: 'product', defaultValue: '6', value: '6', options: [
@@ -71,7 +77,7 @@ const defaultOptions: AnswerOption[] = [
   ], xmlPath: 'ImageInstall/OSImage/InstallFrom/MetaData/Value', enabled: true },
   { id: 'skip-product-key', label: 'Skip Product Key Screen', description: 'Bypass key entry during install', type: 'boolean', category: 'product', defaultValue: 'true', value: 'true', xmlPath: 'Microsoft-Windows-Setup/UserData/ProductKey/WillShowUI', enabled: true },
 
-  // User Account
+  // User
   { id: 'user-name', label: 'Username', description: 'Local admin account name', type: 'text', category: 'user', defaultValue: 'User', value: 'User', xmlPath: 'Microsoft-Windows-Shell-Setup/UserAccounts/LocalAccounts/LocalAccount/Name', enabled: true },
   { id: 'user-password', label: 'Password', description: 'Account password (blank = no password)', type: 'password', category: 'user', defaultValue: '', value: '', xmlPath: 'Microsoft-Windows-Shell-Setup/UserAccounts/LocalAccounts/LocalAccount/Password/Value', enabled: false },
   { id: 'auto-logon', label: 'Auto Logon', description: 'Skip login screen on boot', type: 'boolean', category: 'user', defaultValue: 'true', value: 'true', xmlPath: 'Microsoft-Windows-Shell-Setup/AutoLogon/Enabled', enabled: true },
@@ -81,7 +87,7 @@ const defaultOptions: AnswerOption[] = [
   { id: 'registered-org', label: 'Registered Organization', description: 'Organization name in system info', type: 'text', category: 'user', defaultValue: '', value: '', xmlPath: 'Microsoft-Windows-Shell-Setup/RegisteredOrganization', enabled: false },
   { id: 'registered-owner', label: 'Registered Owner', description: 'Owner name in system info', type: 'text', category: 'user', defaultValue: '', value: '', xmlPath: 'Microsoft-Windows-Shell-Setup/RegisteredOwner', enabled: false },
 
-  // OOBE (Out of Box Experience)
+  // OOBE
   { id: 'hide-eula', label: 'Hide EULA Page', description: 'Skip EULA during OOBE', type: 'boolean', category: 'oobe', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/HideEULAPage', enabled: true },
   { id: 'hide-oem-reg', label: 'Hide OEM Registration', description: 'Skip OEM registration screen', type: 'boolean', category: 'oobe', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/HideOEMRegistrationScreen', enabled: true },
   { id: 'hide-online-account', label: 'Hide Online Account Screen', description: 'Skip Microsoft account creation', type: 'boolean', category: 'oobe', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/HideOnlineAccountScreens', enabled: true },
@@ -99,7 +105,7 @@ const defaultOptions: AnswerOption[] = [
   { id: 'skip-machine-oobe', label: 'Skip Machine OOBE', description: 'Skip device setup questions', type: 'boolean', category: 'oobe', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/SkipMachineOOBE', enabled: true },
   { id: 'skip-user-oobe', label: 'Skip User OOBE', description: 'Skip user personalization', type: 'boolean', category: 'oobe', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/SkipUserOOBE', enabled: true },
 
-  // Privacy (OOBE)
+  // Privacy
   { id: 'disable-location-consent', label: 'Disable Location Consent', description: 'Don\'t ask for location sharing', type: 'boolean', category: 'privacy (oobe)', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/DisableLocationConsent', enabled: true },
   { id: 'disable-speech-opt', label: 'Disable Speech Recognition', description: 'Opt out of online speech recognition', type: 'boolean', category: 'privacy (oobe)', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/DisableSpeechRecognition', enabled: true },
   { id: 'disable-activity-history-oobe', label: 'Disable Activity History', description: 'Opt out of activity history', type: 'boolean', category: 'privacy (oobe)', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/DisableActivityHistory', enabled: true },
@@ -109,7 +115,7 @@ const defaultOptions: AnswerOption[] = [
   { id: 'disable-inking', label: 'Disable Inking & Typing', description: 'Opt out of inking data collection', type: 'boolean', category: 'privacy (oobe)', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/DisableInkingTyping', enabled: true },
   { id: 'disable-advertising-id-oobe', label: 'Disable Advertising ID', description: 'Opt out of advertising tracking', type: 'boolean', category: 'privacy (oobe)', defaultValue: 'true', value: 'true', xmlPath: 'OOBE/DisableAdvertisingID', enabled: true },
 
-  // Windows PE (Setup Phase)
+  // Windows PE
   { id: 'setup-ui-language', label: 'Setup UI Language', description: 'Language during Windows Setup', type: 'text', category: 'windows pe', defaultValue: 'en-US', value: 'en-US', xmlPath: 'Microsoft-Windows-International-Core-WinPE/SetupUILanguage/UILanguage', enabled: true },
   { id: 'bypass-tpm', label: 'Bypass TPM Check', description: 'Skip TPM 2.0 requirement (Win11)', type: 'boolean', category: 'windows pe', defaultValue: 'false', value: 'false', xmlPath: 'Microsoft-Windows-Setup/RunSynchronous/BypassTPMCheck', enabled: false },
   { id: 'bypass-ram', label: 'Bypass RAM Check', description: 'Skip 4GB RAM requirement (Win11)', type: 'boolean', category: 'windows pe', defaultValue: 'false', value: 'false', xmlPath: 'Microsoft-Windows-Setup/RunSynchronous/BypassRAMCheck', enabled: false },
@@ -117,7 +123,7 @@ const defaultOptions: AnswerOption[] = [
   { id: 'bypass-storage', label: 'Bypass Storage Check', description: 'Skip storage size requirement', type: 'boolean', category: 'windows pe', defaultValue: 'false', value: 'false', xmlPath: 'Microsoft-Windows-Setup/RunSynchronous/BypassStorageCheck', enabled: false },
   { id: 'bypass-cpu', label: 'Bypass CPU Check', description: 'Skip CPU compatibility check (Win11)', type: 'boolean', category: 'windows pe', defaultValue: 'false', value: 'false', xmlPath: 'Microsoft-Windows-Setup/RunSynchronous/BypassCPUCheck', enabled: false },
 
-  // First Logon Commands
+  // First Logon
   { id: 'cmd-disable-reserved', label: 'Disable Reserved Storage', description: 'DISM /Set-ReservedStorageState /State:Disabled', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/DisableReservedStorage', enabled: false },
   { id: 'cmd-enable-darkmode', label: 'Enable Dark Mode', description: 'Set dark theme via registry on first login', type: 'boolean', category: 'first logon', defaultValue: 'false', value: 'false', xmlPath: 'FirstLogonCommands/EnableDarkMode', enabled: false },
   { id: 'cmd-disable-edge-first-run', label: 'Disable Edge First Run', description: 'Skip Edge welcome experience', type: 'boolean', category: 'first logon', defaultValue: 'true', value: 'true', xmlPath: 'FirstLogonCommands/DisableEdgeFirstRun', enabled: true },
@@ -139,7 +145,7 @@ const defaultOptions: AnswerOption[] = [
   { id: 'cmd-custom-2', label: 'Custom Command 2', description: 'Second custom command', type: 'text', category: 'first logon', defaultValue: '', value: '', xmlPath: 'FirstLogonCommands/Custom2', enabled: false },
   { id: 'cmd-custom-3', label: 'Custom Command 3', description: 'Third custom command', type: 'text', category: 'first logon', defaultValue: '', value: '', xmlPath: 'FirstLogonCommands/Custom3', enabled: false },
 
-  // Network Configuration
+  // Network
   { id: 'net-static-ip', label: 'Static IP Address', description: 'Set a static IP (leave blank for DHCP)', type: 'text', category: 'network', defaultValue: '', value: '', xmlPath: 'Microsoft-Windows-TCPIP/Interfaces/Interface/UnicastIpAddresses', enabled: false },
   { id: 'net-dns-primary', label: 'Primary DNS', description: 'Primary DNS server address', type: 'text', category: 'network', defaultValue: '1.1.1.1', value: '1.1.1.1', xmlPath: 'Microsoft-Windows-DNS-Client/Interfaces/Interface/DNSServerSearchOrder/1', enabled: false },
   { id: 'net-dns-secondary', label: 'Secondary DNS', description: 'Secondary DNS server address', type: 'text', category: 'network', defaultValue: '8.8.8.8', value: '8.8.8.8', xmlPath: 'Microsoft-Windows-DNS-Client/Interfaces/Interface/DNSServerSearchOrder/2', enabled: false },
@@ -147,7 +153,7 @@ const defaultOptions: AnswerOption[] = [
   { id: 'net-domain-join', label: 'Domain Join', description: 'Active Directory domain to join', type: 'text', category: 'network', defaultValue: '', value: '', xmlPath: 'Microsoft-Windows-UnattendedJoin/Identification/JoinDomain', enabled: false },
   { id: 'net-disable-ipv6', label: 'Disable IPv6', description: 'Turn off IPv6 during setup', type: 'boolean', category: 'network', defaultValue: 'false', value: 'false', xmlPath: 'Microsoft-Windows-TCPIP/DisableIPv6', enabled: false },
 
-  // Power Configuration
+  // Power
   { id: 'power-scheme', label: 'Power Scheme', description: 'Default power plan after install', type: 'select', category: 'power', defaultValue: 'balanced', value: 'balanced', options: [
     { value: 'balanced', label: 'Balanced' },
     { value: 'high-performance', label: 'High Performance' },
@@ -164,7 +170,19 @@ const defaultOptions: AnswerOption[] = [
   { id: 'power-display-timeout', label: 'Display Timeout (min)', description: 'Minutes before display off (0 = never)', type: 'text', category: 'power', defaultValue: '15', value: '15', xmlPath: 'Microsoft-Windows-Shell-Setup/Power/DisplayTimeout', enabled: false },
 ];
 
-const categoryOrder = ['regional', 'windows pe', 'disk', 'product', 'user', 'oobe', 'privacy (oobe)', 'first logon', 'network', 'power'];
+// Tab definitions
+const TABS = [
+  { id: 'locale', label: 'Locale', icon: Globe, categories: ['regional'] },
+  { id: 'disk', label: 'Disk', icon: HardDrive, categories: ['disk'] },
+  { id: 'product', label: 'Product', icon: Key, categories: ['product'] },
+  { id: 'user', label: 'User', icon: User, categories: ['user'] },
+  { id: 'oobe', label: 'OOBE', icon: MonitorSmartphone, categories: ['oobe'] },
+  { id: 'privacy', label: 'Privacy', icon: ShieldCheck, categories: ['privacy (oobe)'] },
+  { id: 'winpe', label: 'WinPE', icon: Cpu, categories: ['windows pe'] },
+  { id: 'commands', label: 'Commands', icon: Terminal, categories: ['first logon'] },
+  { id: 'network', label: 'Network', icon: Wifi, categories: ['network'] },
+  { id: 'power', label: 'Power', icon: Zap, categories: ['power'] },
+];
 
 interface UnattendGeneratorProps {
   isMounted: boolean;
@@ -173,16 +191,165 @@ interface UnattendGeneratorProps {
   importRef?: MutableRefObject<(data: { id: string; value: string; enabled: boolean }[]) => void>;
 }
 
+// Visual partition diagram
+const DiskDiagram = ({ partitionStyle, efiSize, wipeDisk }: { partitionStyle: string; efiSize: string; wipeDisk: string }) => {
+  const isGPT = partitionStyle === 'GPT';
+  return (
+    <div className="mt-3 p-3 bg-muted/30 rounded-lg border border-border">
+      <p className="text-[10px] font-mono text-muted-foreground mb-2 uppercase tracking-wider">Partition Layout Preview</p>
+      <div className="flex gap-0.5 h-8 rounded overflow-hidden border border-border">
+        {isGPT && (
+          <>
+            <div
+              className="bg-warning/30 border-r border-border flex items-center justify-center text-[9px] font-mono text-warning shrink-0"
+              style={{ width: `${Math.max(8, Math.min(20, parseInt(efiSize) / 15))}%` }}
+            >
+              EFI {efiSize}MB
+            </div>
+            <div className="bg-muted/50 border-r border-border flex items-center justify-center text-[9px] font-mono text-muted-foreground shrink-0" style={{ width: '4%' }}>
+              MSR
+            </div>
+          </>
+        )}
+        <div className="bg-primary/20 flex-1 flex items-center justify-center text-[9px] font-mono text-primary">
+          Windows (Extend)
+        </div>
+      </div>
+      <div className="flex items-center gap-3 mt-2">
+        <Badge variant="outline" className="text-[9px] font-mono">
+          {isGPT ? 'GPT / UEFI' : 'MBR / BIOS'}
+        </Badge>
+        {wipeDisk === 'true' && (
+          <span className="text-[9px] font-mono text-destructive">⚠ Disk will be wiped</span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Render a field
+const FieldRenderer = ({ option, onUpdate }: { option: AnswerOption; onUpdate: (id: string, field: 'value' | 'enabled', val: string | boolean) => void }) => {
+  const [showPw, setShowPw] = useState(false);
+
+  return (
+    <div className={`flex items-start gap-3 p-2.5 rounded-lg transition-all ${option.enabled ? 'bg-primary/5 border border-primary/15' : 'bg-muted/10 border border-transparent'}`}>
+      <Switch
+        checked={option.enabled}
+        onCheckedChange={(v) => onUpdate(option.id, 'enabled', v)}
+        className="mt-0.5 scale-75 shrink-0"
+      />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-0.5">
+          <span className="text-xs font-medium text-foreground">{option.label}</span>
+        </div>
+        <p className="text-[10px] text-muted-foreground mb-1.5">{option.description}</p>
+        {option.enabled && (
+          <div>
+            {option.type === 'password' ? (
+              <div className="relative">
+                <Input
+                  type={showPw ? 'text' : 'password'}
+                  value={option.value}
+                  onChange={(e) => onUpdate(option.id, 'value', e.target.value)}
+                  placeholder={option.defaultValue || 'Enter password...'}
+                  className="h-7 text-xs font-mono bg-muted/30 pr-8"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw(!showPw)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPw ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                </button>
+              </div>
+            ) : option.type === 'text' ? (
+              <Input
+                type="text"
+                value={option.value}
+                onChange={(e) => onUpdate(option.id, 'value', e.target.value)}
+                placeholder={option.defaultValue || 'Enter value...'}
+                className="h-7 text-xs font-mono bg-muted/30"
+              />
+            ) : option.type === 'select' ? (
+              <Select value={option.value} onValueChange={(v) => onUpdate(option.id, 'value', v)}>
+                <SelectTrigger className="h-7 text-xs font-mono bg-muted/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {option.options?.map(opt => (
+                    <SelectItem key={opt.value} value={opt.value} className="text-xs font-mono">{opt.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : option.type === 'boolean' ? (
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => onUpdate(option.id, 'value', 'true')}
+                  className={`px-3 py-1 rounded text-[10px] font-mono transition-all ${option.value === 'true' ? 'bg-primary text-primary-foreground' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+                >
+                  true
+                </button>
+                <button
+                  onClick={() => onUpdate(option.id, 'value', 'false')}
+                  className={`px-3 py-1 rounded text-[10px] font-mono transition-all ${option.value === 'false' ? 'bg-destructive/80 text-destructive-foreground' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+                >
+                  false
+                </button>
+              </div>
+            ) : null}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Toggle grid for boolean-only categories
+const ToggleGrid = ({ options, onUpdate }: { options: AnswerOption[]; onUpdate: (id: string, field: 'value' | 'enabled', val: string | boolean) => void }) => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+    {options.map(opt => (
+      <div
+        key={opt.id}
+        className={`flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-all ${
+          opt.enabled && opt.value === 'true'
+            ? 'bg-primary/10 border border-primary/20'
+            : 'bg-muted/10 border border-transparent hover:bg-muted/20'
+        }`}
+        onClick={() => {
+          if (!opt.enabled) {
+            onUpdate(opt.id, 'enabled', true);
+            onUpdate(opt.id, 'value', 'true');
+          } else if (opt.value === 'true') {
+            onUpdate(opt.id, 'value', 'false');
+          } else {
+            onUpdate(opt.id, 'enabled', false);
+          }
+        }}
+      >
+        <div className={`w-4 h-4 rounded flex items-center justify-center shrink-0 ${
+          opt.enabled && opt.value === 'true' ? 'bg-primary' : 'bg-muted border border-border'
+        }`}>
+          {opt.enabled && opt.value === 'true' && <Check className="w-2.5 h-2.5 text-primary-foreground" />}
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs font-medium text-foreground leading-tight">{opt.label}</p>
+          <p className="text-[9px] text-muted-foreground truncate">{opt.description}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: UnattendGeneratorProps) => {
   const [options, setOptions] = useState(defaultOptions);
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['oobe', 'user']);
+  const [activeTab, setActiveTab] = useState('locale');
+  const [copied, setCopied] = useState(false);
 
   const enabledCount = options.filter(o => o.enabled).length;
 
   useEffect(() => {
     onCountChange?.(enabledCount);
   }, [enabledCount, onCountChange]);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (exportRef) exportRef.current = () => options.map(o => ({ id: o.id, value: o.value, enabled: o.enabled }));
@@ -197,19 +364,14 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
     };
   }, [importRef]);
 
-  const toggleCategory = (cat: string) => {
-    setExpandedCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
-  };
-
   const updateOption = (id: string, field: 'value' | 'enabled', newValue: string | boolean) => {
     setOptions(prev => prev.map(o => o.id === id ? { ...o, [field]: newValue } : o));
   };
 
   const resetDefaults = () => {
     setOptions(defaultOptions.map(o => ({ ...o })));
+    toast.success('Reset all settings to defaults');
   };
-
-  
 
   const generateXML = (): string => {
     const enabled = options.filter(o => o.enabled);
@@ -223,7 +385,6 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
       '',
     ];
 
-    // Group by pass
     const regional = enabled.filter(o => o.category === 'regional');
     const winpe = enabled.filter(o => o.category === 'windows pe');
     const disk = enabled.filter(o => o.category === 'disk');
@@ -232,7 +393,6 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
     const oobe = enabled.filter(o => o.category === 'oobe' || o.category === 'privacy (oobe)');
     const firstLogon = enabled.filter(o => o.category === 'first logon');
 
-    // windowsPE pass
     if (winpe.length > 0 || regional.length > 0 || disk.length > 0 || product.length > 0) {
       lines.push('  <settings pass="windowsPE">');
       if (winpe.length > 0 || regional.length > 0) {
@@ -270,7 +430,6 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
           if (o.id === 'accept-eula') lines.push(`      <UserData><AcceptEula>${escapeXml(o.value)}</AcceptEula></UserData>`);
           if (o.id === 'product-key' && o.value) lines.push(`      <UserData><ProductKey><Key>${escapeXml(o.value)}</Key></ProductKey></UserData>`);
         });
-        // Bypass checks
         const bypasses = winpe.filter(o => o.id.startsWith('bypass-') && o.value === 'true');
         if (bypasses.length > 0) {
           lines.push('      <RunSynchronous>');
@@ -288,18 +447,13 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
       lines.push('');
     }
 
-    // oobeSystem pass
     if (user.length > 0 || oobe.length > 0 || firstLogon.length > 0) {
       lines.push('  <settings pass="oobeSystem">');
       lines.push('    <component name="Microsoft-Windows-Shell-Setup">');
-
       const compName = user.find(o => o.id === 'computer-name');
       if (compName) lines.push(`      <ComputerName>${escapeXml(compName.value)}</ComputerName>`);
-
       const tz = options.find(o => o.id === 'timezone' && o.enabled);
       if (tz) lines.push(`      <TimeZone>${escapeXml(tz.value)}</TimeZone>`);
-
-      // OOBE
       if (oobe.length > 0) {
         lines.push('      <OOBE>');
         oobe.forEach(o => {
@@ -308,8 +462,6 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         });
         lines.push('      </OOBE>');
       }
-
-      // User accounts
       const userName = user.find(o => o.id === 'user-name');
       if (userName) {
         const userPass = user.find(o => o.id === 'user-password');
@@ -325,8 +477,6 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         lines.push('        </LocalAccounts>');
         lines.push('      </UserAccounts>');
       }
-
-      // Auto logon
       const autoLogon = user.find(o => o.id === 'auto-logon');
       if (autoLogon?.value === 'true') {
         const logonCount = user.find(o => o.id === 'auto-logon-count');
@@ -336,8 +486,6 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         if (logonCount) lines.push(`        <LogonCount>${escapeXml(logonCount.value)}</LogonCount>`);
         lines.push('      </AutoLogon>');
       }
-
-      // First logon commands
       const flcEnabled = firstLogon.filter(o => o.value === 'true' || (o.type === 'text' && o.value));
       if (flcEnabled.length > 0) {
         lines.push('      <FirstLogonCommands>');
@@ -352,6 +500,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
           else if (o.id === 'cmd-taskbar-left') cmd = 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f';
           else if (o.id === 'cmd-disable-reserved') cmd = 'DISM /Online /Set-ReservedStorageState /State:Disabled';
           else if (o.id === 'cmd-custom' && o.value) cmd = o.value;
+          else if (o.id === 'cmd-custom-2' && o.value) cmd = o.value;
+          else if (o.id === 'cmd-custom-3' && o.value) cmd = o.value;
           if (cmd) {
             lines.push(`        <SynchronousCommand wcm:action="add"><Order>${order}</Order>`);
             lines.push(`          <CommandLine>cmd /c ${escapeXml(cmd)}</CommandLine>`);
@@ -361,7 +511,6 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         });
         lines.push('      </FirstLogonCommands>');
       }
-
       lines.push('    </component>');
       lines.push('  </settings>');
     }
@@ -378,12 +527,6 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const grouped = categoryOrder.reduce((acc, cat) => {
-    const items = options.filter(o => o.category === cat);
-    if (items.length > 0) acc[cat] = items;
-    return acc;
-  }, {} as Record<string, AnswerOption[]>);
-
   if (!isMounted) {
     return (
       <div className="bg-card border border-border rounded-lg p-8 text-center animate-fade-in">
@@ -394,6 +537,21 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
       </div>
     );
   }
+
+  const getTabOptions = (tabId: string) => {
+    const tab = TABS.find(t => t.id === tabId);
+    return tab ? options.filter(o => tab.categories.includes(o.category)) : [];
+  };
+
+  const getTabEnabledCount = (tabId: string) => {
+    return getTabOptions(tabId).filter(o => o.enabled).length;
+  };
+
+  // Boolean-only tabs use toggle grid
+  const isBooleanOnlyTab = (tabId: string) => {
+    const opts = getTabOptions(tabId);
+    return opts.length > 0 && opts.every(o => o.type === 'boolean');
+  };
 
   return (
     <div className="bg-card border border-border rounded-lg overflow-hidden animate-slide-in">
@@ -417,106 +575,103 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         </div>
       </div>
 
-      {/* Options */}
-      <div className="max-h-[500px] overflow-y-auto p-3">
-        {Object.entries(grouped).map(([category, items]) => {
-          const isExpanded = expandedCategories.includes(category);
-          const enabledInCat = items.filter(i => i.enabled).length;
+      {/* Visual Tabbed Editor */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <div className="border-b border-border bg-muted/20 px-2">
+          <TabsList className="h-auto bg-transparent flex flex-wrap gap-0 p-0">
+            {TABS.map(tab => {
+              const Icon = tab.icon;
+              const count = getTabEnabledCount(tab.id);
+              return (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 py-2 text-[11px] font-mono gap-1.5"
+                >
+                  <Icon className="w-3 h-3" />
+                  {tab.label}
+                  {count > 0 && (
+                    <span className="ml-0.5 px-1 py-0 rounded-full bg-primary/20 text-primary text-[9px] leading-tight">
+                      {count}
+                    </span>
+                  )}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+        </div>
 
-          return (
-            <div key={category} className="mb-3">
-              <button
-                onClick={() => toggleCategory(category)}
-                className="flex items-center gap-2 mb-2 w-full text-left group"
-              >
-                {isExpanded ? (
-                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                ) : (
-                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                )}
-                <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider group-hover:text-foreground transition-colors">
-                  {category}
-                </span>
-                <span className="text-[10px] font-mono text-muted-foreground/60">
-                  ({enabledInCat}/{items.length})
-                </span>
-                <div className="flex-1 h-px bg-border" />
-              </button>
+        <div className="max-h-[480px] overflow-y-auto">
+          {TABS.map(tab => {
+            const tabOptions = getTabOptions(tab.id);
+            const boolOnly = isBooleanOnlyTab(tab.id);
+            const Icon = tab.icon;
 
-              {isExpanded && (
-                <div className="space-y-2 ml-6">
-                  {items.map(option => (
-                    <div
-                      key={option.id}
-                      className={`
-                        p-2.5 rounded-lg transition-all
-                        ${option.enabled ? 'bg-primary/5 border border-primary/20' : 'bg-muted/20'}
-                      `}
-                    >
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <Switch
-                            checked={option.enabled}
-                            onCheckedChange={(v) => updateOption(option.id, 'enabled', v)}
-                            className="scale-75"
-                          />
-                          <span className="text-sm font-medium text-foreground truncate">{option.label}</span>
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-1.5 ml-10">{option.description}</p>
-
-                      {option.enabled && (
-                        <div className="ml-10">
-                          {option.type === 'text' || option.type === 'password' ? (
-                            <Input
-                              type={option.type === 'password' ? 'password' : 'text'}
-                              value={option.value}
-                              onChange={(e) => updateOption(option.id, 'value', e.target.value)}
-                              placeholder={option.defaultValue || 'Enter value...'}
-                              className="h-8 text-xs font-mono bg-muted/30"
-                            />
-                          ) : option.type === 'select' ? (
-                            <select
-                              value={option.value}
-                              onChange={(e) => updateOption(option.id, 'value', e.target.value)}
-                              className="w-full h-8 text-xs font-mono bg-muted/30 border border-border rounded-md px-2 text-foreground"
-                            >
-                              {option.options?.map(opt => (
-                                <option key={opt.value} value={opt.value}>{opt.label}</option>
-                              ))}
-                            </select>
-                          ) : option.type === 'boolean' ? (
-                            <div className="flex items-center gap-2">
-                              <select
-                                value={option.value}
-                                onChange={(e) => updateOption(option.id, 'value', e.target.value)}
-                                className="h-8 text-xs font-mono bg-muted/30 border border-border rounded-md px-2 text-foreground"
-                              >
-                                <option value="true">true</option>
-                                <option value="false">false</option>
-                              </select>
-                            </div>
-                          ) : null}
-                          <p className="text-[10px] font-mono text-muted-foreground/50 mt-1 truncate">
-                            {option.xmlPath}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+            return (
+              <TabsContent key={tab.id} value={tab.id} className="p-3 mt-0 space-y-3">
+                {/* Section header */}
+                <div className="flex items-center gap-2 pb-2 border-b border-border/50">
+                  <Icon className="w-4 h-4 text-primary" />
+                  <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider">{tab.label} Settings</h3>
+                  <span className="text-[10px] text-muted-foreground font-mono ml-auto">
+                    {tabOptions.filter(o => o.enabled).length}/{tabOptions.length} active
+                  </span>
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+
+                {/* Disk tab gets visual partition diagram */}
+                {tab.id === 'disk' && (
+                  <DiskDiagram
+                    partitionStyle={options.find(o => o.id === 'partition-style')?.value || 'GPT'}
+                    efiSize={options.find(o => o.id === 'efi-size')?.value || '300'}
+                    wipeDisk={options.find(o => o.id === 'wipe-disk')?.value || 'true'}
+                  />
+                )}
+
+                {/* User tab gets account card */}
+                {tab.id === 'user' && (
+                  <Card className="border-primary/20 bg-primary/5">
+                    <CardHeader className="pb-2 pt-3 px-3">
+                      <CardTitle className="text-xs font-mono flex items-center gap-2">
+                        <User className="w-3.5 h-3.5 text-primary" />
+                        Local Administrator Account
+                      </CardTitle>
+                      <CardDescription className="text-[10px]">
+                        This account will be created during installation with Administrator privileges
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="px-3 pb-3">
+                      <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-muted-foreground">
+                        <div>Username: <span className="text-foreground">{options.find(o => o.id === 'user-name')?.value || 'User'}</span></div>
+                        <div>Computer: <span className="text-foreground">{options.find(o => o.id === 'computer-name')?.value || '*'}</span></div>
+                        <div>Auto Login: <span className="text-foreground">{options.find(o => o.id === 'auto-logon')?.value || 'true'}</span></div>
+                        <div>Group: <span className="text-foreground">Administrators</span></div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Render fields */}
+                {boolOnly ? (
+                  <ToggleGrid options={tabOptions} onUpdate={updateOption} />
+                ) : (
+                  <div className="space-y-1.5">
+                    {tabOptions.map(opt => (
+                      <FieldRenderer key={opt.id} option={opt} onUpdate={updateOption} />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+            );
+          })}
+        </div>
+      </Tabs>
 
       {/* XML Preview */}
       <div className="border-t border-border">
         <details className="group">
           <summary className="px-4 py-2.5 cursor-pointer text-xs font-mono text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
             <ChevronRight className="w-3 h-3 group-open:rotate-90 transition-transform" />
-            Preview XML Output
+            Preview Generated XML
           </summary>
           <div className="max-h-[300px] overflow-auto bg-[hsl(var(--background))] p-3">
             <pre className="text-[11px] font-mono text-muted-foreground whitespace-pre leading-relaxed">
