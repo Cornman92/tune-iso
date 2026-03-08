@@ -47,6 +47,19 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showPresets, setShowPresets] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Ctrl+K shortcut to focus search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   useEffect(() => {
     if (exportRef) exportRef.current = () => ({
