@@ -98,9 +98,10 @@ const COMPONENT_PRESETS: ComponentPreset[] = [
 interface ComponentRemovalProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
+  exportRef?: MutableRefObject<() => string[]>;
 }
 
-const ComponentRemoval = ({ isMounted, onCountChange }: ComponentRemovalProps) => {
+const ComponentRemoval = ({ isMounted, onCountChange, exportRef }: ComponentRemovalProps) => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<RiskLevel | 'all'>('all');
   const [selected, setSelected] = useState<Set<string>>(new Set());
