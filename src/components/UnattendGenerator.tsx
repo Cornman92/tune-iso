@@ -316,10 +316,10 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         lines.push('      <UserAccounts>');
         lines.push('        <LocalAccounts>');
         lines.push('          <LocalAccount wcm:action="add">');
-        lines.push(`            <Name>${userName.value}</Name>`);
+        lines.push(`            <Name>${escapeXml(userName.value)}</Name>`);
         lines.push('            <Group>Administrators</Group>');
         if (userPass?.enabled && userPass.value) {
-          lines.push(`            <Password><Value>${userPass.value}</Value><PlainText>true</PlainText></Password>`);
+          lines.push(`            <Password><Value>${escapeXml(userPass.value)}</Value><PlainText>true</PlainText></Password>`);
         }
         lines.push('          </LocalAccount>');
         lines.push('        </LocalAccounts>');
