@@ -180,6 +180,9 @@ const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: 
   }
 
   const grouped = getGroupedItems();
+  const searchResultCount = isGlobalSearch
+    ? Object.values(grouped).reduce((sum, items) => sum + items.length, 0)
+    : 0;
 
   return (
     <div className="space-y-4">
