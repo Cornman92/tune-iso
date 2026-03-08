@@ -23,6 +23,7 @@ interface PowerShellExportProps {
   exportRegistry: MutableRefObject<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>;
   isMounted: boolean;
   exportScriptRef?: MutableRefObject<() => void>;
+  buildSteps: BuildStep[];
 }
 
 const PowerShellExport = ({
@@ -34,6 +35,7 @@ const PowerShellExport = ({
   exportRegistry,
   isMounted,
   exportScriptRef,
+  buildSteps,
 }: PowerShellExportProps) => {
 
   const generateScript = useCallback((): string => {
