@@ -420,6 +420,44 @@ const Index = () => {
             </div>
 
             <div className="mt-6">
+              <IsoSizeEstimator
+                removedComponents={exportComponents.current()}
+                driverCount={driverCount}
+                updateCount={updateCount}
+              />
+            </div>
+
+            <div className="mt-6">
+              <DependencyWarnings
+                disabledServices={exportServices.current()}
+                removedComponents={exportComponents.current()}
+              />
+            </div>
+
+            <div className="mt-6">
+              <ScriptValidator
+                customizations={exportCustomizations.current()}
+                disabledServices={exportServices.current()}
+                removedComponents={exportComponents.current()}
+                registryEntries={exportRegistry.current()}
+                driverCount={driverCount}
+                isMounted={isMounted}
+              />
+            </div>
+
+            <div className="mt-6">
+              <BuildDiffView
+                customizations={exportCustomizations.current()}
+                disabledServices={exportServices.current()}
+                removedComponents={exportComponents.current()}
+                registryEntries={exportRegistry.current()}
+                driverCount={driverCount}
+                updateCount={updateCount}
+                unattendCount={unattendCount}
+              />
+            </div>
+
+            <div className="mt-6">
               <BuildStepReorder steps={buildSteps} onReorder={setBuildSteps} />
             </div>
 
