@@ -27,7 +27,13 @@ const STORAGE_KEY = 'iso-forge-templates';
 function loadTemplates(): SavedTemplate[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    // Validate each template's data field
+    return parsed.filter((t: any) =>
+      t && typeof t.id === 'string' && typeof t.name === 'string' && t.data && projectDataSchema.safeParse(t.data).success
+    );
   } catch {
     return [];
   }
