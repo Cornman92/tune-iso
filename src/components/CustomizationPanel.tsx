@@ -154,6 +154,27 @@ const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProp
         })}
       </div>
 
+      {/* Search */}
+      <div className="px-4 pt-3 pb-1">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search customizations..."
+            className="pl-9 pr-8 h-9 font-mono text-sm bg-muted/30"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Content */}
       <div className="p-4 max-h-[400px] overflow-y-auto">
         {Object.entries(getGroupedItems()).map(([category, items]) => (
