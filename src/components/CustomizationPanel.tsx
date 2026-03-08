@@ -57,6 +57,7 @@ const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProp
   const [tweaks, setTweaks] = useState(defaultTweaks);
   const [optimizations, setOptimizations] = useState(defaultOptimizations);
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['browsers', 'privacy', 'performance']);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleItem = (id: string, type: 'programs' | 'tweaks' | 'optimizations') => {
     const setter = type === 'programs' ? setPrograms : type === 'tweaks' ? setTweaks : setOptimizations;
