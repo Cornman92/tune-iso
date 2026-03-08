@@ -167,6 +167,8 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'virtualbox', name: 'VirtualBox', description: 'Free virtualization platform', enabled: false, category: 'virtualization', risk: 'safe' },
   { id: 'vmware-player', name: 'VMware Workstation Player', description: 'Free VM player', enabled: false, category: 'virtualization', risk: 'safe' },
   { id: 'sandboxie-plus', name: 'Sandboxie-Plus', description: 'Application sandboxing', enabled: false, category: 'virtualization', risk: 'safe' },
+  { id: 'qemu', name: 'QEMU', description: 'Open-source machine emulator', enabled: false, category: 'virtualization', risk: 'safe' },
+  { id: 'proxmox-ve', name: 'Proxmox VE Client', description: 'Proxmox management client', enabled: false, category: 'virtualization', risk: 'safe' },
 
   // Runtimes & Frameworks
   { id: 'dotnet-desktop', name: '.NET Desktop Runtime', description: '.NET 8 desktop runtime', enabled: false, category: 'runtimes', risk: 'safe' },
@@ -177,6 +179,11 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'vulkan-rt', name: 'Vulkan Runtime', description: 'Vulkan graphics API runtime', enabled: false, category: 'runtimes', risk: 'safe' },
   { id: 'xna-framework', name: 'XNA Framework', description: 'Microsoft XNA for older games', enabled: false, category: 'runtimes', risk: 'safe' },
   { id: 'webview2', name: 'WebView2 Runtime', description: 'Edge-based web rendering runtime', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'dotnet6-runtime', name: '.NET 6 Runtime', description: '.NET 6 LTS runtime', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'dotnet7-runtime', name: '.NET 7 Runtime', description: '.NET 7 runtime', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'msys2', name: 'MSYS2', description: 'Unix-like environment for Windows', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'perl', name: 'Strawberry Perl', description: 'Perl programming language', enabled: false, category: 'runtimes', risk: 'safe' },
+  { id: 'ruby', name: 'Ruby (RubyInstaller)', description: 'Ruby language installer', enabled: false, category: 'runtimes', risk: 'safe' },
 
   // System Tools
   { id: 'wiztree', name: 'WizTree', description: 'Fastest disk space analyzer', enabled: false, category: 'system tools', risk: 'safe' },
@@ -191,6 +198,13 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'throttlestop', name: 'ThrottleStop', description: 'CPU undervolting & monitoring', enabled: false, category: 'system tools', risk: 'safe' },
   { id: 'driver-booster', name: 'Driver Booster Free', description: 'Auto driver updater', enabled: false, category: 'system tools', risk: 'safe' },
   { id: 'snappy-driver', name: 'Snappy Driver Installer', description: 'Offline driver installer', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'aida64', name: 'AIDA64', description: 'System benchmarking & diagnostics', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'cinebench', name: 'Cinebench', description: 'CPU/GPU rendering benchmark', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'disk2vhd', name: 'Disk2VHD', description: 'Convert physical disk to VHD', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'sysmon', name: 'Sysmon', description: 'Sysinternals system monitor', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'bginfo', name: 'BGInfo', description: 'Desktop wallpaper system info', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'ntlite', name: 'NTLite', description: 'Windows image configurator', enabled: false, category: 'system tools', risk: 'safe' },
+  { id: 'mdt', name: 'Microsoft Deployment Toolkit', description: 'OS deployment framework', enabled: false, category: 'system tools', risk: 'safe' },
 
   // Customization
   { id: 'open-shell', name: 'Open-Shell', description: 'Classic Start menu replacement', enabled: false, category: 'customization', risk: 'safe' },
@@ -202,6 +216,13 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'eartrumpet', name: 'EarTrumpet', description: 'Per-app volume control', enabled: false, category: 'customization', risk: 'safe' },
   { id: 'files-app', name: 'Files App', description: 'Modern file explorer replacement', enabled: false, category: 'customization', risk: 'safe' },
   { id: 'modernflyouts', name: 'ModernFlyouts', description: 'Modern volume/brightness flyouts', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'windhawk', name: 'Windhawk', description: 'System-wide code injection for mods', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'taskbarx', name: 'TaskbarX', description: 'Center taskbar icons & customize', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'powertoys-run', name: 'PowerToys Run', description: 'Spotlight-like app launcher', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'wallpaper-engine', name: 'Wallpaper Engine', description: 'Animated wallpaper (Steam)', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'winaero-tweaker', name: 'Winaero Tweaker', description: 'All-in-one Windows customization', enabled: false, category: 'customization', risk: 'safe' },
+  { id: 'uxtheme-patcher', name: 'UxTheme Patcher', description: 'Enable custom visual themes', enabled: false, category: 'customization', risk: 'moderate' },
+  { id: 'rectify11', name: 'Rectify11', description: 'UI consistency patches for Win11', enabled: false, category: 'customization', risk: 'moderate' },
 
   // Fonts
   { id: 'font-firacode', name: 'Fira Code', description: 'Monospaced font with ligatures', enabled: false, category: 'fonts', risk: 'safe' },
@@ -214,6 +235,11 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'font-sourcecodepro', name: 'Source Code Pro', description: 'Adobe monospaced font', enabled: false, category: 'fonts', risk: 'safe' },
   { id: 'font-hack', name: 'Hack', description: 'Open-source coding font', enabled: false, category: 'fonts', risk: 'safe' },
   { id: 'font-meslo', name: 'Meslo LG', description: 'Customized Apple Menlo font', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-monaspace', name: 'Monaspace', description: 'GitHub monospace font family', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-recursive', name: 'Recursive', description: 'Variable font for code & UI', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-comic-mono', name: 'Comic Mono', description: 'Monospaced Comic Sans alternative', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-victor-mono', name: 'Victor Mono', description: 'Clean monospace with cursive italics', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-geist-mono', name: 'Geist Mono', description: 'Vercel monospace font', enabled: false, category: 'fonts', risk: 'safe' },
 
   // Cloud & Backup
   { id: 'nextcloud-client', name: 'Nextcloud Client', description: 'Self-hosted cloud sync client', enabled: false, category: 'cloud & backup', risk: 'safe' },
@@ -223,6 +249,26 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'megasync', name: 'MEGA Sync', description: 'MEGA cloud storage client', enabled: false, category: 'cloud & backup', risk: 'safe' },
   { id: 'dropbox', name: 'Dropbox', description: 'Cloud file hosting client', enabled: false, category: 'cloud & backup', risk: 'safe' },
   { id: 'google-drive', name: 'Google Drive Desktop', description: 'Google cloud storage client', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'backblaze', name: 'Backblaze', description: 'Unlimited cloud backup service', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'borgbackup', name: 'BorgBackup', description: 'Deduplicating backup with compression', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'veeam-agent', name: 'Veeam Agent Free', description: 'Enterprise backup for Windows', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'macrium-reflect', name: 'Macrium Reflect Free', description: 'Disk imaging & cloning', enabled: false, category: 'cloud & backup', risk: 'safe' },
+
+  // Remote Access
+  { id: 'rustdesk', name: 'RustDesk', description: 'Open-source remote desktop', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'anydesk', name: 'AnyDesk', description: 'Fast remote desktop client', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'parsec', name: 'Parsec', description: 'Low-latency remote desktop for gaming', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'moonlight', name: 'Moonlight', description: 'NVIDIA GameStream client', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'sunshine', name: 'Sunshine', description: 'Open-source game streaming server', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'tailscale', name: 'Tailscale', description: 'WireGuard-based mesh VPN', enabled: false, category: 'remote access', risk: 'safe' },
+  { id: 'zerotier', name: 'ZeroTier', description: 'Software-defined networking', enabled: false, category: 'remote access', risk: 'safe' },
+
+  // Education & Science
+  { id: 'octave', name: 'GNU Octave', description: 'MATLAB-compatible numerical computing', enabled: false, category: 'education', risk: 'safe' },
+  { id: 'r-project', name: 'R (CRAN)', description: 'Statistical computing language', enabled: false, category: 'education', risk: 'safe' },
+  { id: 'rstudio', name: 'RStudio Desktop', description: 'IDE for R language', enabled: false, category: 'education', risk: 'safe' },
+  { id: 'jupyter', name: 'Jupyter Notebook', description: 'Interactive computing notebooks', enabled: false, category: 'education', risk: 'safe' },
+  { id: 'geogebra', name: 'GeoGebra', description: 'Math visualization & graphing', enabled: false, category: 'education', risk: 'safe' },
 ];
 
 export const defaultTweaks: CustomizationItem[] = [
@@ -410,6 +456,13 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'disable-game-dvr', name: 'Disable Game DVR', description: 'Stop background game recording', enabled: false, category: 'performance', risk: 'safe' },
   { id: 'disable-game-bar', name: 'Disable Game Bar Tips', description: 'Stop Game Bar suggestions', enabled: false, category: 'performance', risk: 'safe' },
   { id: 'high-perf-timer', name: 'High Performance Timer', description: 'Set timer resolution to 0.5ms', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'disable-dynamic-tick', name: 'Disable Dynamic Tick', description: 'Force constant timer interrupts', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'disable-power-throttling', name: 'Disable Power Throttling', description: 'Prevent CPU throttling of background apps', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'thread-dpc-optimization', name: 'Optimize DPC Latency', description: 'Reduce Deferred Procedure Call latency', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'disable-meltdown', name: 'Disable Meltdown Mitigations', description: 'Trade security for perf (Intel CPUs)', enabled: false, category: 'performance', risk: 'aggressive' },
+  { id: 'irq-affinity', name: 'Set IRQ Affinity', description: 'Pin interrupts to specific CPU cores', enabled: false, category: 'performance', risk: 'moderate' },
+  { id: 'disable-cfg', name: 'Disable Control Flow Guard', description: 'Remove CFG overhead (security tradeoff)', enabled: false, category: 'performance', risk: 'aggressive' },
+  { id: 'split-large-caches', name: 'Split Large Caches', description: 'Optimize L3 cache partitioning', enabled: false, category: 'performance', risk: 'moderate' },
 
   // Memory
   { id: 'disable-pagefile', name: 'Disable Page File', description: 'Remove virtual memory (16GB+ RAM)', enabled: false, category: 'memory', risk: 'aggressive' },
@@ -418,6 +471,9 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'disable-prefetch', name: 'Disable Prefetch', description: 'Stop app prefetching (SSD only)', enabled: false, category: 'memory', risk: 'moderate' },
   { id: 'memory-management', name: 'Optimize Memory Management', description: 'Tune kernel memory parameters', enabled: false, category: 'memory', risk: 'moderate' },
   { id: 'disable-memory-compression', name: 'Disable Memory Compression', description: 'Trade RAM for CPU cycles', enabled: false, category: 'memory', risk: 'moderate' },
+  { id: 'lock-pages-memory', name: 'Lock Pages in Memory', description: 'Prevent paging for critical processes', enabled: false, category: 'memory', risk: 'moderate' },
+  { id: 'increase-npp', name: 'Increase Non-Paged Pool', description: 'Larger kernel memory pool', enabled: false, category: 'memory', risk: 'moderate' },
+  { id: 'disable-swap-file', name: 'Disable swapfile.sys', description: 'Remove UWP app swap (SSD)', enabled: false, category: 'memory', risk: 'moderate' },
 
   // Storage
   { id: 'ssd-optimize', name: 'SSD Optimization Suite', description: 'TRIM, disable defrag, optimize I/O', enabled: false, category: 'storage', risk: 'safe' },
@@ -428,6 +484,10 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'disable-reserved-storage', name: 'Disable Reserved Storage', description: 'Reclaim 7GB+ reserved space', enabled: false, category: 'storage', risk: 'moderate' },
   { id: 'disable-storage-sense', name: 'Configure Storage Sense', description: 'Auto-clean temp files', enabled: false, category: 'storage', risk: 'safe' },
   { id: 'disable-last-access', name: 'Disable Last Access Timestamp', description: 'Reduce NTFS write overhead', enabled: false, category: 'storage', risk: 'safe' },
+  { id: 'enable-dedup', name: 'Enable Deduplication', description: 'NTFS data deduplication (Server feature)', enabled: false, category: 'storage', risk: 'moderate' },
+  { id: 'disable-8dot3', name: 'Disable 8.3 Name Generation', description: 'Skip legacy short filename creation', enabled: false, category: 'storage', risk: 'safe' },
+  { id: 'increase-ntfs-cache', name: 'Increase NTFS Cache', description: 'Larger MFT zone for performance', enabled: false, category: 'storage', risk: 'safe' },
+  { id: 'disable-encryption-warning', name: 'Disable Encryption Warning', description: 'Remove NTFS encryption warning prompts', enabled: false, category: 'storage', risk: 'safe' },
 
   // Network
   { id: 'network-optimize', name: 'Network Stack Optimization', description: 'Optimize TCP/IP parameters', enabled: false, category: 'network', risk: 'safe' },
@@ -441,6 +501,13 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'set-dns-google', name: 'Set DNS to Google', description: 'Use 8.8.8.8 / 8.8.4.4 DNS', enabled: false, category: 'network', risk: 'safe' },
   { id: 'set-dns-quad9', name: 'Set DNS to Quad9', description: 'Use 9.9.9.9 security-filtered DNS', enabled: false, category: 'network', risk: 'safe' },
   { id: 'disable-wifi-hotspot', name: 'Disable Mobile Hotspot', description: 'Prevent mobile hotspot auto-enable', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'rss-scaling', name: 'Enable RSS (Receive Side Scaling)', description: 'Distribute network processing across cores', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'rsc-offload', name: 'Enable RSC Offload', description: 'Receive Segment Coalescing for throughput', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'disable-netbios-tcp', name: 'Disable NetBIOS over TCP', description: 'Remove legacy name resolution', enabled: false, category: 'network', risk: 'moderate' },
+  { id: 'jumbo-frames', name: 'Enable Jumbo Frames', description: 'MTU 9014 for local network throughput', enabled: false, category: 'network', risk: 'moderate' },
+  { id: 'disable-qos-packet-scheduler', name: 'Disable QoS Packet Scheduler', description: 'Remove bandwidth reservation', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'set-dns-adguard', name: 'Set DNS to AdGuard', description: 'Use 94.140.14.14 ad-blocking DNS', enabled: false, category: 'network', risk: 'safe' },
+  { id: 'congestion-ctcp', name: 'Enable CTCP', description: 'Compound TCP for high-latency links', enabled: false, category: 'network', risk: 'safe' },
 
   // Power
   { id: 'power-plan', name: 'Ultimate Performance Plan', description: 'Hidden ultimate power plan', enabled: false, category: 'power', risk: 'safe' },
@@ -450,18 +517,40 @@ export const defaultOptimizations: CustomizationItem[] = [
   { id: 'disable-sleep', name: 'Disable Sleep', description: 'Prevent system sleep mode', enabled: false, category: 'power', risk: 'safe' },
   { id: 'fast-boot', name: 'Enable Fast Boot', description: 'Hybrid shutdown for faster boot', enabled: false, category: 'power', risk: 'safe' },
   { id: 'disable-modern-standby', name: 'Disable Modern Standby', description: 'Use classic S3 sleep instead', enabled: false, category: 'power', risk: 'moderate' },
+  { id: 'disable-cpu-idle', name: 'Disable CPU Idle States', description: 'Keep CPU at max clocks always', enabled: false, category: 'power', risk: 'moderate' },
+  { id: 'min-processor-100', name: 'Min Processor State 100%', description: 'Lock CPU to max frequency', enabled: false, category: 'power', risk: 'moderate' },
+  { id: 'disable-hard-disk-timeout', name: 'Disable HDD Timeout', description: 'Prevent hard disk spin-down', enabled: false, category: 'power', risk: 'safe' },
 
   // GPU
   { id: 'gpu-scheduling', name: 'Hardware GPU Scheduling', description: 'Enable hardware-accelerated GPU scheduling', enabled: false, category: 'gpu', risk: 'safe' },
   { id: 'disable-dwm', name: 'Optimize DWM', description: 'Optimize Desktop Window Manager', enabled: false, category: 'gpu', risk: 'moderate' },
   { id: 'disable-gpu-preemption', name: 'Disable GPU Preemption', description: 'Reduce GPU latency for gaming', enabled: false, category: 'gpu', risk: 'moderate' },
   { id: 'force-p-state', name: 'Force Max GPU P-State', description: 'Lock GPU to highest performance', enabled: false, category: 'gpu', risk: 'moderate' },
+  { id: 'disable-hdcp', name: 'Disable HDCP', description: 'Remove HDCP overhead on output', enabled: false, category: 'gpu', risk: 'moderate' },
+  { id: 'profile-inspector', name: 'NVIDIA Profile Inspector Tweaks', description: 'Low-latency NVIDIA driver config', enabled: false, category: 'gpu', risk: 'moderate' },
+  { id: 'disable-gpu-power-saving', name: 'Disable GPU Power Saving', description: 'Force max performance GPU mode', enabled: false, category: 'gpu', risk: 'moderate' },
+  { id: 'vulkan-pre-cache', name: 'Disable Vulkan Pre-Cache', description: 'Skip Vulkan shader pre-caching', enabled: false, category: 'gpu', risk: 'safe' },
 
   // Boot
   { id: 'startup-optimize', name: 'Optimize Boot Sequence', description: 'Parallelize startup, reduce timeout', enabled: false, category: 'boot', risk: 'safe' },
   { id: 'disable-boot-logo', name: 'Disable Boot Logo', description: 'Skip Windows boot animation', enabled: false, category: 'boot', risk: 'safe' },
   { id: 'boot-timeout', name: 'Reduce Boot Timeout', description: 'Set boot menu timeout to 3s', enabled: false, category: 'boot', risk: 'safe' },
   { id: 'disable-boot-log', name: 'Disable Boot Logging', description: 'Skip boot log for faster start', enabled: false, category: 'boot', risk: 'safe' },
+  { id: 'num-processors-max', name: 'Use All Processors at Boot', description: 'BCDEdit numproc to max cores', enabled: false, category: 'boot', risk: 'safe' },
+  { id: 'disable-boot-ux', name: 'Disable Boot UX', description: 'Skip animated dots at boot', enabled: false, category: 'boot', risk: 'safe' },
+  { id: 'quiet-boot', name: 'Quiet Boot', description: 'Suppress all boot messages', enabled: false, category: 'boot', risk: 'safe' },
+
+  // Audio
+  { id: 'disable-audio-enhancements', name: 'Disable Audio Enhancements', description: 'Raw audio for lowest latency', enabled: false, category: 'audio', risk: 'safe' },
+  { id: 'exclusive-audio', name: 'Force Exclusive Mode Audio', description: 'Allow apps exclusive audio device access', enabled: false, category: 'audio', risk: 'safe' },
+  { id: 'wasapi-optimization', name: 'WASAPI Optimization', description: 'Low-latency audio endpoint config', enabled: false, category: 'audio', risk: 'safe' },
+
+  // Input
+  { id: 'raw-mouse-input', name: 'Raw Mouse Input', description: 'Disable mouse acceleration/smoothing', enabled: false, category: 'input', risk: 'safe' },
+  { id: 'disable-mouse-accel', name: 'Disable Mouse Acceleration', description: 'Linear 1:1 mouse movement', enabled: false, category: 'input', risk: 'safe' },
+  { id: 'keyboard-response', name: 'Fastest Keyboard Response', description: 'Reduce key repeat delay to minimum', enabled: false, category: 'input', risk: 'safe' },
+  { id: 'disable-touchpad-gestures', name: 'Disable Touchpad Gestures', description: 'Remove multi-finger touchpad gestures', enabled: false, category: 'input', risk: 'safe' },
+  { id: 'polling-rate-optimize', name: 'USB Polling Rate Optimization', description: 'Increase USB polling frequency', enabled: false, category: 'input', risk: 'moderate' },
 ];
 
 export interface Preset {

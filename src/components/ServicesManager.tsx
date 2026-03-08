@@ -32,6 +32,10 @@ const SERVICES: ServiceEntry[] = [
   { name: 'PhoneSvc', displayName: 'Phone Service', description: 'Manages telephony state', risk: 'safe', category: 'Apps', defaultEnabled: true },
   { name: 'MessagingService', displayName: 'Messaging Service', description: 'SMS/MMS message management', risk: 'safe', category: 'Apps', defaultEnabled: true },
   { name: 'PcaSvc', displayName: 'Program Compatibility Assistant', description: 'Detects compatibility issues with programs', risk: 'safe', category: 'Apps', defaultEnabled: true },
+  { name: 'InventorySvc', displayName: 'Inventory Service', description: 'Collects system inventory data', risk: 'safe', category: 'Apps', defaultEnabled: true },
+  { name: 'DevicesFlowUserSvc', displayName: 'Devices Flow', description: 'Connects and manages devices', risk: 'safe', category: 'Apps', defaultEnabled: true },
+  { name: 'CaptureService', displayName: 'CaptureService', description: 'Screen capture related', risk: 'safe', category: 'Apps', defaultEnabled: true },
+  { name: 'ClipSVC', displayName: 'Client License Service', description: 'License management for Store apps', risk: 'moderate', category: 'Apps', defaultEnabled: true },
 
   // Xbox - Safe
   { name: 'XblAuthManager', displayName: 'Xbox Live Auth Manager', description: 'Xbox Live authentication', risk: 'safe', category: 'Xbox', defaultEnabled: true },
@@ -52,6 +56,12 @@ const SERVICES: ServiceEntry[] = [
   { name: 'SCardSvr', displayName: 'Smart Card', description: 'Manages smart card access', risk: 'safe', category: 'Misc', defaultEnabled: true },
   { name: 'ScDeviceEnum', displayName: 'Smart Card Device Enumeration', description: 'Enumerates smart card readers', risk: 'safe', category: 'Misc', defaultEnabled: true },
   { name: 'SEMgrSvc', displayName: 'Payments and NFC/SE Manager', description: 'NFC-based payment management', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'AJRouter', displayName: 'AllJoyn Router Service', description: 'IoT AllJoyn messaging router', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'ALG', displayName: 'Application Layer Gateway', description: 'FTP/plugin support for ICS', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'PushToInstall', displayName: 'Push to Install Service', description: 'Remote app install via Store', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'wercplsupport', displayName: 'Problem Reports Support', description: 'Problem reports control panel', risk: 'safe', category: 'Misc', defaultEnabled: true },
+  { name: 'WpnService', displayName: 'Windows Push Notifications', description: 'Push notification platform', risk: 'moderate', category: 'Misc', defaultEnabled: true },
+  { name: 'WpnUserService', displayName: 'Push Notification User Service', description: 'Per-user push notifications', risk: 'moderate', category: 'Misc', defaultEnabled: true },
 
   // Network - Safe/Moderate
   { name: 'SharedAccess', displayName: 'Internet Connection Sharing', description: 'NAT and sharing for home networks', risk: 'safe', category: 'Network', defaultEnabled: true },
@@ -63,10 +73,20 @@ const SERVICES: ServiceEntry[] = [
   { name: 'RmSvc', displayName: 'Radio Management Service', description: 'Manages radio states (airplane mode)', risk: 'moderate', category: 'Network', defaultEnabled: true },
   { name: 'NcdAutoSetup', displayName: 'Network Connected Devices Auto-Setup', description: 'Auto-setup for network devices', risk: 'safe', category: 'Network', defaultEnabled: true },
   { name: 'WlanSvc', displayName: 'WLAN AutoConfig', description: 'Wi-Fi network configuration — disable only if wired', risk: 'moderate', category: 'Network', defaultEnabled: true },
+  { name: 'p2psvc', displayName: 'Peer Networking Group', description: 'Peer-to-peer networking', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'p2pimsvc', displayName: 'Peer Networking Identity', description: 'Peer networking identity manager', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'PNRPsvc', displayName: 'Peer Name Resolution Protocol', description: 'PNRP name resolution', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'PNRPAutoReg', displayName: 'PNRP Machine Name Publication', description: 'Publishes machine name via PNRP', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'CDPUserSvc', displayName: 'Connected Devices Platform User', description: 'Per-user device connectivity', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'NaturalAuthentication', displayName: 'Natural Authentication', description: 'Dynamic lock & proximity features', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'SSDPSRV', displayName: 'SSDP Discovery', description: 'Discovers UPnP devices on network', risk: 'safe', category: 'Network', defaultEnabled: true },
+  { name: 'upnphost', displayName: 'UPnP Device Host', description: 'Hosts UPnP devices', risk: 'safe', category: 'Network', defaultEnabled: true },
 
   // Performance - Moderate
   { name: 'SysMain', displayName: 'SysMain (Superfetch)', description: 'Maintains and improves system performance (may cause disk usage on HDDs)', risk: 'moderate', category: 'Performance', defaultEnabled: true },
   { name: 'WSearch', displayName: 'Windows Search', description: 'Content indexing and search (can be CPU-intensive)', risk: 'moderate', category: 'Performance', defaultEnabled: true },
+  { name: 'tiledatamodelsvc', displayName: 'Tile Data Model Server', description: 'Tile data for Start menu', risk: 'safe', category: 'Performance', defaultEnabled: true },
+  { name: 'OneSyncSvc', displayName: 'Sync Host', description: 'Synchronizes mail, contacts, calendar', risk: 'safe', category: 'Performance', defaultEnabled: true },
 
   // Input - Moderate
   { name: 'TabletInputService', displayName: 'Touch Keyboard and Handwriting', description: 'Pen and ink functionality', risk: 'moderate', category: 'Input', defaultEnabled: true },
@@ -79,19 +99,29 @@ const SERVICES: ServiceEntry[] = [
   { name: 'bthserv', displayName: 'Bluetooth Support Service', description: 'Discovery and association of Bluetooth', risk: 'moderate', category: 'Hardware', defaultEnabled: true },
   { name: 'WiaRpc', displayName: 'Still Image Acquisition Events', description: 'Scanner event dispatching', risk: 'moderate', category: 'Hardware', defaultEnabled: true },
   { name: 'irmon', displayName: 'Infrared Monitor', description: 'Infrared device support', risk: 'safe', category: 'Hardware', defaultEnabled: true },
+  { name: 'DeviceAssociationService', displayName: 'Device Association Service', description: 'Pairs wired/wireless devices', risk: 'moderate', category: 'Hardware', defaultEnabled: true },
+  { name: 'DeviceInstall', displayName: 'Device Install Service', description: 'Manages device driver installs', risk: 'aggressive', category: 'Hardware', defaultEnabled: true },
+  { name: 'PlugPlay', displayName: 'Plug and Play', description: 'Hardware detection and config — DO NOT disable', risk: 'aggressive', category: 'Hardware', defaultEnabled: true },
 
   // Media - Moderate
   { name: 'FrameServer', displayName: 'Windows Camera Frame Server', description: 'Manages access to camera frames', risk: 'moderate', category: 'Media', defaultEnabled: true },
   { name: 'stisvc', displayName: 'Windows Image Acquisition', description: 'Scanner and camera image acquisition', risk: 'moderate', category: 'Media', defaultEnabled: true },
   { name: 'AudioEndpointBuilder', displayName: 'Windows Audio Endpoint Builder', description: 'Manages audio devices — disabling breaks audio', risk: 'aggressive', category: 'Media', defaultEnabled: true },
+  { name: 'Audiosrv', displayName: 'Windows Audio', description: 'Core audio service — disabling mutes all sound', risk: 'aggressive', category: 'Media', defaultEnabled: true },
+  { name: 'AudioSrvHost', displayName: 'Audio Service Host', description: 'Per-session audio management', risk: 'aggressive', category: 'Media', defaultEnabled: true },
 
   // Security - Moderate
   { name: 'WbioSrvc', displayName: 'Windows Biometric Service', description: 'Fingerprint and face recognition', risk: 'moderate', category: 'Security', defaultEnabled: true },
   { name: 'BDESVC', displayName: 'BitLocker Drive Encryption', description: 'Encrypts drives with BitLocker', risk: 'moderate', category: 'Security', defaultEnabled: true },
+  { name: 'KeyIso', displayName: 'CNG Key Isolation', description: 'Crypto key isolation in LSA', risk: 'aggressive', category: 'Security', defaultEnabled: true },
+  { name: 'EFS', displayName: 'Encrypting File System', description: 'NTFS file-level encryption', risk: 'moderate', category: 'Security', defaultEnabled: true },
+  { name: 'VaultSvc', displayName: 'Credential Manager', description: 'Stores Windows credentials', risk: 'aggressive', category: 'Security', defaultEnabled: true },
+  { name: 'SamSs', displayName: 'Security Accounts Manager', description: 'SAM database — DO NOT disable', risk: 'aggressive', category: 'Security', defaultEnabled: true },
 
   // Printing - Moderate
   { name: 'Spooler', displayName: 'Print Spooler', description: 'Manages print jobs — disable if no printer', risk: 'moderate', category: 'Printing', defaultEnabled: true },
   { name: 'PrintNotify', displayName: 'Printer Extensions and Notifications', description: 'Custom printer notifications', risk: 'moderate', category: 'Printing', defaultEnabled: true },
+  { name: 'PrintWorkflowUserSvc', displayName: 'Print Workflow User Service', description: 'Print workflow for modern apps', risk: 'safe', category: 'Printing', defaultEnabled: true },
 
   // System - Aggressive
   { name: 'wuauserv', displayName: 'Windows Update', description: 'Detects, downloads, installs updates — disabling stops all updates', risk: 'aggressive', category: 'System', defaultEnabled: true },
@@ -100,6 +130,13 @@ const SERVICES: ServiceEntry[] = [
   { name: 'DPS', displayName: 'Diagnostic Policy Service', description: 'Problem detection and troubleshooting', risk: 'aggressive', category: 'System', defaultEnabled: true },
   { name: 'DoSvc', displayName: 'Delivery Optimization', description: 'Peer-to-peer update delivery', risk: 'moderate', category: 'System', defaultEnabled: true },
   { name: 'BITS', displayName: 'Background Intelligent Transfer Service', description: 'Background file transfers — used by Windows Update', risk: 'aggressive', category: 'System', defaultEnabled: true },
+  { name: 'WdiServiceHost', displayName: 'Diagnostic Service Host', description: 'Diagnostic troubleshooting host', risk: 'moderate', category: 'System', defaultEnabled: true },
+  { name: 'WdiSystemHost', displayName: 'Diagnostic System Host', description: 'System diagnostic host', risk: 'moderate', category: 'System', defaultEnabled: true },
+  { name: 'InstallService', displayName: 'Microsoft Store Install', description: 'Store app installation service', risk: 'moderate', category: 'System', defaultEnabled: true },
+  { name: 'TokenBroker', displayName: 'Web Account Manager', description: 'SSO token management for apps', risk: 'moderate', category: 'System', defaultEnabled: true },
+  { name: 'AppXSvc', displayName: 'AppX Deployment Service', description: 'Deploys Store (UWP) apps', risk: 'aggressive', category: 'System', defaultEnabled: true },
+  { name: 'Schedule', displayName: 'Task Scheduler', description: 'Manages scheduled tasks — many features depend on it', risk: 'aggressive', category: 'System', defaultEnabled: true },
+  { name: 'TrustedInstaller', displayName: 'Windows Modules Installer', description: 'Installs/modifies Windows components', risk: 'aggressive', category: 'System', defaultEnabled: true },
 
   // Security - Aggressive
   { name: 'SecurityHealthService', displayName: 'Windows Security Service', description: 'Windows Security / Defender health monitoring', risk: 'aggressive', category: 'Security', defaultEnabled: true },
@@ -113,6 +150,21 @@ const SERVICES: ServiceEntry[] = [
   // UI - Aggressive
   { name: 'Themes', displayName: 'Themes', description: 'User experience theme management — disabling gives classic look', risk: 'aggressive', category: 'UI', defaultEnabled: true },
   { name: 'FontCache', displayName: 'Windows Font Cache', description: 'Optimizes font performance', risk: 'aggressive', category: 'UI', defaultEnabled: true },
+  { name: 'UxSms', displayName: 'Desktop Window Manager Session', description: 'DWM session management', risk: 'aggressive', category: 'UI', defaultEnabled: true },
+
+  // Remote Access
+  { name: 'TermService', displayName: 'Remote Desktop Services', description: 'Allows remote desktop connections', risk: 'moderate', category: 'Remote', defaultEnabled: true },
+  { name: 'SessionEnv', displayName: 'Remote Desktop Configuration', description: 'RDP session configuration', risk: 'moderate', category: 'Remote', defaultEnabled: true },
+  { name: 'UmRdpService', displayName: 'Remote Desktop Device Redirector', description: 'Redirects devices to RDP sessions', risk: 'moderate', category: 'Remote', defaultEnabled: true },
+  { name: 'RemoteAccess', displayName: 'Routing and Remote Access', description: 'VPN/dial-up routing service', risk: 'safe', category: 'Remote', defaultEnabled: true },
+  { name: 'RasAuto', displayName: 'Remote Access Auto Connection', description: 'Auto-dial for remote access', risk: 'safe', category: 'Remote', defaultEnabled: true },
+  { name: 'RasMan', displayName: 'Remote Access Connection Manager', description: 'Manages VPN and dial-up connections', risk: 'moderate', category: 'Remote', defaultEnabled: true },
+
+  // Scheduled Tasks
+  { name: 'TimeBrokerSvc', displayName: 'Time Broker', description: 'Coordinates background task execution', risk: 'moderate', category: 'Background Tasks', defaultEnabled: true },
+  { name: 'UserDataSvc', displayName: 'User Data Access', description: 'Access to contacts, calendars, messages', risk: 'safe', category: 'Background Tasks', defaultEnabled: true },
+  { name: 'UnistoreSvc', displayName: 'User Data Storage', description: 'Stores user data for apps', risk: 'safe', category: 'Background Tasks', defaultEnabled: true },
+  { name: 'cbdhsvc', displayName: 'Clipboard User Service', description: 'Per-user clipboard history', risk: 'safe', category: 'Background Tasks', defaultEnabled: true },
 ];
 
 const riskConfig: Record<RiskLevel, { color: string; icon: React.ElementType; label: string }> = {

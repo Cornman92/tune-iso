@@ -48,6 +48,18 @@ const COMPONENTS: ComponentEntry[] = [
   { id: 'soundrecorder', name: 'Sound Recorder', description: 'Voice recorder app', size: '~10 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.WindowsSoundRecorder' },
   { id: 'photos', name: 'Photos', description: 'Photo viewer & editor — some features depend on it', size: '~80 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.Windows.Photos' },
   { id: 'snip-sketch', name: 'Snipping Tool', description: 'Screenshot & screen capture', size: '~20 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.ScreenSketch' },
+  { id: 'paint3d', name: 'Paint 3D', description: '3D painting app', size: '~120 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.MSPaint' },
+  { id: 'your-phone', name: 'Phone Link', description: 'Connect phone to PC', size: '~30 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.YourPhone' },
+  { id: 'whiteboard', name: 'Microsoft Whiteboard', description: 'Digital whiteboard app', size: '~25 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.Whiteboard' },
+  { id: 'mixed-reality-viewer', name: '3D Viewer', description: '3D model viewer', size: '~60 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.Microsoft3DViewer' },
+  { id: 'winget', name: 'Winget (App Installer)', description: 'Package manager CLI — needed for installs', size: '~10 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.DesktopAppInstaller' },
+  { id: 'web-media-ext', name: 'Web Media Extensions', description: 'OGG Vorbis & Theora codecs', size: '~5 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.WebMediaExtensions' },
+  { id: 'heif-ext', name: 'HEIF Image Extensions', description: 'HEIC photo format support', size: '~5 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.HEIFImageExtension' },
+  { id: 'webp-ext', name: 'WebP Image Extensions', description: 'WebP image format', size: '~3 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.WebpImageExtension' },
+  { id: 'raw-ext', name: 'Raw Image Extension', description: 'Camera RAW photo support', size: '~5 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.RawImageExtension' },
+  { id: 'paint', name: 'Paint', description: 'Classic Windows Paint (new version)', size: '~15 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.Paint' },
+  { id: 'notepad-store', name: 'Notepad (Store)', description: 'Modern Notepad from Store', size: '~8 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.WindowsNotepad' },
+  { id: 'terminal-store', name: 'Windows Terminal', description: 'Modern terminal emulator', size: '~20 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.WindowsTerminal' },
 
   // Games
   { id: 'solitaire', name: 'Solitaire Collection', description: 'Microsoft Solitaire & Casual Games', size: '~200 MB', risk: 'safe', category: 'Games', packageName: 'Microsoft.MicrosoftSolitaireCollection' },
@@ -55,6 +67,13 @@ const COMPONENTS: ComponentEntry[] = [
   { id: 'candy-crush-friends', name: 'Candy Crush Friends', description: 'Pre-installed game', size: '~100 MB', risk: 'safe', category: 'Games', packageName: 'king.com.CandyCrushFriends' },
   { id: 'disney-magic', name: 'Disney Magic Kingdoms', description: 'Pre-installed game', size: '~80 MB', risk: 'safe', category: 'Games', packageName: 'Disney.37853FC22B2CE' },
   { id: 'farmville', name: 'FarmVille 2', description: 'Pre-installed game', size: '~80 MB', risk: 'safe', category: 'Games', packageName: 'Zynga.FarmVille2CountryEscape' },
+  { id: 'bubble-witch', name: 'Bubble Witch 3', description: 'Pre-installed puzzle game', size: '~80 MB', risk: 'safe', category: 'Games', packageName: 'king.com.BubbleWitch3Saga' },
+  { id: 'march-empires', name: 'March of Empires', description: 'Pre-installed strategy game', size: '~100 MB', risk: 'safe', category: 'Games', packageName: 'Gameloft.MarchofEmpires' },
+  { id: 'hidden-city', name: 'Hidden City', description: 'Pre-installed hidden object game', size: '~100 MB', risk: 'safe', category: 'Games', packageName: 'G5Entertainment.HiddenCity' },
+  { id: 'asphalt-legends', name: 'Asphalt Legends', description: 'Pre-installed racing game', size: '~100 MB', risk: 'safe', category: 'Games', packageName: 'Gameloft.AsphaltLegends' },
+  { id: 'sudoku', name: 'Microsoft Sudoku', description: 'Pre-installed puzzle game', size: '~40 MB', risk: 'safe', category: 'Games', packageName: 'Microsoft.MicrosoftSudoku' },
+  { id: 'mahjong', name: 'Microsoft Mahjong', description: 'Pre-installed tile game', size: '~60 MB', risk: 'safe', category: 'Games', packageName: 'Microsoft.MicrosoftMahjong' },
+  { id: 'jigsaw', name: 'Microsoft Jigsaw', description: 'Pre-installed jigsaw puzzle', size: '~40 MB', risk: 'safe', category: 'Games', packageName: 'Microsoft.MicrosoftJigsaw' },
 
   // Xbox
   { id: 'xbox-app', name: 'Xbox App', description: 'Xbox companion app', size: '~60 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.GamingApp' },
@@ -62,40 +81,58 @@ const COMPONENTS: ComponentEntry[] = [
   { id: 'xbox-tcui', name: 'Xbox TCUI', description: 'Xbox text/voice communication UI', size: '~5 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.Xbox.TCUI' },
   { id: 'xbox-identity', name: 'Xbox Identity Provider', description: 'Xbox Live identity', size: '~5 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.XboxIdentityProvider' },
   { id: 'xbox-speech', name: 'Xbox Speech to Text', description: 'Voice transcription for Xbox', size: '~10 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.XboxSpeechToTextOverlay' },
+  { id: 'xbox-game-callable-ui', name: 'Xbox Game Callable UI', description: 'In-game Xbox UI overlay', size: '~5 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.Xbox.GameCallableUI' },
 
   // Office
   { id: 'onenote', name: 'OneNote', description: 'Note-taking app (UWP version)', size: '~120 MB', risk: 'safe', category: 'Office', packageName: 'Microsoft.Office.OneNote' },
   { id: 'office-hub', name: 'Office Hub', description: 'Office app launcher', size: '~20 MB', risk: 'safe', category: 'Office', packageName: 'Microsoft.MicrosoftOfficeHub' },
+  { id: 'office-sway', name: 'Sway', description: 'Presentation creation app', size: '~15 MB', risk: 'safe', category: 'Office', packageName: 'Microsoft.Office.Sway' },
 
   // Cloud
   { id: 'onedrive', name: 'OneDrive', description: 'Cloud storage integration — some apps depend on it', size: '~40 MB', risk: 'moderate', category: 'Cloud' },
 
   // Browser
   { id: 'edge', name: 'Microsoft Edge', description: 'Default browser — removing may break some web links', size: '~350 MB', risk: 'moderate', category: 'Browser' },
+  { id: 'edge-webview', name: 'Edge WebView2', description: 'Web rendering runtime — many apps depend on it', size: '~150 MB', risk: 'aggressive', category: 'Browser' },
 
   // UI
   { id: 'widgets', name: 'Widgets', description: 'Taskbar Widgets panel (Win 11)', size: '~50 MB', risk: 'moderate', category: 'UI', packageName: 'MicrosoftWindows.Client.WebExperience' },
-  { id: 'paint3d', name: 'Paint 3D', description: '3D painting app', size: '~120 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.MSPaint' },
-  { id: 'your-phone', name: 'Phone Link', description: 'Connect phone to PC', size: '~30 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.YourPhone' },
+  { id: 'lockscreen-spotlight', name: 'Windows Spotlight', description: 'Lock screen dynamic images', size: '~10 MB', risk: 'safe', category: 'UI', packageName: 'Microsoft.Windows.ContentDeliveryManager' },
+  { id: 'start-recommended', name: 'Start Menu Recommendations', description: 'Suggested apps in Start menu', size: '~5 MB', risk: 'safe', category: 'UI' },
+  { id: 'snap-layouts', name: 'Snap Layouts', description: 'Window snap arrangement UI', size: '~5 MB', risk: 'moderate', category: 'UI' },
 
   // Media
   { id: 'media-player', name: 'Media Player', description: 'Windows Media Player — some codecs may stop working', size: '~40 MB', risk: 'moderate', category: 'Media' },
   { id: 'groove-music', name: 'Groove Music', description: 'Legacy music player', size: '~25 MB', risk: 'safe', category: 'Media', packageName: 'Microsoft.ZuneMusic' },
   { id: 'movies-tv', name: 'Movies & TV', description: 'Video player app', size: '~25 MB', risk: 'safe', category: 'Media', packageName: 'Microsoft.ZuneVideo' },
+  { id: 'voice-recorder', name: 'Voice Recorder', description: 'Audio recording app', size: '~10 MB', risk: 'safe', category: 'Media', packageName: 'Microsoft.WindowsSoundRecorder' },
 
   // System
   { id: 'store', name: 'Microsoft Store', description: 'App store — cannot install UWP apps without it', size: '~35 MB', risk: 'moderate', category: 'System', packageName: 'Microsoft.WindowsStore' },
   { id: 'store-purchase', name: 'Store Purchase App', description: 'Store purchase service', size: '~5 MB', risk: 'moderate', category: 'System', packageName: 'Microsoft.StorePurchaseApp' },
   { id: 'app-installer', name: 'App Installer', description: 'Winget & MSIX installer — needed for package management', size: '~10 MB', risk: 'moderate', category: 'System', packageName: 'Microsoft.DesktopAppInstaller' },
+  { id: 'store-experience', name: 'Store Experience Host', description: 'Store UI rendering component', size: '~10 MB', risk: 'moderate', category: 'System', packageName: 'Microsoft.StorePurchaseApp' },
+  { id: 'xaml-framework', name: 'XAML Framework', description: 'UI framework for UWP/WinUI apps', size: '~30 MB', risk: 'aggressive', category: 'System', packageName: 'Microsoft.UI.Xaml' },
+  { id: 'vclibs', name: 'VCLibs', description: 'Visual C++ UWP runtime — apps may break', size: '~5 MB', risk: 'aggressive', category: 'System', packageName: 'Microsoft.VCLibs.140.00' },
 
   // AI
   { id: 'recall', name: 'Windows Recall', description: 'AI timeline feature (Win 11 24H2+)', size: '~150 MB', risk: 'aggressive', category: 'AI', packageName: 'MicrosoftWindows.AI.Copilot.Provider' },
   { id: 'copilot', name: 'Copilot', description: 'Windows AI Copilot', size: '~20 MB', risk: 'aggressive', category: 'AI', packageName: 'Microsoft.Copilot' },
+  { id: 'copilot-runtime', name: 'Copilot Runtime', description: 'AI model runtime services', size: '~200 MB', risk: 'aggressive', category: 'AI', packageName: 'Microsoft.Windows.AI.CopilotRuntime' },
+  { id: 'ai-ocr', name: 'AI OCR', description: 'AI-powered text recognition', size: '~50 MB', risk: 'safe', category: 'AI', packageName: 'Microsoft.Windows.AI.OCR' },
+
+  // Telemetry
+  { id: 'compat-telemetry', name: 'Compatibility Telemetry', description: 'Compatibility data collection', size: '~20 MB', risk: 'safe', category: 'Telemetry' },
+  { id: 'census', name: 'Device Census', description: 'Hardware telemetry reporting', size: '~5 MB', risk: 'safe', category: 'Telemetry' },
+  { id: 'diagtrack', name: 'DiagTrack (Telemetry)', description: 'Connected User Experiences collector', size: '~15 MB', risk: 'safe', category: 'Telemetry' },
+  { id: 'error-reporting', name: 'Error Reporting', description: 'Windows Error Reporting data', size: '~10 MB', risk: 'safe', category: 'Telemetry' },
+  { id: 'customer-experience', name: 'Customer Experience Program', description: 'CEIP data collection', size: '~5 MB', risk: 'safe', category: 'Telemetry' },
 
   // Security
   { id: 'defender', name: 'Windows Defender', description: 'Built-in antivirus — system will be unprotected', size: '~200 MB', risk: 'aggressive', category: 'Security' },
   { id: 'windows-security', name: 'Windows Security', description: 'Security dashboard UI', size: '~30 MB', risk: 'aggressive', category: 'Security', packageName: 'Microsoft.SecHealthUI' },
   { id: 'search', name: 'Windows Search', description: 'Taskbar search and indexing — affects Start menu search', size: '~80 MB', risk: 'aggressive', category: 'System' },
+  { id: 'smartscreen', name: 'SmartScreen', description: 'App reputation filter — removes download warnings', size: '~10 MB', risk: 'aggressive', category: 'Security' },
 ];
 
 const riskConfig: Record<RiskLevel, { color: string; badgeColor: string; icon: React.ElementType; label: string }> = {
