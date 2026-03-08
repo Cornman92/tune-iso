@@ -1,4 +1,4 @@
-import { HardDrive, Disc, Settings, HardDriveDownload, Download, FileCode, Save, Layers, Database } from 'lucide-react';
+import { HardDrive, Disc, Settings, HardDriveDownload, Download, FileCode, Save, Layers, Database, Cog, Package } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SectionSidebarProps {
@@ -14,9 +14,11 @@ const sections = [
   { id: 'customizations', label: 'Customize', icon: Settings, step: 4 },
   { id: 'drivers', label: 'Drivers', icon: HardDriveDownload, step: 5 },
   { id: 'registry', label: 'Registry', icon: Database, step: 6 },
-  { id: 'updates', label: 'Updates', icon: Download, step: 7 },
-  { id: 'unattend', label: 'Unattend', icon: FileCode, step: 8 },
-  { id: 'build', label: 'Build', icon: Save, step: 9 },
+  { id: 'services', label: 'Services', icon: Cog, step: 7 },
+  { id: 'components', label: 'Components', icon: Package, step: 8 },
+  { id: 'updates', label: 'Updates', icon: Download, step: 9 },
+  { id: 'unattend', label: 'Unattend', icon: FileCode, step: 10 },
+  { id: 'build', label: 'Build', icon: Save, step: 11 },
 ];
 
 const SectionSidebar = ({ activeSection, isMounted, hasFile }: SectionSidebarProps) => {
