@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Disc3, Terminal } from 'lucide-react';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
@@ -9,11 +9,17 @@ import DriverInjection from '@/components/DriverInjection';
 import UnattendGenerator from '@/components/UnattendGenerator';
 import WindowsUpdate from '@/components/WindowsUpdate';
 import ProjectManager, { type ProjectData } from '@/components/ProjectManager';
+import WimEditor from '@/components/WimEditor';
+import RegistryEditor from '@/components/RegistryEditor';
+import SectionSidebar from '@/components/SectionSidebar';
+
+const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'updates', 'unattend', 'build'];
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [customizationCount, setCustomizationCount] = useState(0);
+  const [activeSection, setActiveSection] = useState('source');
 
   // Refs for export/import callbacks
   const exportCustomizations = useRef<() => { programs: string[]; tweaks: string[]; optimizations: string[] }>(() => ({ programs: [], tweaks: [], optimizations: [] }));
@@ -25,6 +31,27 @@ const Index = () => {
   const exportUnattend = useRef<() => { id: string; value: string; enabled: boolean }[]>(() => []);
   const importUnattend = useRef<(data: { id: string; value: string; enabled: boolean }[]) => void>(() => {});
 
+  // Scroll spy
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0) {
+          const id = visible[0].target.id.replace('section-', '');
+          setActiveSection(id);
+        }
+      },
+      { rootMargin: '-80px 0px -60% 0px', threshold: 0.1 }
+    );
+
+    SECTION_IDS.forEach(id => {
+      const el = document.getElementById(`section-${id}`);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const currentStep = useMemo(() => {
     if (!selectedFile) return 1;
     if (!isMounted) return 2;
@@ -33,7 +60,7 @@ const Index = () => {
 
   const handleExport = useCallback((): ProjectData => {
     return {
-      version: '1.2.0',
+      version: '1.3.0',
       name: selectedFile?.name?.replace('.iso', '') || 'iso-forge-project',
       exportedAt: new Date().toISOString(),
       customizations: exportCustomizations.current(),
@@ -52,6 +79,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SectionSidebar activeSection={activeSection} isMounted={isMounted} hasFile={!!selectedFile} />
+
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container max-w-6xl mx-auto px-4 py-4">
@@ -67,7 +96,7 @@ const Index = () => {
               <ProjectManager onExport={handleExport} onImport={handleImport} />
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
                 <Terminal className="w-4 h-4 text-primary" />
-                <span className="text-xs font-mono text-muted-foreground">v1.2.0</span>
+                <span className="text-xs font-mono text-muted-foreground">v1.3.0</span>
               </div>
             </div>
           </div>
@@ -75,14 +104,14 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container max-w-6xl mx-auto px-4 py-8">
+      <main className="container max-w-6xl mx-auto px-4 py-8 xl:pl-36">
         <WorkflowStepper currentStep={currentStep} />
 
         <div className="grid gap-6 lg:grid-cols-[1fr,420px]">
           {/* Left Column */}
           <div className="space-y-6">
             {/* 1. ISO Selection */}
-            <section>
+            <section id="section-source">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">1</span>
                 Source Image
@@ -92,7 +121,7 @@ const Index = () => {
 
             {/* 2. Mount */}
             {selectedFile && (
-              <section>
+              <section id="section-mount">
                 <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                   <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">2</span>
                   Mount Status
@@ -106,10 +135,19 @@ const Index = () => {
               </section>
             )}
 
-            {/* 3. Customizations */}
-            <section>
+            {/* 3. WIM Editor */}
+            <section id="section-wim">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">3</span>
+                WIM Edition Manager
+              </h2>
+              <WimEditor isMounted={isMounted} />
+            </section>
+
+            {/* 4. Customizations */}
+            <section id="section-customizations">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">4</span>
                 Customizations
               </h2>
               <CustomizationPanel
@@ -120,10 +158,10 @@ const Index = () => {
               />
             </section>
 
-            {/* 4. Drivers */}
-            <section>
+            {/* 5. Drivers */}
+            <section id="section-drivers">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">4</span>
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">5</span>
                 Driver Injection
               </h2>
               <DriverInjection
@@ -133,10 +171,19 @@ const Index = () => {
               />
             </section>
 
-            {/* 5. Windows Update */}
-            <section>
+            {/* 6. Registry */}
+            <section id="section-registry">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">5</span>
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">6</span>
+                Registry Editor
+              </h2>
+              <RegistryEditor isMounted={isMounted} />
+            </section>
+
+            {/* 7. Windows Update */}
+            <section id="section-updates">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">7</span>
                 Windows Update Slipstream
               </h2>
               <WindowsUpdate
@@ -146,10 +193,10 @@ const Index = () => {
               />
             </section>
 
-            {/* 6. Unattend */}
-            <section>
+            {/* 8. Unattend */}
+            <section id="section-unattend">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">6</span>
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">8</span>
                 Unattended Setup (autounattend.xml)
               </h2>
               <UnattendGenerator
@@ -161,9 +208,9 @@ const Index = () => {
           </div>
 
           {/* Right Column */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="lg:sticky lg:top-24 lg:self-start" id="section-build">
             <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-              <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">7</span>
+              <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">9</span>
               Build Output
             </h2>
             <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
@@ -190,7 +237,9 @@ const Index = () => {
               <h3 className="text-sm font-medium text-foreground mb-2">DISM Reference</h3>
               <div className="space-y-1.5 text-[11px] font-mono text-muted-foreground">
                 <p><span className="text-primary">Mount:</span> /Mount-Wim /WimFile /Index /MountDir</p>
+                <p><span className="text-primary">Editions:</span> /Delete-Image /Export-Image</p>
                 <p><span className="text-primary">Drivers:</span> /Add-Driver /Driver /Recurse</p>
+                <p><span className="text-primary">Registry:</span> REG LOAD / REG IMPORT / REG UNLOAD</p>
                 <p><span className="text-primary">Updates:</span> /Add-Package /PackagePath</p>
                 <p><span className="text-primary">Packages:</span> /Remove-ProvisionedAppxPackage</p>
                 <p><span className="text-primary">Cleanup:</span> /Cleanup-Image /StartComponentCleanup</p>
@@ -204,7 +253,7 @@ const Index = () => {
       <footer className="border-t border-border mt-12 py-6">
         <div className="container max-w-6xl mx-auto px-4">
           <p className="text-center text-xs font-mono text-muted-foreground">
-            ISO Forge • Windows Image Customization Tool • Prototype v1.2.0
+            ISO Forge • Windows Image Customization Tool • Prototype v1.3.0
           </p>
         </div>
       </footer>
