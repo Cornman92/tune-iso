@@ -260,10 +260,19 @@ const Index = () => {
               <WimEditor isMounted={isMounted} />
             </section>
 
-            {/* 4. Customizations */}
-            <section id="section-customizations">
+            {/* 3b. ISO Metadata */}
+            <section id="section-iso-metadata">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">4</span>
+                ISO Metadata &amp; Boot Config
+              </h2>
+              <IsoMetadataEditor isMounted={isMounted} />
+            </section>
+
+            {/* 5. Customizations */}
+            <section id="section-customizations">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">5</span>
                 Customizations
               </h2>
               <CustomizationPanel
