@@ -194,7 +194,7 @@ const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProp
               <div className="flex-1 h-px bg-border" />
             </button>
             
-            {expandedCategories.includes(category) && (
+            {(searchQuery || expandedCategories.includes(category)) && (
               <div className="space-y-2 ml-6">
                 {items.map(item => (
                   <div
