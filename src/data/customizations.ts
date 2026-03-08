@@ -202,6 +202,27 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'eartrumpet', name: 'EarTrumpet', description: 'Per-app volume control', enabled: false, category: 'customization', risk: 'safe' },
   { id: 'files-app', name: 'Files App', description: 'Modern file explorer replacement', enabled: false, category: 'customization', risk: 'safe' },
   { id: 'modernflyouts', name: 'ModernFlyouts', description: 'Modern volume/brightness flyouts', enabled: false, category: 'customization', risk: 'safe' },
+
+  // Fonts
+  { id: 'font-firacode', name: 'Fira Code', description: 'Monospaced font with ligatures', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-cascadia', name: 'Cascadia Code', description: 'Microsoft dev font with ligatures', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-jetbrains', name: 'JetBrains Mono', description: 'Developer font by JetBrains', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-iosevka', name: 'Iosevka', description: 'Versatile monospaced typeface', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-nerdfonts', name: 'Nerd Fonts Pack', description: 'Patched fonts with dev icons', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-inter', name: 'Inter', description: 'Modern UI typeface', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-roboto', name: 'Roboto', description: 'Google Material Design font', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-sourcecodepro', name: 'Source Code Pro', description: 'Adobe monospaced font', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-hack', name: 'Hack', description: 'Open-source coding font', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-meslo', name: 'Meslo LG', description: 'Customized Apple Menlo font', enabled: false, category: 'fonts', risk: 'safe' },
+
+  // Cloud & Backup
+  { id: 'nextcloud-client', name: 'Nextcloud Client', description: 'Self-hosted cloud sync client', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'restic', name: 'Restic', description: 'Fast encrypted backup tool', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'duplicati', name: 'Duplicati', description: 'Cloud backup with encryption', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'rclone', name: 'Rclone', description: 'CLI cloud storage manager', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'megasync', name: 'MEGA Sync', description: 'MEGA cloud storage client', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'dropbox', name: 'Dropbox', description: 'Cloud file hosting client', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'google-drive', name: 'Google Drive Desktop', description: 'Google cloud storage client', enabled: false, category: 'cloud & backup', risk: 'safe' },
 ];
 
 export const defaultTweaks: CustomizationItem[] = [
