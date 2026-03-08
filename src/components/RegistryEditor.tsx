@@ -48,14 +48,19 @@ const PRESET_ENTRIES: RegistryEntry[] = [
 interface RegistryEditorProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
+  exportRef?: MutableRefObject<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>;
 }
 
-const RegistryEditor = ({ isMounted, onCountChange }: RegistryEditorProps) => {
+const RegistryEditor = ({ isMounted, onCountChange, exportRef }: RegistryEditorProps) => {
   const [entries, setEntries] = useState<RegistryEntry[]>([]);
 
   useEffect(() => {
     onCountChange?.(entries.length);
   }, [entries.length, onCountChange]);
+
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => entries.map(e => ({ hive: e.hive, keyPath: e.keyPath, valueName: e.valueName, valueType: e.valueType, valueData: e.valueData }));
+  }, [entries, exportRef]);
   const [showForm, setShowForm] = useState(false);
   const [expandedPresets, setExpandedPresets] = useState(true);
   const [form, setForm] = useState<Omit<RegistryEntry, 'id'>>({

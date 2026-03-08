@@ -110,6 +110,10 @@ const ComponentRemoval = ({ isMounted, onCountChange, exportRef }: ComponentRemo
     onCountChange?.(selected.size);
   }, [selected.size, onCountChange]);
 
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => [...selected];
+  }, [selected, exportRef]);
+
   const toggle = (id: string) => {
     setSelected(prev => {
       const next = new Set(prev);

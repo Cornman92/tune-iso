@@ -116,6 +116,10 @@ const ServicesManager = ({ isMounted, onCountChange, exportRef }: ServicesManage
     onCountChange?.(disabledCount);
   }, [disabledCount, onCountChange]);
 
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => [...disabledServices];
+  }, [disabledServices, exportRef]);
+
   const toggleService = (name: string) => {
     setDisabledServices(prev => {
       const next = new Set(prev);
