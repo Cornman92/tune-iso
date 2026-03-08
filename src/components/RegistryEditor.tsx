@@ -50,9 +50,10 @@ interface RegistryEditorProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>;
+  importRef?: MutableRefObject<(presetIds: string[]) => void>;
 }
 
-const RegistryEditor = ({ isMounted, onCountChange, exportRef }: RegistryEditorProps) => {
+const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: RegistryEditorProps) => {
   const [entries, setEntries] = useState<RegistryEntry[]>([]);
 
   useEffect(() => {
@@ -62,6 +63,13 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef }: RegistryEditorP
   useEffect(() => {
     if (exportRef) exportRef.current = () => entries.map(e => ({ hive: e.hive, keyPath: e.keyPath, valueName: e.valueName, valueType: e.valueType, valueData: e.valueData }));
   }, [entries, exportRef]);
+
+  useEffect(() => {
+    if (importRef) importRef.current = (presetIds: string[]) => {
+      const toAdd = PRESET_ENTRIES.filter(p => presetIds.includes(p.id));
+      setEntries(toAdd.map(p => ({ ...p, id: crypto.randomUUID() })));
+    };
+  }, [importRef]);
   const [showForm, setShowForm] = useState(false);
   const [expandedPresets, setExpandedPresets] = useState(true);
   const [form, setForm] = useState<Omit<RegistryEntry, 'id'>>({

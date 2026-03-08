@@ -211,9 +211,10 @@ interface ServicesManagerProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => string[]>;
+  importRef?: MutableRefObject<(data: string[]) => void>;
 }
 
-const ServicesManager = ({ isMounted, onCountChange, exportRef }: ServicesManagerProps) => {
+const ServicesManager = ({ isMounted, onCountChange, exportRef, importRef }: ServicesManagerProps) => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<RiskLevel | 'all'>('all');
   const [disabledServices, setDisabledServices] = useState<Set<string>>(new Set());
@@ -227,6 +228,10 @@ const ServicesManager = ({ isMounted, onCountChange, exportRef }: ServicesManage
   useEffect(() => {
     if (exportRef) exportRef.current = () => [...disabledServices];
   }, [disabledServices, exportRef]);
+
+  useEffect(() => {
+    if (importRef) importRef.current = (data: string[]) => setDisabledServices(new Set(data));
+  }, [importRef]);
 
   const toggleService = (name: string) => {
     setDisabledServices(prev => {

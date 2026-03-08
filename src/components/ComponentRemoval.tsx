@@ -179,9 +179,10 @@ interface ComponentRemovalProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => string[]>;
+  importRef?: MutableRefObject<(data: string[]) => void>;
 }
 
-const ComponentRemoval = ({ isMounted, onCountChange, exportRef }: ComponentRemovalProps) => {
+const ComponentRemoval = ({ isMounted, onCountChange, exportRef, importRef }: ComponentRemovalProps) => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<RiskLevel | 'all'>('all');
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -197,6 +198,10 @@ const ComponentRemoval = ({ isMounted, onCountChange, exportRef }: ComponentRemo
         .map(c => c.packageName || c.id);
     };
   }, [selected, exportRef]);
+
+  useEffect(() => {
+    if (importRef) importRef.current = (data: string[]) => setSelected(new Set(data));
+  }, [importRef]);
 
   const toggle = (id: string) => {
     setSelected(prev => {

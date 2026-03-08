@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Disc3, Terminal, Keyboard } from 'lucide-react';
+import BuildProfiles from '@/components/BuildProfiles';
 import GlobalSearch from '@/components/GlobalSearch';
 import { DEFAULT_FEATURES } from '@/components/WimEditor';
 import { COMPONENTS } from '@/components/ComponentRemoval';
@@ -59,9 +60,13 @@ const Index = () => {
   const exportUnattend = useRef<() => { id: string; value: string; enabled: boolean }[]>(() => []);
   const importUnattend = useRef<(data: { id: string; value: string; enabled: boolean }[]) => void>(() => {});
   const exportServices = useRef<() => string[]>(() => []);
+  const importServices = useRef<(data: string[]) => void>(() => {});
   const exportComponents = useRef<() => string[]>(() => []);
+  const importComponents = useRef<(data: string[]) => void>(() => {});
   const exportRegistry = useRef<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>(() => []);
+  const importRegistry = useRef<(presetIds: string[]) => void>(() => {});
   const exportFeatures = useRef<() => WimFeatureExport[]>(() => []);
+  const importFeatures = useRef<(data: { id: string; enabled: boolean }[]) => void>(() => {});
 
   // Scroll spy
   useEffect(() => {
@@ -209,6 +214,14 @@ const Index = () => {
                 buildSteps={buildSteps}
               />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
+              <BuildProfiles
+                importCustomizations={importCustomizations}
+                importServices={importServices}
+                importComponents={importComponents}
+                importRegistry={importRegistry}
+                importFeatures={importFeatures}
+                isMounted={isMounted}
+              />
               <div className="h-6 w-px bg-border" />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <div className="h-6 w-px bg-border" />
@@ -275,7 +288,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">3</span>
                 WIM Edition Manager
               </h2>
-              <WimEditor isMounted={isMounted} exportFeaturesRef={exportFeatures} />
+              <WimEditor isMounted={isMounted} exportFeaturesRef={exportFeatures} importFeaturesRef={importFeatures} />
             </section>
 
             {/* 3b. ISO Metadata */}
@@ -321,7 +334,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">6</span>
                 Registry Editor
               </h2>
-              <RegistryEditor isMounted={isMounted} onCountChange={setRegistryCount} exportRef={exportRegistry} />
+              <RegistryEditor isMounted={isMounted} onCountChange={setRegistryCount} exportRef={exportRegistry} importRef={importRegistry} />
             </section>
 
             {/* 7. Services Manager */}
@@ -330,7 +343,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">7</span>
                 Services Manager
               </h2>
-              <ServicesManager isMounted={isMounted} onCountChange={setServiceCount} exportRef={exportServices} />
+              <ServicesManager isMounted={isMounted} onCountChange={setServiceCount} exportRef={exportServices} importRef={importServices} />
             </section>
 
             {/* 8. Component Removal */}
@@ -339,7 +352,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">8</span>
                 Component Removal
               </h2>
-              <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} exportRef={exportComponents} />
+              <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} exportRef={exportComponents} importRef={importComponents} />
             </section>
 
             {/* 9. Windows Update */}
