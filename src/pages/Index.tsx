@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Disc3, Terminal, Keyboard } from 'lucide-react';
+import BuildProfiles from '@/components/BuildProfiles';
 import GlobalSearch from '@/components/GlobalSearch';
 import { DEFAULT_FEATURES } from '@/components/WimEditor';
 import { COMPONENTS } from '@/components/ComponentRemoval';
