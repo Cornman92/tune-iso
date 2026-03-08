@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, MutableRefObject } from 'react';
 import { Download, Plus, Trash2, Search, ExternalLink, CheckCircle2, Clock, AlertTriangle, X, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
