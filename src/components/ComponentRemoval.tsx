@@ -18,41 +18,84 @@ interface ComponentEntry {
 }
 
 const COMPONENTS: ComponentEntry[] = [
+  // Apps
   { id: 'cortana', name: 'Cortana', description: 'Voice assistant', size: '~80 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.549981C3F5F10' },
   { id: 'bing-weather', name: 'Weather', description: 'MSN Weather app', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.BingWeather' },
   { id: 'bing-news', name: 'News', description: 'MSN News app', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.BingNews' },
   { id: 'bing-finance', name: 'Finance', description: 'MSN Money app', size: '~12 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.BingFinance' },
   { id: 'bing-sports', name: 'Sports', description: 'MSN Sports app', size: '~12 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.BingSports' },
   { id: 'skype', name: 'Skype', description: 'Skype communication app', size: '~90 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.SkypeApp' },
-  { id: 'solitaire', name: 'Solitaire Collection', description: 'Microsoft Solitaire & Casual Games', size: '~200 MB', risk: 'safe', category: 'Games', packageName: 'Microsoft.MicrosoftSolitaireCollection' },
-  { id: 'xbox-app', name: 'Xbox App', description: 'Xbox companion app', size: '~60 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.GamingApp' },
-  { id: 'xbox-bar', name: 'Xbox Game Bar', description: 'In-game overlay and recording', size: '~45 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.XboxGamingOverlay' },
-  { id: 'xbox-tcui', name: 'Xbox TCUI', description: 'Xbox text/voice communication UI', size: '~5 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.Xbox.TCUI' },
-  { id: 'xbox-identity', name: 'Xbox Identity Provider', description: 'Xbox Live identity', size: '~5 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.XboxIdentityProvider' },
-  { id: 'xbox-speech', name: 'Xbox Speech to Text', description: 'Voice transcription for Xbox', size: '~10 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.XboxSpeechToTextOverlay' },
   { id: 'gethelp', name: 'Get Help', description: 'Microsoft support app', size: '~10 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.GetHelp' },
   { id: 'getstarted', name: 'Tips', description: 'Windows Tips app', size: '~10 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.Getstarted' },
   { id: 'feedback', name: 'Feedback Hub', description: 'Send feedback to Microsoft', size: '~25 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.WindowsFeedbackHub' },
   { id: 'maps', name: 'Maps', description: 'Windows Maps app', size: '~30 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.WindowsMaps' },
   { id: 'mixedreality', name: 'Mixed Reality Portal', description: 'VR headset portal', size: '~100 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.MixedReality.Portal' },
   { id: 'people', name: 'People', description: 'Contact management app', size: '~10 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.People' },
-  { id: 'onenote', name: 'OneNote', description: 'Note-taking app (UWP version)', size: '~120 MB', risk: 'safe', category: 'Office', packageName: 'Microsoft.Office.OneNote' },
   { id: 'teams', name: 'Microsoft Teams', description: 'Teams chat client (new)', size: '~150 MB', risk: 'safe', category: 'Apps', packageName: 'MicrosoftTeams' },
   { id: 'clipchamp', name: 'Clipchamp', description: 'Video editor', size: '~100 MB', risk: 'safe', category: 'Apps', packageName: 'Clipchamp.Clipchamp' },
   { id: 'todo', name: 'Microsoft To Do', description: 'Task management app', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.Todos' },
   { id: 'powerautomate', name: 'Power Automate', description: 'Desktop automation', size: '~80 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.PowerAutomateDesktop' },
+  { id: 'quickassist', name: 'Quick Assist', description: 'Remote assistance tool', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'MicrosoftCorporationII.QuickAssist' },
+  { id: 'journal', name: 'Journal', description: 'Microsoft Journal note-taking', size: '~30 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.MicrosoftJournal' },
+  { id: 'family', name: 'Family Safety', description: 'Microsoft Family features', size: '~20 MB', risk: 'safe', category: 'Apps', packageName: 'MicrosoftCorporationII.MicrosoftFamily' },
+  { id: 'devhome', name: 'Dev Home', description: 'Developer dashboard (Preview)', size: '~40 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.Windows.DevHome' },
+  { id: 'outlook-new', name: 'Outlook (New)', description: 'New Outlook mail client', size: '~60 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.OutlookForWindows' },
+  { id: 'linkedin', name: 'LinkedIn', description: 'LinkedIn integration app', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'LinkedIn.LinkedIn' },
+  { id: 'sticky-notes', name: 'Sticky Notes', description: 'Desktop sticky notes', size: '~15 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.MicrosoftStickyNotes' },
+  { id: 'alarms', name: 'Alarms & Clock', description: 'Clock, timer, and alarms', size: '~10 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.WindowsAlarms' },
+  { id: 'calculator', name: 'Calculator', description: 'Windows Calculator app', size: '~10 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.WindowsCalculator' },
+  { id: 'camera', name: 'Camera', description: 'Windows Camera app', size: '~15 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.WindowsCamera' },
+  { id: 'soundrecorder', name: 'Sound Recorder', description: 'Voice recorder app', size: '~10 MB', risk: 'safe', category: 'Apps', packageName: 'Microsoft.WindowsSoundRecorder' },
+  { id: 'photos', name: 'Photos', description: 'Photo viewer & editor — some features depend on it', size: '~80 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.Windows.Photos' },
+  { id: 'snip-sketch', name: 'Snipping Tool', description: 'Screenshot & screen capture', size: '~20 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.ScreenSketch' },
+
+  // Games
+  { id: 'solitaire', name: 'Solitaire Collection', description: 'Microsoft Solitaire & Casual Games', size: '~200 MB', risk: 'safe', category: 'Games', packageName: 'Microsoft.MicrosoftSolitaireCollection' },
+  { id: 'candy-crush', name: 'Candy Crush Saga', description: 'Pre-installed game', size: '~100 MB', risk: 'safe', category: 'Games', packageName: 'king.com.CandyCrushSaga' },
+  { id: 'candy-crush-friends', name: 'Candy Crush Friends', description: 'Pre-installed game', size: '~100 MB', risk: 'safe', category: 'Games', packageName: 'king.com.CandyCrushFriends' },
+  { id: 'disney-magic', name: 'Disney Magic Kingdoms', description: 'Pre-installed game', size: '~80 MB', risk: 'safe', category: 'Games', packageName: 'Disney.37853FC22B2CE' },
+  { id: 'farmville', name: 'FarmVille 2', description: 'Pre-installed game', size: '~80 MB', risk: 'safe', category: 'Games', packageName: 'Zynga.FarmVille2CountryEscape' },
+
+  // Xbox
+  { id: 'xbox-app', name: 'Xbox App', description: 'Xbox companion app', size: '~60 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.GamingApp' },
+  { id: 'xbox-bar', name: 'Xbox Game Bar', description: 'In-game overlay and recording', size: '~45 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.XboxGamingOverlay' },
+  { id: 'xbox-tcui', name: 'Xbox TCUI', description: 'Xbox text/voice communication UI', size: '~5 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.Xbox.TCUI' },
+  { id: 'xbox-identity', name: 'Xbox Identity Provider', description: 'Xbox Live identity', size: '~5 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.XboxIdentityProvider' },
+  { id: 'xbox-speech', name: 'Xbox Speech to Text', description: 'Voice transcription for Xbox', size: '~10 MB', risk: 'safe', category: 'Xbox', packageName: 'Microsoft.XboxSpeechToTextOverlay' },
+
+  // Office
+  { id: 'onenote', name: 'OneNote', description: 'Note-taking app (UWP version)', size: '~120 MB', risk: 'safe', category: 'Office', packageName: 'Microsoft.Office.OneNote' },
+  { id: 'office-hub', name: 'Office Hub', description: 'Office app launcher', size: '~20 MB', risk: 'safe', category: 'Office', packageName: 'Microsoft.MicrosoftOfficeHub' },
+
+  // Cloud
   { id: 'onedrive', name: 'OneDrive', description: 'Cloud storage integration — some apps depend on it', size: '~40 MB', risk: 'moderate', category: 'Cloud' },
+
+  // Browser
   { id: 'edge', name: 'Microsoft Edge', description: 'Default browser — removing may break some web links', size: '~350 MB', risk: 'moderate', category: 'Browser' },
+
+  // UI
   { id: 'widgets', name: 'Widgets', description: 'Taskbar Widgets panel (Win 11)', size: '~50 MB', risk: 'moderate', category: 'UI', packageName: 'MicrosoftWindows.Client.WebExperience' },
   { id: 'paint3d', name: 'Paint 3D', description: '3D painting app', size: '~120 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.MSPaint' },
   { id: 'your-phone', name: 'Phone Link', description: 'Connect phone to PC', size: '~30 MB', risk: 'moderate', category: 'Apps', packageName: 'Microsoft.YourPhone' },
+
+  // Media
   { id: 'media-player', name: 'Media Player', description: 'Windows Media Player — some codecs may stop working', size: '~40 MB', risk: 'moderate', category: 'Media' },
+  { id: 'groove-music', name: 'Groove Music', description: 'Legacy music player', size: '~25 MB', risk: 'safe', category: 'Media', packageName: 'Microsoft.ZuneMusic' },
+  { id: 'movies-tv', name: 'Movies & TV', description: 'Video player app', size: '~25 MB', risk: 'safe', category: 'Media', packageName: 'Microsoft.ZuneVideo' },
+
+  // System
   { id: 'store', name: 'Microsoft Store', description: 'App store — cannot install UWP apps without it', size: '~35 MB', risk: 'moderate', category: 'System', packageName: 'Microsoft.WindowsStore' },
+  { id: 'store-purchase', name: 'Store Purchase App', description: 'Store purchase service', size: '~5 MB', risk: 'moderate', category: 'System', packageName: 'Microsoft.StorePurchaseApp' },
+  { id: 'app-installer', name: 'App Installer', description: 'Winget & MSIX installer — needed for package management', size: '~10 MB', risk: 'moderate', category: 'System', packageName: 'Microsoft.DesktopAppInstaller' },
+
+  // AI
+  { id: 'recall', name: 'Windows Recall', description: 'AI timeline feature (Win 11 24H2+)', size: '~150 MB', risk: 'aggressive', category: 'AI', packageName: 'MicrosoftWindows.AI.Copilot.Provider' },
+  { id: 'copilot', name: 'Copilot', description: 'Windows AI Copilot', size: '~20 MB', risk: 'aggressive', category: 'AI', packageName: 'Microsoft.Copilot' },
+
+  // Security
   { id: 'defender', name: 'Windows Defender', description: 'Built-in antivirus — system will be unprotected', size: '~200 MB', risk: 'aggressive', category: 'Security' },
   { id: 'windows-security', name: 'Windows Security', description: 'Security dashboard UI', size: '~30 MB', risk: 'aggressive', category: 'Security', packageName: 'Microsoft.SecHealthUI' },
   { id: 'search', name: 'Windows Search', description: 'Taskbar search and indexing — affects Start menu search', size: '~80 MB', risk: 'aggressive', category: 'System' },
-  { id: 'recall', name: 'Windows Recall', description: 'AI timeline feature (Win 11 24H2+)', size: '~150 MB', risk: 'aggressive', category: 'AI', packageName: 'MicrosoftWindows.AI.Copilot.Provider' },
-  { id: 'copilot', name: 'Copilot', description: 'Windows AI Copilot', size: '~20 MB', risk: 'aggressive', category: 'AI', packageName: 'Microsoft.Copilot' },
 ];
 
 const riskConfig: Record<RiskLevel, { color: string; badgeColor: string; icon: React.ElementType; label: string }> = {
