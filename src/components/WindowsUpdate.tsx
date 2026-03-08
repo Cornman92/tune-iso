@@ -21,6 +21,7 @@ export interface KBUpdate {
 
 interface WindowsUpdateProps {
   isMounted: boolean;
+  onCountChange?: (count: number) => void;
   exportRef?: MutableRefObject<() => { kb: string; title: string; category: string; source: string; filePath?: string }[]>;
   importRef?: MutableRefObject<(data: { kb: string; title: string; category: string; source: string; filePath?: string }[]) => void>;
 }
