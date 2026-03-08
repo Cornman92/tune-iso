@@ -256,7 +256,6 @@ const PowerShellExport = ({
     add('    exit /b 1');
     add(')');
     blank();
-
     add('SET MountDir=C:\\Mount');
     add('SET WimFile=install.wim');
     add('SET WimIndex=6');
@@ -266,6 +265,7 @@ const PowerShellExport = ({
     add('SET UpdateDir=C:\\Updates');
     blank();
 
+    // Mount (always first)
     add('echo.');
     add('echo ══► Mounting Windows Image');
     add('echo ────────────────────────────────────────────────────');
@@ -274,87 +274,98 @@ const PowerShellExport = ({
     add('IF %ERRORLEVEL% NEQ 0 ( echo FAILED to mount image & pause & exit /b 1 )');
     blank();
 
-    if (components.length > 0) {
-      add('echo.');
-      add(`echo ══► Removing Components (${components.length} packages)`);
-      add('echo ────────────────────────────────────────────────────');
-      components.forEach(c => {
-        add(`echo   Removing: ${c}`);
-        add(`FOR /F "tokens=3 delims=: " %%P IN ('DISM /Image:%MountDir% /Get-ProvisionedAppxPackages ^| findstr /i "${c}"') DO (`);
-        add(`    DISM /Image:%MountDir% /Remove-ProvisionedAppxPackage /PackageName:%%P`);
-        add(')');
-      });
-      blank();
-    }
+    // Build sections in custom order
+    const enabledSteps = buildSteps.filter(s => s.enabled);
 
-    if (services.length > 0) {
-      add('echo.');
-      add(`echo ══► Disabling Services (${services.length} services)`);
-      add('echo ────────────────────────────────────────────────────');
-      services.forEach(s => {
-        add(`echo   Disabling: ${s}`);
-        add(`REG ADD "HKLM\\SYSTEM\\ControlSet001\\Services\\${s}" /v Start /t REG_DWORD /d 4 /f >nul`);
-      });
-      blank();
-    }
+    const batSections: Record<string, () => void> = {
+      components: () => {
+        if (components.length === 0) return;
+        add('echo.');
+        add(`echo ══► Removing Components (${components.length} packages)`);
+        add('echo ────────────────────────────────────────────────────');
+        components.forEach(c => {
+          add(`echo   Removing: ${c}`);
+          add(`FOR /F "tokens=3 delims=: " %%P IN ('DISM /Image:%MountDir% /Get-ProvisionedAppxPackages ^| findstr /i "${c}"') DO (`);
+          add(`    DISM /Image:%MountDir% /Remove-ProvisionedAppxPackage /PackageName:%%P`);
+          add(')');
+        });
+        blank();
+      },
+      services: () => {
+        if (services.length === 0) return;
+        add('echo.');
+        add(`echo ══► Disabling Services (${services.length} services)`);
+        add('echo ────────────────────────────────────────────────────');
+        services.forEach(s => {
+          add(`echo   Disabling: ${s}`);
+          add(`REG ADD "HKLM\\SYSTEM\\ControlSet001\\Services\\${s}" /v Start /t REG_DWORD /d 4 /f >nul`);
+        });
+        blank();
+      },
+      registry: () => {
+        if (registry.length === 0) return;
+        add('echo.');
+        add(`echo ══► Applying Registry Tweaks (${registry.length} entries)`);
+        add('echo ────────────────────────────────────────────────────');
+        add('REG LOAD "HKLM\\OFFLINE_SOFTWARE" "%MountDir%\\Windows\\System32\\config\\SOFTWARE"');
+        add('REG LOAD "HKLM\\OFFLINE_SYSTEM" "%MountDir%\\Windows\\System32\\config\\SYSTEM"');
+        add('REG LOAD "HKLM\\OFFLINE_DEFAULT" "%MountDir%\\Windows\\System32\\config\\DEFAULT"');
+        registry.forEach(r => {
+          add(`echo   Setting: ${r.valueName}`);
+          add(`REG ADD "${r.hive}\\${r.keyPath}" /v "${r.valueName}" /t ${r.valueType} /d "${r.valueData}" /f >nul`);
+        });
+        add('REG UNLOAD "HKLM\\OFFLINE_SOFTWARE"');
+        add('REG UNLOAD "HKLM\\OFFLINE_SYSTEM"');
+        add('REG UNLOAD "HKLM\\OFFLINE_DEFAULT"');
+        blank();
+      },
+      drivers: () => {
+        if (drivers.length === 0) return;
+        add('echo.');
+        add(`echo ══► Injecting Drivers (${drivers.length} drivers)`);
+        add('echo ────────────────────────────────────────────────────');
+        drivers.forEach(d => {
+          if (d.type === 'folder') {
+            add(`echo   Adding folder: ${d.path}`);
+            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${d.path}" /Recurse`);
+          } else {
+            add(`echo   Adding driver: ${d.name}`);
+            add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${d.path}"`);
+          }
+        });
+        blank();
+      },
+      updates: () => {
+        if (updates.length === 0) return;
+        add('echo.');
+        add(`echo ══► Applying Updates (${updates.length} packages)`);
+        add('echo ────────────────────────────────────────────────────');
+        const order = ['servicing', 'cumulative', 'dotnet', 'security', 'driver', 'feature', 'custom'];
+        const sorted = [...updates].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category));
+        sorted.forEach(u => {
+          const path = u.filePath || `%UpdateDir%\\${u.kb}.msu`;
+          add(`echo   Applying: ${u.kb} - ${u.title}`);
+          add(`DISM /Image:%MountDir% /Add-Package /PackagePath:"${path}"`);
+        });
+        blank();
+      },
+      customizations: () => {
+        if (customizations.programs.length === 0 && customizations.tweaks.length === 0 && customizations.optimizations.length === 0) return;
+        add('echo.');
+        add('echo ══► Applying Customizations');
+        add('echo ────────────────────────────────────────────────────');
+        customizations.programs.forEach(p => add(`echo   Program: ${p}`));
+        customizations.tweaks.forEach(t => add(`echo   Tweak: ${t}`));
+        customizations.optimizations.forEach(o => add(`echo   Optimization: ${o}`));
+        blank();
+      },
+    };
 
-    if (registry.length > 0) {
-      add('echo.');
-      add(`echo ══► Applying Registry Tweaks (${registry.length} entries)`);
-      add('echo ────────────────────────────────────────────────────');
-      add('REG LOAD "HKLM\\OFFLINE_SOFTWARE" "%MountDir%\\Windows\\System32\\config\\SOFTWARE"');
-      add('REG LOAD "HKLM\\OFFLINE_SYSTEM" "%MountDir%\\Windows\\System32\\config\\SYSTEM"');
-      add('REG LOAD "HKLM\\OFFLINE_DEFAULT" "%MountDir%\\Windows\\System32\\config\\DEFAULT"');
-      registry.forEach(r => {
-        add(`echo   Setting: ${r.valueName}`);
-        add(`REG ADD "${r.hive}\\${r.keyPath}" /v "${r.valueName}" /t ${r.valueType} /d "${r.valueData}" /f >nul`);
-      });
-      add('REG UNLOAD "HKLM\\OFFLINE_SOFTWARE"');
-      add('REG UNLOAD "HKLM\\OFFLINE_SYSTEM"');
-      add('REG UNLOAD "HKLM\\OFFLINE_DEFAULT"');
-      blank();
-    }
+    enabledSteps.forEach(step => {
+      batSections[step.id]?.();
+    });
 
-    if (drivers.length > 0) {
-      add('echo.');
-      add(`echo ══► Injecting Drivers (${drivers.length} drivers)`);
-      add('echo ────────────────────────────────────────────────────');
-      drivers.forEach(d => {
-        if (d.type === 'folder') {
-          add(`echo   Adding folder: ${d.path}`);
-          add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${d.path}" /Recurse`);
-        } else {
-          add(`echo   Adding driver: ${d.name}`);
-          add(`DISM /Image:%MountDir% /Add-Driver /Driver:"${d.path}"`);
-        }
-      });
-      blank();
-    }
-
-    if (updates.length > 0) {
-      add('echo.');
-      add(`echo ══► Applying Updates (${updates.length} packages)`);
-      add('echo ────────────────────────────────────────────────────');
-      const order = ['servicing', 'cumulative', 'dotnet', 'security', 'driver', 'feature', 'custom'];
-      const sorted = [...updates].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category));
-      sorted.forEach(u => {
-        const path = u.filePath || `%UpdateDir%\\${u.kb}.msu`;
-        add(`echo   Applying: ${u.kb} - ${u.title}`);
-        add(`DISM /Image:%MountDir% /Add-Package /PackagePath:"${path}"`);
-      });
-      blank();
-    }
-
-    if (customizations.programs.length > 0 || customizations.tweaks.length > 0 || customizations.optimizations.length > 0) {
-      add('echo.');
-      add('echo ══► Applying Customizations');
-      add('echo ────────────────────────────────────────────────────');
-      customizations.programs.forEach(p => add(`echo   Program: ${p}`));
-      customizations.tweaks.forEach(t => add(`echo   Tweak: ${t}`));
-      customizations.optimizations.forEach(o => add(`echo   Optimization: ${o}`));
-      blank();
-    }
-
+    // Cleanup & Commit (always last)
     add('echo.');
     add('echo ══► Cleaning Up Image');
     add('echo ────────────────────────────────────────────────────');
@@ -378,7 +389,7 @@ const PowerShellExport = ({
     add('pause');
 
     return lines.join('\r\n');
-  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry]);
+  }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, buildSteps]);
 
   const downloadFile = (content: string, filename: string) => {
     const blob = new Blob([content], { type: 'text/plain' });
