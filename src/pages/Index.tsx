@@ -11,6 +11,8 @@ import WindowsUpdate from '@/components/WindowsUpdate';
 import ProjectManager, { type ProjectData } from '@/components/ProjectManager';
 import WimEditor from '@/components/WimEditor';
 import RegistryEditor from '@/components/RegistryEditor';
+import ServicesManager from '@/components/ServicesManager';
+import ComponentRemoval from '@/components/ComponentRemoval';
 import SectionSidebar from '@/components/SectionSidebar';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'updates', 'unattend', 'build'];
