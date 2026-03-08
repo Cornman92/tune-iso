@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Disc3, Terminal, Keyboard } from 'lucide-react';
+import { Disc3, Terminal, Keyboard, Undo2, Redo2 } from 'lucide-react';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
 import CustomizationPanel from '@/components/CustomizationPanel';
@@ -9,6 +9,7 @@ import DriverInjection from '@/components/DriverInjection';
 import UnattendGenerator from '@/components/UnattendGenerator';
 import WindowsUpdate from '@/components/WindowsUpdate';
 import ProjectManager, { type ProjectData } from '@/components/ProjectManager';
+import TemplateManager from '@/components/TemplateManager';
 import WimEditor from '@/components/WimEditor';
 import RegistryEditor from '@/components/RegistryEditor';
 import ServicesManager from '@/components/ServicesManager';
@@ -19,6 +20,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 import PowerShellExport from '@/components/PowerShellExport';
 import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
+import useUndoRedo from '@/hooks/useUndoRedo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
@@ -116,10 +118,49 @@ const Index = () => {
     URL.revokeObjectURL(url);
   }, [handleExport]);
 
+  // Undo/Redo system
+  const getSnapshot = useCallback((): ProjectData => {
+    return {
+      version: '1.3.0',
+      name: selectedFile?.name?.replace('.iso', '') || 'iso-forge-project',
+      exportedAt: new Date().toISOString(),
+      customizations: exportCustomizations.current(),
+      drivers: exportDrivers.current(),
+      updates: exportUpdates.current(),
+      unattend: exportUnattend.current(),
+      buildSteps,
+    };
+  }, [selectedFile, buildSteps]);
+
+  const applySnapshot = useCallback((snapshot: ProjectData) => {
+    if (snapshot.customizations) importCustomizations.current(snapshot.customizations);
+    if (snapshot.drivers) importDrivers.current(snapshot.drivers);
+    if (snapshot.updates) importUpdates.current(snapshot.updates);
+    if (snapshot.unattend) importUnattend.current(snapshot.unattend);
+    if (snapshot.buildSteps) setBuildSteps(snapshot.buildSteps);
+  }, []);
+
+  const { pushState, undo, redo } = useUndoRedo<ProjectData>({
+    getSnapshot,
+    applySnapshot,
+  });
+
+  // Push state on meaningful changes (debounced via counts)
+  const prevCounts = useRef('');
+  useEffect(() => {
+    const key = `${customizationCount}-${driverCount}-${registryCount}-${serviceCount}-${componentCount}-${updateCount}-${unattendCount}-${buildSteps.map(s => `${s.id}:${s.enabled}`).join(',')}`;
+    if (prevCounts.current && prevCounts.current !== key) {
+      pushState();
+    }
+    prevCounts.current = key;
+  }, [customizationCount, driverCount, registryCount, serviceCount, componentCount, updateCount, unattendCount, buildSteps, pushState]);
+
   useKeyboardShortcuts({
     onExportProject: handleExportProjectKb,
     onExportScript: useCallback(() => exportScriptRef.current(), []),
     onToggleTheme: useCallback(() => themeToggleRef.current(), []),
+    onUndo: undo,
+    onRedo: redo,
   });
 
   return (
@@ -149,7 +190,7 @@ const Index = () => {
                 exportScriptRef={exportScriptRef}
                 buildSteps={buildSteps}
               />
-              <ProjectManager onExport={handleExport} onImport={handleImport} />
+              <TemplateManager onExport={handleExport} onImport={handleImport} />
               <ThemeToggle toggleRef={themeToggleRef} />
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -161,6 +202,8 @@ const Index = () => {
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+S</kbd> Export Project</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+E</kbd> Export Script</p>
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+D</kbd> Toggle Theme</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+Z</kbd> Undo</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+Y</kbd> Redo</p>
                 </TooltipContent>
               </Tooltip>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
