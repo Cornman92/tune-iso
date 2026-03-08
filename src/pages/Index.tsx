@@ -227,6 +227,16 @@ const Index = () => {
                 importFeatures={importFeatures}
                 isMounted={isMounted}
               />
+              <MarkdownExport
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportUpdates={exportUpdates}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+                isMounted={isMounted}
+              />
               <div className="h-6 w-px bg-border" />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <div className="h-6 w-px bg-border" />
