@@ -87,7 +87,15 @@ const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProp
 
   const getGroupedItems = () => {
     const items = getItems();
-    return items.reduce((acc, item) => {
+    const query = searchQuery.toLowerCase().trim();
+    const filtered = query
+      ? items.filter(item =>
+          item.name.toLowerCase().includes(query) ||
+          item.description.toLowerCase().includes(query) ||
+          item.category.toLowerCase().includes(query)
+        )
+      : items;
+    return filtered.reduce((acc, item) => {
       if (!acc[item.category]) acc[item.category] = [];
       acc[item.category].push(item);
       return acc;
