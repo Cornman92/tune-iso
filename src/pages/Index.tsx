@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Disc3, Terminal, Keyboard } from 'lucide-react';
+import { Disc3, Terminal, Keyboard, Undo2, Redo2 } from 'lucide-react';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
 import CustomizationPanel from '@/components/CustomizationPanel';
@@ -9,6 +9,7 @@ import DriverInjection from '@/components/DriverInjection';
 import UnattendGenerator from '@/components/UnattendGenerator';
 import WindowsUpdate from '@/components/WindowsUpdate';
 import ProjectManager, { type ProjectData } from '@/components/ProjectManager';
+import TemplateManager from '@/components/TemplateManager';
 import WimEditor from '@/components/WimEditor';
 import RegistryEditor from '@/components/RegistryEditor';
 import ServicesManager from '@/components/ServicesManager';
@@ -19,6 +20,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 import PowerShellExport from '@/components/PowerShellExport';
 import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
+import useUndoRedo from '@/hooks/useUndoRedo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
