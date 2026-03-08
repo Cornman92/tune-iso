@@ -1,6 +1,7 @@
 import { useCallback, MutableRefObject, useState } from 'react';
 import { FileDown, ChevronDown } from 'lucide-react';
 import type { BuildStep } from '@/components/BuildStepReorder';
+import type { WimFeatureExport } from '@/components/WimEditor';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
