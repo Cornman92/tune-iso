@@ -267,8 +267,8 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
           lines.push('      </DiskConfiguration>');
         }
         product.forEach(o => {
-          if (o.id === 'accept-eula') lines.push(`      <UserData><AcceptEula>${o.value}</AcceptEula></UserData>`);
-          if (o.id === 'product-key' && o.value) lines.push(`      <UserData><ProductKey><Key>${o.value}</Key></ProductKey></UserData>`);
+          if (o.id === 'accept-eula') lines.push(`      <UserData><AcceptEula>${escapeXml(o.value)}</AcceptEula></UserData>`);
+          if (o.id === 'product-key' && o.value) lines.push(`      <UserData><ProductKey><Key>${escapeXml(o.value)}</Key></ProductKey></UserData>`);
         });
         // Bypass checks
         const bypasses = winpe.filter(o => o.id.startsWith('bypass-') && o.value === 'true');
