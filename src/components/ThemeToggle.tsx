@@ -2,13 +2,23 @@ import { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const ThemeToggle = () => {
+interface ThemeToggleProps {
+  toggleRef?: React.MutableRefObject<() => void>;
+}
+
+const ThemeToggle = ({ toggleRef }: ThemeToggleProps) => {
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('theme') !== 'light';
     }
     return true;
   });
+
+  const toggle = () => setIsDark(prev => !prev);
+
+  if (toggleRef) {
+    toggleRef.current = toggle;
+  }
 
   useEffect(() => {
     const root = document.documentElement;

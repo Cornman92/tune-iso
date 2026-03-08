@@ -21,6 +21,7 @@ interface PowerShellExportProps {
   exportComponents: MutableRefObject<() => string[]>;
   exportRegistry: MutableRefObject<() => { hive: string; keyPath: string; valueName: string; valueType: string; valueData: string }[]>;
   isMounted: boolean;
+  exportScriptRef?: MutableRefObject<() => void>;
 }
 
 const PowerShellExport = ({
