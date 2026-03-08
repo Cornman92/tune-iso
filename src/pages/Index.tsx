@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Disc3, Terminal, Keyboard, Undo2, Redo2 } from 'lucide-react';
+import { Disc3, Terminal, Keyboard } from 'lucide-react';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
 import CustomizationPanel from '@/components/CustomizationPanel';
