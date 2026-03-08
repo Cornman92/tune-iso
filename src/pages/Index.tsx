@@ -220,7 +220,7 @@ const Index = () => {
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">8</span>
                 Component Removal
               </h2>
-              <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} />
+              <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} exportRef={exportComponents} />
             </section>
 
             {/* 9. Windows Update */}
