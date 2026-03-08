@@ -214,6 +214,14 @@ const Index = () => {
                 buildSteps={buildSteps}
               />
               <ProjectManager onExport={handleExport} onImport={handleImport} />
+              <BuildProfiles
+                importCustomizations={importCustomizations}
+                importServices={importServices}
+                importComponents={importComponents}
+                importRegistry={importRegistry}
+                importFeatures={importFeatures}
+                isMounted={isMounted}
+              />
               <div className="h-6 w-px bg-border" />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <div className="h-6 w-px bg-border" />
