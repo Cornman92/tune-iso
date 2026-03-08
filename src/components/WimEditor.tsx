@@ -161,6 +161,14 @@ const WimEditor = ({ isMounted, exportFeaturesRef }: WimEditorProps) => {
   const [features, setFeatures] = useState<WinFeature[]>(DEFAULT_FEATURES);
   const [featureSearch, setFeatureSearch] = useState('');
 
+  // Export features ref
+  useEffect(() => {
+    if (exportFeaturesRef) {
+      exportFeaturesRef.current = () => features
+        .filter(f => f.enabled !== DEFAULT_FEATURES.find(d => d.id === f.id)?.enabled)
+        .map(f => ({ id: f.id, name: f.name, enabled: f.enabled }));
+    }
+  }, [features, exportFeaturesRef]);
   // Package state
   const [packages, setPackages] = useState<WimPackage[]>([]);
   const [pkgName, setPkgName] = useState('');
