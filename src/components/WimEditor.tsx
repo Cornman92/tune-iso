@@ -146,6 +146,7 @@ export interface WimFeatureExport {
 interface WimEditorProps {
   isMounted: boolean;
   exportFeaturesRef?: MutableRefObject<() => WimFeatureExport[]>;
+  importFeaturesRef?: MutableRefObject<(data: { id: string; enabled: boolean }[]) => void>;
 }
 
 type WimTab = 'editions' | 'features' | 'packages' | 'compression' | 'files';
