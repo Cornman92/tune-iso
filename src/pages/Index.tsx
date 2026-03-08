@@ -15,6 +15,8 @@ import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
 import SectionSidebar from '@/components/SectionSidebar';
 import SummaryDashboard from '@/components/SummaryDashboard';
+import ThemeToggle from '@/components/ThemeToggle';
+import PowerShellExport from '@/components/PowerShellExport';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
