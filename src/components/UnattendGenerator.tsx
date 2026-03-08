@@ -304,11 +304,7 @@ const UnattendGenerator = ({ isMounted, onCountChange, exportRef, importRef }: U
         lines.push('      <OOBE>');
         oobe.forEach(o => {
           const tag = o.xmlPath.split('/').pop();
-          if (o.type === 'boolean') {
-            lines.push(`        <${tag}>${o.value}</${tag}>`);
-          } else {
-            lines.push(`        <${tag}>${o.value}</${tag}>`);
-          }
+          lines.push(`        <${tag}>${escapeXml(o.value)}</${tag}>`);
         });
         lines.push('      </OOBE>');
       }
