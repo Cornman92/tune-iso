@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { Disc3, Terminal } from 'lucide-react';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
@@ -7,17 +7,48 @@ import CommitPanel from '@/components/CommitPanel';
 import WorkflowStepper from '@/components/WorkflowStepper';
 import DriverInjection from '@/components/DriverInjection';
 import UnattendGenerator from '@/components/UnattendGenerator';
+import WindowsUpdate from '@/components/WindowsUpdate';
+import ProjectManager, { type ProjectData } from '@/components/ProjectManager';
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [customizationCount, setCustomizationCount] = useState(0);
 
+  // Refs for export/import callbacks
+  const exportCustomizations = useRef<() => { programs: string[]; tweaks: string[]; optimizations: string[] }>(() => ({ programs: [], tweaks: [], optimizations: [] }));
+  const importCustomizations = useRef<(data: { programs: string[]; tweaks: string[]; optimizations: string[] }) => void>(() => {});
+  const exportDrivers = useRef<() => { name: string; path: string; type: string }[]>(() => []);
+  const importDrivers = useRef<(data: { name: string; path: string; type: string }[]) => void>(() => {});
+  const exportUpdates = useRef<() => { kb: string; title: string; category: string; source: string; filePath?: string }[]>(() => []);
+  const importUpdates = useRef<(data: { kb: string; title: string; category: string; source: string; filePath?: string }[]) => void>(() => {});
+  const exportUnattend = useRef<() => { id: string; value: string; enabled: boolean }[]>(() => []);
+  const importUnattend = useRef<(data: { id: string; value: string; enabled: boolean }[]) => void>(() => {});
+
   const currentStep = useMemo(() => {
     if (!selectedFile) return 1;
     if (!isMounted) return 2;
     return 3;
   }, [selectedFile, isMounted]);
+
+  const handleExport = useCallback((): ProjectData => {
+    return {
+      version: '1.2.0',
+      name: selectedFile?.name?.replace('.iso', '') || 'iso-forge-project',
+      exportedAt: new Date().toISOString(),
+      customizations: exportCustomizations.current(),
+      drivers: exportDrivers.current(),
+      updates: exportUpdates.current(),
+      unattend: exportUnattend.current(),
+    };
+  }, [selectedFile]);
+
+  const handleImport = useCallback((data: ProjectData) => {
+    if (data.customizations) importCustomizations.current(data.customizations);
+    if (data.drivers) importDrivers.current(data.drivers);
+    if (data.updates) importUpdates.current(data.updates);
+    if (data.unattend) importUnattend.current(data.unattend);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,9 +63,12 @@ const Index = () => {
               <h1 className="text-lg font-semibold text-foreground">ISO Forge</h1>
               <p className="text-xs font-mono text-muted-foreground">Windows Image Customization Tool</p>
             </div>
-            <div className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
-              <Terminal className="w-4 h-4 text-primary" />
-              <span className="text-xs font-mono text-muted-foreground">v1.1.0</span>
+            <div className="ml-auto flex items-center gap-3">
+              <ProjectManager onExport={handleExport} onImport={handleImport} />
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
+                <Terminal className="w-4 h-4 text-primary" />
+                <span className="text-xs font-mono text-muted-foreground">v1.2.0</span>
+              </div>
             </div>
           </div>
         </div>
@@ -42,26 +76,21 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container max-w-6xl mx-auto px-4 py-8">
-        {/* Workflow Stepper */}
         <WorkflowStepper currentStep={currentStep} />
 
-        {/* Main Grid */}
         <div className="grid gap-6 lg:grid-cols-[1fr,420px]">
-          {/* Left Column - Main Actions */}
+          {/* Left Column */}
           <div className="space-y-6">
-            {/* ISO Selection */}
+            {/* 1. ISO Selection */}
             <section>
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">1</span>
                 Source Image
               </h2>
-              <IsoUploader 
-                selectedFile={selectedFile} 
-                onIsoSelect={setSelectedFile} 
-              />
+              <IsoUploader selectedFile={selectedFile} onIsoSelect={setSelectedFile} />
             </section>
 
-            {/* Mount Status */}
+            {/* 2. Mount */}
             {selectedFile && (
               <section>
                 <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -77,46 +106,68 @@ const Index = () => {
               </section>
             )}
 
-            {/* Customization Panel */}
+            {/* 3. Customizations */}
             <section>
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">3</span>
                 Customizations
               </h2>
-              <CustomizationPanel isMounted={isMounted} onCountChange={setCustomizationCount} />
+              <CustomizationPanel
+                isMounted={isMounted}
+                onCountChange={setCustomizationCount}
+                exportRef={exportCustomizations}
+                importRef={importCustomizations}
+              />
             </section>
 
-            {/* Driver Injection */}
+            {/* 4. Drivers */}
             <section>
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">4</span>
                 Driver Injection
               </h2>
-              <DriverInjection isMounted={isMounted} />
+              <DriverInjection
+                isMounted={isMounted}
+                exportRef={exportDrivers}
+                importRef={importDrivers}
+              />
             </section>
 
-            {/* Unattended Answer File */}
+            {/* 5. Windows Update */}
             <section>
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">5</span>
+                Windows Update Slipstream
+              </h2>
+              <WindowsUpdate
+                isMounted={isMounted}
+                exportRef={exportUpdates}
+                importRef={importUpdates}
+              />
+            </section>
+
+            {/* 6. Unattend */}
+            <section>
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">6</span>
                 Unattended Setup (autounattend.xml)
               </h2>
-              <UnattendGenerator isMounted={isMounted} />
+              <UnattendGenerator
+                isMounted={isMounted}
+                exportRef={exportUnattend}
+                importRef={importUnattend}
+              />
             </section>
           </div>
 
-          {/* Right Column - Commit Panel */}
+          {/* Right Column */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-              <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">6</span>
+              <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">7</span>
               Build Output
             </h2>
-            <CommitPanel 
-              isMounted={isMounted} 
-              customizationCount={customizationCount}
-            />
+            <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
 
-            {/* Info Panel */}
             <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
               <h3 className="text-sm font-medium text-foreground mb-2">Risk Levels</h3>
               <ul className="space-y-2 text-xs text-muted-foreground">
@@ -135,12 +186,12 @@ const Index = () => {
               </ul>
             </div>
 
-            {/* DISM Commands Reference */}
             <div className="mt-4 p-4 bg-muted/30 border border-border rounded-lg">
               <h3 className="text-sm font-medium text-foreground mb-2">DISM Reference</h3>
               <div className="space-y-1.5 text-[11px] font-mono text-muted-foreground">
                 <p><span className="text-primary">Mount:</span> /Mount-Wim /WimFile /Index /MountDir</p>
                 <p><span className="text-primary">Drivers:</span> /Add-Driver /Driver /Recurse</p>
+                <p><span className="text-primary">Updates:</span> /Add-Package /PackagePath</p>
                 <p><span className="text-primary">Packages:</span> /Remove-ProvisionedAppxPackage</p>
                 <p><span className="text-primary">Cleanup:</span> /Cleanup-Image /StartComponentCleanup</p>
                 <p><span className="text-primary">Commit:</span> /Unmount-Wim /Commit</p>
@@ -150,11 +201,10 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-border mt-12 py-6">
         <div className="container max-w-6xl mx-auto px-4">
           <p className="text-center text-xs font-mono text-muted-foreground">
-            ISO Forge • Windows Image Customization Tool • Prototype v1.1.0
+            ISO Forge • Windows Image Customization Tool • Prototype v1.2.0
           </p>
         </div>
       </footer>

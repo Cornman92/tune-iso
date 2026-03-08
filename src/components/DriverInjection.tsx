@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, MutableRefObject } from 'react';
 import { HardDrive, Upload, Trash2, FileText, FolderOpen, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,12 +16,32 @@ export interface DriverEntry {
 
 interface DriverInjectionProps {
   isMounted: boolean;
+  exportRef?: MutableRefObject<() => { name: string; path: string; type: string }[]>;
+  importRef?: MutableRefObject<(data: { name: string; path: string; type: string }[]) => void>;
 }
 
-const DriverInjection = ({ isMounted }: DriverInjectionProps) => {
+const DriverInjection = ({ isMounted, exportRef, importRef }: DriverInjectionProps) => {
   const [drivers, setDrivers] = useState<DriverEntry[]>([]);
   const [manualPath, setManualPath] = useState('');
   const [recurse, setRecurse] = useState(true);
+
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => drivers.map(d => ({ name: d.name, path: d.path, type: d.type }));
+  }, [drivers, exportRef]);
+
+  useEffect(() => {
+    if (importRef) importRef.current = (data) => {
+      setDrivers(data.map((d, i) => ({
+        id: `drv-import-${i}`,
+        name: d.name,
+        path: d.path,
+        size: 'Imported',
+        type: d.type as 'inf' | 'folder',
+        status: 'valid' as const,
+        details: `Imported from project file`,
+      })));
+    };
+  }, [importRef]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;

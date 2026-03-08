@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, MutableRefObject } from 'react';
 import { FileCode, Copy, ChevronDown, ChevronRight, Check, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -129,10 +129,29 @@ const defaultOptions: AnswerOption[] = [
 
 const categoryOrder = ['regional', 'windows pe', 'disk', 'product', 'user', 'oobe', 'privacy (oobe)', 'first logon'];
 
-const UnattendGenerator = ({ isMounted }: { isMounted: boolean }) => {
+interface UnattendGeneratorProps {
+  isMounted: boolean;
+  exportRef?: MutableRefObject<() => { id: string; value: string; enabled: boolean }[]>;
+  importRef?: MutableRefObject<(data: { id: string; value: string; enabled: boolean }[]) => void>;
+}
+
+const UnattendGenerator = ({ isMounted, exportRef, importRef }: UnattendGeneratorProps) => {
   const [options, setOptions] = useState(defaultOptions);
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['oobe', 'user']);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => options.map(o => ({ id: o.id, value: o.value, enabled: o.enabled }));
+  }, [options, exportRef]);
+
+  useEffect(() => {
+    if (importRef) importRef.current = (data) => {
+      setOptions(prev => prev.map(o => {
+        const imported = data.find(d => d.id === o.id);
+        return imported ? { ...o, value: imported.value, enabled: imported.enabled } : o;
+      }));
+    };
+  }, [importRef]);
 
   const toggleCategory = (cat: string) => {
     setExpandedCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);

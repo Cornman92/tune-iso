@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, MutableRefObject } from 'react';
 import { Package, Wrench, Zap, ChevronDown, ChevronRight, Plus, Check, Search, X, Shield, AlertTriangle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,8 @@ import {
 interface CustomizationPanelProps {
   isMounted: boolean;
   onCountChange?: (count: number) => void;
+  exportRef?: MutableRefObject<() => { programs: string[]; tweaks: string[]; optimizations: string[] }>;
+  importRef?: MutableRefObject<(data: { programs: string[]; tweaks: string[]; optimizations: string[] }) => void>;
 }
 
 const categories = [
@@ -37,7 +39,7 @@ const riskIcons = {
   aggressive: AlertTriangle,
 };
 
-const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProps) => {
+const CustomizationPanel = ({ isMounted, onCountChange, exportRef, importRef }: CustomizationPanelProps) => {
   const [activeTab, setActiveTab] = useState('programs');
   const [programs, setPrograms] = useState(defaultPrograms);
   const [tweaks, setTweaks] = useState(defaultTweaks);
@@ -45,6 +47,22 @@ const CustomizationPanel = ({ isMounted, onCountChange }: CustomizationPanelProp
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showPresets, setShowPresets] = useState(false);
+
+  useEffect(() => {
+    if (exportRef) exportRef.current = () => ({
+      programs: programs.filter(p => p.enabled).map(p => p.id),
+      tweaks: tweaks.filter(t => t.enabled).map(t => t.id),
+      optimizations: optimizations.filter(o => o.enabled).map(o => o.id),
+    });
+  }, [programs, tweaks, optimizations, exportRef]);
+
+  useEffect(() => {
+    if (importRef) importRef.current = (data) => {
+      setPrograms(prev => prev.map(p => ({ ...p, enabled: data.programs.includes(p.id) })));
+      setTweaks(prev => prev.map(t => ({ ...t, enabled: data.tweaks.includes(t.id) })));
+      setOptimizations(prev => prev.map(o => ({ ...o, enabled: data.optimizations.includes(o.id) })));
+    };
+  }, [importRef]);
 
   const toggleItem = (id: string, type: 'programs' | 'tweaks' | 'optimizations') => {
     const setter = type === 'programs' ? setPrograms : type === 'tweaks' ? setTweaks : setOptimizations;
