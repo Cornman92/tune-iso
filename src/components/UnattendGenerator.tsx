@@ -1,5 +1,6 @@
 import { useState, useEffect, MutableRefObject } from 'react';
 import { FileCode, Copy, ChevronDown, ChevronRight, Check, RotateCcw } from 'lucide-react';
+import { escapeXml } from '@/lib/sanitize';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
