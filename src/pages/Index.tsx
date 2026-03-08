@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Disc3, Terminal, Keyboard, Undo2, Redo2 } from 'lucide-react';
+import { Disc3, Terminal, Keyboard } from 'lucide-react';
 import IsoUploader from '@/components/IsoUploader';
 import MountStatus from '@/components/MountStatus';
 import CustomizationPanel from '@/components/CustomizationPanel';
@@ -14,6 +14,7 @@ import WimEditor from '@/components/WimEditor';
 import RegistryEditor from '@/components/RegistryEditor';
 import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
+import IsoMetadataEditor from '@/components/IsoMetadataEditor';
 import SectionSidebar from '@/components/SectionSidebar';
 import SummaryDashboard from '@/components/SummaryDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -23,7 +24,7 @@ import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import useUndoRedo from '@/hooks/useUndoRedo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-const SECTION_IDS = ['source', 'mount', 'wim', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
+const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -259,10 +260,19 @@ const Index = () => {
               <WimEditor isMounted={isMounted} />
             </section>
 
-            {/* 4. Customizations */}
-            <section id="section-customizations">
+            {/* 3b. ISO Metadata */}
+            <section id="section-iso-metadata">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">4</span>
+                ISO Metadata &amp; Boot Config
+              </h2>
+              <IsoMetadataEditor isMounted={isMounted} />
+            </section>
+
+            {/* 5. Customizations */}
+            <section id="section-customizations">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">5</span>
                 Customizations
               </h2>
               <CustomizationPanel

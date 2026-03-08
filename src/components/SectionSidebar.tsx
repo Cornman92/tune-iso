@@ -1,4 +1,4 @@
-import { HardDrive, Disc, Settings, HardDriveDownload, Download, FileCode, Save, Layers, Database, Cog, Package } from 'lucide-react';
+import { HardDrive, Disc, Settings, HardDriveDownload, Download, FileCode, Save, Layers, Database, Cog, Package, Settings2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SectionSidebarProps {
@@ -11,14 +11,15 @@ const sections = [
   { id: 'source', label: 'Source', icon: HardDrive, step: 1 },
   { id: 'mount', label: 'Mount', icon: Disc, step: 2, requiresFile: true },
   { id: 'wim', label: 'WIM Editor', icon: Layers, step: 3, requiresMount: true },
-  { id: 'customizations', label: 'Customize', icon: Settings, step: 4 },
-  { id: 'drivers', label: 'Drivers', icon: HardDriveDownload, step: 5 },
-  { id: 'registry', label: 'Registry', icon: Database, step: 6 },
-  { id: 'services', label: 'Services', icon: Cog, step: 7 },
-  { id: 'components', label: 'Components', icon: Package, step: 8 },
-  { id: 'updates', label: 'Updates', icon: Download, step: 9 },
-  { id: 'unattend', label: 'Unattend', icon: FileCode, step: 10 },
-  { id: 'build', label: 'Build', icon: Save, step: 11 },
+  { id: 'iso-metadata', label: 'ISO Meta', icon: Settings2, step: 4 },
+  { id: 'customizations', label: 'Customize', icon: Settings, step: 5 },
+  { id: 'drivers', label: 'Drivers', icon: HardDriveDownload, step: 6 },
+  { id: 'registry', label: 'Registry', icon: Database, step: 7 },
+  { id: 'services', label: 'Services', icon: Cog, step: 8 },
+  { id: 'components', label: 'Components', icon: Package, step: 9 },
+  { id: 'updates', label: 'Updates', icon: Download, step: 10 },
+  { id: 'unattend', label: 'Unattend', icon: FileCode, step: 11 },
+  { id: 'build', label: 'Build', icon: Save, step: 12 },
 ];
 
 const SectionSidebar = ({ activeSection, isMounted, hasFile }: SectionSidebarProps) => {

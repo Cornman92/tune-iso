@@ -202,6 +202,27 @@ export const defaultPrograms: CustomizationItem[] = [
   { id: 'eartrumpet', name: 'EarTrumpet', description: 'Per-app volume control', enabled: false, category: 'customization', risk: 'safe' },
   { id: 'files-app', name: 'Files App', description: 'Modern file explorer replacement', enabled: false, category: 'customization', risk: 'safe' },
   { id: 'modernflyouts', name: 'ModernFlyouts', description: 'Modern volume/brightness flyouts', enabled: false, category: 'customization', risk: 'safe' },
+
+  // Fonts
+  { id: 'font-firacode', name: 'Fira Code', description: 'Monospaced font with ligatures', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-cascadia', name: 'Cascadia Code', description: 'Microsoft dev font with ligatures', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-jetbrains', name: 'JetBrains Mono', description: 'Developer font by JetBrains', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-iosevka', name: 'Iosevka', description: 'Versatile monospaced typeface', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-nerdfonts', name: 'Nerd Fonts Pack', description: 'Patched fonts with dev icons', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-inter', name: 'Inter', description: 'Modern UI typeface', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-roboto', name: 'Roboto', description: 'Google Material Design font', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-sourcecodepro', name: 'Source Code Pro', description: 'Adobe monospaced font', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-hack', name: 'Hack', description: 'Open-source coding font', enabled: false, category: 'fonts', risk: 'safe' },
+  { id: 'font-meslo', name: 'Meslo LG', description: 'Customized Apple Menlo font', enabled: false, category: 'fonts', risk: 'safe' },
+
+  // Cloud & Backup
+  { id: 'nextcloud-client', name: 'Nextcloud Client', description: 'Self-hosted cloud sync client', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'restic', name: 'Restic', description: 'Fast encrypted backup tool', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'duplicati', name: 'Duplicati', description: 'Cloud backup with encryption', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'rclone', name: 'Rclone', description: 'CLI cloud storage manager', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'megasync', name: 'MEGA Sync', description: 'MEGA cloud storage client', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'dropbox', name: 'Dropbox', description: 'Cloud file hosting client', enabled: false, category: 'cloud & backup', risk: 'safe' },
+  { id: 'google-drive', name: 'Google Drive Desktop', description: 'Google cloud storage client', enabled: false, category: 'cloud & backup', risk: 'safe' },
 ];
 
 export const defaultTweaks: CustomizationItem[] = [
@@ -345,6 +366,32 @@ export const defaultTweaks: CustomizationItem[] = [
   { id: 'disable-admin-shares', name: 'Disable Admin Shares', description: 'Remove C$ and ADMIN$ shares', enabled: false, category: 'security', risk: 'moderate' },
   { id: 'audit-logon-events', name: 'Audit Logon Events', description: 'Enable logon/logoff auditing', enabled: false, category: 'security', risk: 'safe' },
   { id: 'disable-guest-account', name: 'Disable Guest Account', description: 'Ensure guest account is disabled', enabled: false, category: 'security', risk: 'safe' },
+
+  // Group Policy
+  { id: 'gpo-disable-store', name: 'Disable Microsoft Store', description: 'Block Store app via Group Policy', enabled: false, category: 'group policy', risk: 'moderate' },
+  { id: 'gpo-disable-consumer-features', name: 'Disable Consumer Features', description: 'Block consumer experience features', enabled: false, category: 'group policy', risk: 'safe' },
+  { id: 'gpo-disable-cloud-content', name: 'Disable Cloud Content', description: 'Block cloud-delivered content & suggestions', enabled: false, category: 'group policy', risk: 'safe' },
+  { id: 'gpo-disable-onedrive', name: 'Disable OneDrive via GP', description: 'Prevent OneDrive installation via policy', enabled: false, category: 'group policy', risk: 'safe' },
+  { id: 'gpo-disable-edge-update', name: 'Disable Edge Auto-Update', description: 'Block Edge browser auto-updates', enabled: false, category: 'group policy', risk: 'moderate' },
+  { id: 'gpo-restrict-driver-install', name: 'Restrict Driver Installation', description: 'Block unsigned driver installs', enabled: false, category: 'group policy', risk: 'moderate' },
+  { id: 'gpo-disable-telemetry', name: 'Disable Telemetry via GP', description: 'Enterprise-level telemetry disable', enabled: false, category: 'group policy', risk: 'safe' },
+  { id: 'gpo-password-policy', name: 'Strong Password Policy', description: 'Enforce complexity & min length', enabled: false, category: 'group policy', risk: 'safe' },
+  { id: 'gpo-account-lockout', name: 'Account Lockout Policy', description: 'Lock after 5 failed attempts', enabled: false, category: 'group policy', risk: 'safe' },
+  { id: 'gpo-audit-policy', name: 'Advanced Audit Policy', description: 'Enable comprehensive event auditing', enabled: false, category: 'group policy', risk: 'safe' },
+  { id: 'gpo-disable-removable-storage', name: 'Disable Removable Storage', description: 'Block USB storage devices via policy', enabled: false, category: 'group policy', risk: 'moderate' },
+  { id: 'gpo-disable-script-host', name: 'Disable Windows Script Host', description: 'Block VBS/JS script execution', enabled: false, category: 'group policy', risk: 'moderate' },
+
+  // Startup Scripts
+  { id: 'script-cleanup-temp', name: 'Cleanup Temp on Login', description: 'Auto-clear temp files at each logon', enabled: false, category: 'startup scripts', risk: 'safe' },
+  { id: 'script-set-timezone', name: 'Auto-Set Timezone', description: 'Detect and set timezone on first boot', enabled: false, category: 'startup scripts', risk: 'safe' },
+  { id: 'script-activate-windows', name: 'Run Activation Script', description: 'Execute custom activation script at OOBE', enabled: false, category: 'startup scripts', risk: 'moderate' },
+  { id: 'script-install-choco', name: 'Install Chocolatey', description: 'Auto-install Chocolatey package manager', enabled: false, category: 'startup scripts', risk: 'safe' },
+  { id: 'script-install-winget', name: 'Setup Winget', description: 'Ensure Winget is configured on first boot', enabled: false, category: 'startup scripts', risk: 'safe' },
+  { id: 'script-install-scoop', name: 'Install Scoop', description: 'Auto-install Scoop package manager', enabled: false, category: 'startup scripts', risk: 'safe' },
+  { id: 'script-map-drives', name: 'Map Network Drives', description: 'Configure network drive mappings at logon', enabled: false, category: 'startup scripts', risk: 'safe' },
+  { id: 'script-disable-firstrun', name: 'Skip First Run Dialogs', description: 'Suppress all first-run welcome dialogs', enabled: false, category: 'startup scripts', risk: 'safe' },
+  { id: 'script-import-tasks', name: 'Import Scheduled Tasks', description: 'Register custom scheduled tasks on boot', enabled: false, category: 'startup scripts', risk: 'moderate' },
+  { id: 'script-apply-theme', name: 'Apply Custom Theme', description: 'Set wallpaper, accent color, and theme on first logon', enabled: false, category: 'startup scripts', risk: 'safe' },
 ];
 
 export const defaultOptimizations: CustomizationItem[] = [
