@@ -100,11 +100,12 @@ function generateRollbackScript(
     lines.push('# --- Uninstall Injected Programs (via winget) ---');
     lines.push(`Write-Host "Attempting to uninstall ${allPrograms.length} programs..." -ForegroundColor Cyan`);
     allPrograms.forEach((prog) => {
+      const safeProg = escapePS(prog);
       lines.push(`try {`);
-      lines.push(`    winget uninstall --id "${prog}" --silent --accept-source-agreements 2>$null`);
-      lines.push(`    Write-Host "  [OK] Uninstalled: ${prog}" -ForegroundColor Green`);
+      lines.push(`    winget uninstall --id "${safeProg}" --silent --accept-source-agreements 2>`$null`);
+      lines.push(`    Write-Host "  [OK] Uninstalled: ${safeProg}" -ForegroundColor Green`);
       lines.push(`} catch {`);
-      lines.push(`    Write-Host "  [WARN] Could not uninstall: ${prog}" -ForegroundColor Yellow`);
+      lines.push(`    Write-Host "  [WARN] Could not uninstall: ${safeProg}" -ForegroundColor Yellow`);
       lines.push(`}`);
     });
     lines.push('');
