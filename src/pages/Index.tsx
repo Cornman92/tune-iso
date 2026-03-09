@@ -241,6 +241,13 @@ const Index = () => {
                 isMounted={isMounted}
               />
               <div className="h-6 w-px bg-border" />
+              <ConfigComparison onGetCurrentConfig={handleExport} />
+              <RollbackScriptGenerator
+                onGetCurrentConfig={handleExport}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+              />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <div className="h-6 w-px bg-border" />
               <ThemeToggle toggleRef={themeToggleRef} />
