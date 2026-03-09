@@ -118,7 +118,7 @@ function generateRollbackScript(
     lines.push('# NOTE: Driver removal requires identifying the OEM driver package.');
     lines.push('# Use: pnputil /enum-drivers and pnputil /delete-driver <oem##.inf> /uninstall');
     config.drivers.forEach((drv) => {
-      lines.push(`Write-Host "  [INFO] Review driver: ${drv.name} (${drv.path})" -ForegroundColor Yellow`);
+      lines.push(`Write-Host "  [INFO] Review driver: ${escapePS(drv.name)} (${escapePS(drv.path)})" -ForegroundColor Yellow`);
     });
     lines.push('');
   }
