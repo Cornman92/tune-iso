@@ -1,8 +1,11 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "iso-forge",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "main": "electron/main.cjs",
+  "author": "ISO Forge",
+  "description": "Windows ISO customization tool — edit and tweak .iso files for Windows 11 x64",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -10,7 +13,36 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "electron:dev": "electron .",
+    "electron:build": "electron-builder --win --x64",
+    "electron:pack": "electron-builder --win --x64 --dir"
+  },
+  "build": {
+    "appId": "com.isoforge.app",
+    "productName": "ISO Forge",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "public/favicon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
