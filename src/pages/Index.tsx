@@ -429,7 +429,7 @@ const Index = () => {
             <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
 
             <div className="mt-6">
-              <SummaryDashboard
+              <DraggableDashboard
                 customizationCount={customizationCount}
                 driverCount={driverCount}
                 registryCount={registryCount}
@@ -437,6 +437,8 @@ const Index = () => {
                 componentCount={componentCount}
                 updateCount={updateCount}
                 unattendCount={unattendCount}
+                isMounted={isMounted}
+                buildStepCount={buildSteps.filter(s => s.enabled).length}
               />
             </div>
 
