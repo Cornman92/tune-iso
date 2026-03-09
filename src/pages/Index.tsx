@@ -1,45 +1,50 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect, lazy, Suspense } from 'react';
 import { Disc3, Terminal, Keyboard } from 'lucide-react';
-import BuildProfiles from '@/components/BuildProfiles';
-import GlobalSearch from '@/components/GlobalSearch';
 import { DEFAULT_FEATURES } from '@/components/WimEditor';
 import { COMPONENTS } from '@/components/ComponentRemoval';
 import { SERVICES } from '@/components/ServicesManager';
 import { PRESET_ENTRIES } from '@/components/RegistryEditor';
-import IsoUploader from '@/components/IsoUploader';
-import MountStatus from '@/components/MountStatus';
-import CustomizationPanel from '@/components/CustomizationPanel';
-import CommitPanel from '@/components/CommitPanel';
-import WorkflowStepper from '@/components/WorkflowStepper';
-import DriverInjection from '@/components/DriverInjection';
-import UnattendGenerator from '@/components/UnattendGenerator';
-import WindowsUpdate from '@/components/WindowsUpdate';
-import ProjectManager, { type ProjectData } from '@/components/ProjectManager';
-import TemplateManager from '@/components/TemplateManager';
-import WimEditor, { type WimFeatureExport } from '@/components/WimEditor';
-import RegistryEditor from '@/components/RegistryEditor';
-import ServicesManager from '@/components/ServicesManager';
-import ComponentRemoval from '@/components/ComponentRemoval';
-import IsoMetadataEditor from '@/components/IsoMetadataEditor';
-import SectionSidebar from '@/components/SectionSidebar';
-import DraggableDashboard from '@/components/DraggableDashboard';
-import ThemeToggle from '@/components/ThemeToggle';
-import PowerShellExport from '@/components/PowerShellExport';
-import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
-import LiveScriptPreview from '@/components/LiveScriptPreview';
-import DependencyWarnings from '@/components/DependencyWarnings';
-import IsoSizeEstimator from '@/components/IsoSizeEstimator';
-import BuildDiffView from '@/components/BuildDiffView';
-import MarkdownExport from '@/components/MarkdownExport';
-import ScriptValidator from '@/components/ScriptValidator';
+import { type ProjectData } from '@/components/ProjectManager';
+import { type WimFeatureExport } from '@/components/WimEditor';
+import { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import useUndoRedo from '@/hooks/useUndoRedo';
-import UndoRedoTimeline from '@/components/UndoRedoTimeline';
-import ConfigComparison from '@/components/ConfigComparison';
-import RollbackScriptGenerator from '@/components/RollbackScriptGenerator';
-import BatchImageProcessor from '@/components/BatchImageProcessor';
-import CompatibilityChecker from '@/components/CompatibilityChecker';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+
+// Lazy-loaded components for code splitting
+const BuildProfiles = lazy(() => import('@/components/BuildProfiles'));
+const GlobalSearch = lazy(() => import('@/components/GlobalSearch'));
+const IsoUploader = lazy(() => import('@/components/IsoUploader'));
+const MountStatus = lazy(() => import('@/components/MountStatus'));
+const CustomizationPanel = lazy(() => import('@/components/CustomizationPanel'));
+const CommitPanel = lazy(() => import('@/components/CommitPanel'));
+const WorkflowStepper = lazy(() => import('@/components/WorkflowStepper'));
+const DriverInjection = lazy(() => import('@/components/DriverInjection'));
+const UnattendGenerator = lazy(() => import('@/components/UnattendGenerator'));
+const WindowsUpdate = lazy(() => import('@/components/WindowsUpdate'));
+const ProjectManager = lazy(() => import('@/components/ProjectManager'));
+const TemplateManager = lazy(() => import('@/components/TemplateManager'));
+const WimEditor = lazy(() => import('@/components/WimEditor'));
+const RegistryEditor = lazy(() => import('@/components/RegistryEditor'));
+const ServicesManager = lazy(() => import('@/components/ServicesManager'));
+const ComponentRemoval = lazy(() => import('@/components/ComponentRemoval'));
+const IsoMetadataEditor = lazy(() => import('@/components/IsoMetadataEditor'));
+const SectionSidebar = lazy(() => import('@/components/SectionSidebar'));
+const DraggableDashboard = lazy(() => import('@/components/DraggableDashboard'));
+const ThemeToggle = lazy(() => import('@/components/ThemeToggle'));
+const PowerShellExport = lazy(() => import('@/components/PowerShellExport'));
+const BuildStepReorder = lazy(() => import('@/components/BuildStepReorder'));
+const LiveScriptPreview = lazy(() => import('@/components/LiveScriptPreview'));
+const DependencyWarnings = lazy(() => import('@/components/DependencyWarnings'));
+const IsoSizeEstimator = lazy(() => import('@/components/IsoSizeEstimator'));
+const BuildDiffView = lazy(() => import('@/components/BuildDiffView'));
+const MarkdownExport = lazy(() => import('@/components/MarkdownExport'));
+const ScriptValidator = lazy(() => import('@/components/ScriptValidator'));
+const UndoRedoTimeline = lazy(() => import('@/components/UndoRedoTimeline'));
+const ConfigComparison = lazy(() => import('@/components/ConfigComparison'));
+const RollbackScriptGenerator = lazy(() => import('@/components/RollbackScriptGenerator'));
+const BatchImageProcessor = lazy(() => import('@/components/BatchImageProcessor'));
+const CompatibilityChecker = lazy(() => import('@/components/CompatibilityChecker'));
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
@@ -189,6 +194,7 @@ const Index = () => {
   });
 
   return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
     <div className="min-h-screen bg-background">
       <SectionSidebar activeSection={activeSection} isMounted={isMounted} hasFile={!!selectedFile} />
 
@@ -572,6 +578,7 @@ const Index = () => {
         </div>
       </footer>
     </div>
+    </Suspense>
   );
 };
 
