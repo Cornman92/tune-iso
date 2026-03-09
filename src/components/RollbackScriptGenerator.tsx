@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { RotateCcw, Copy, Download, Check } from 'lucide-react';
+import { escapePS } from '@/lib/sanitize';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -48,12 +49,13 @@ function generateRollbackScript(
     lines.push('# --- Re-enable Disabled Services ---');
     lines.push(`Write-Host "Re-enabling ${disabledServices.length} services..." -ForegroundColor Cyan`);
     disabledServices.forEach((svc) => {
+      const safeSvc = escapePS(svc);
       lines.push(`try {`);
-      lines.push(`    Set-Service -Name "${svc}" -StartupType Automatic -ErrorAction Stop`);
-      lines.push(`    Start-Service -Name "${svc}" -ErrorAction SilentlyContinue`);
-      lines.push(`    Write-Host "  [OK] Re-enabled: ${svc}" -ForegroundColor Green`);
+      lines.push(`    Set-Service -Name "${safeSvc}" -StartupType Automatic -ErrorAction Stop`);
+      lines.push(`    Start-Service -Name "${safeSvc}" -ErrorAction SilentlyContinue`);
+      lines.push(`    Write-Host "  [OK] Re-enabled: ${safeSvc}" -ForegroundColor Green`);
       lines.push(`} catch {`);
-      lines.push(`    Write-Host "  [WARN] Could not re-enable: ${svc} - $_" -ForegroundColor Yellow`);
+      lines.push('    Write-Host "  [WARN] Could not re-enable: ' + safeSvc + ' - $_" -ForegroundColor Yellow');
       lines.push(`}`);
     });
     lines.push('');
@@ -66,12 +68,15 @@ function generateRollbackScript(
     lines.push('# NOTE: This removes the values set by ISO Forge. If the original values were different,');
     lines.push('# you may need to manually restore them from a registry backup.');
     registryEntries.forEach((entry) => {
-      const regPath = `${entry.hive}:\\${entry.keyPath}`;
+      const safeHive = escapePS(entry.hive);
+      const safeKeyPath = escapePS(entry.keyPath);
+      const safeValueName = escapePS(entry.valueName);
+      const regPath = `${safeHive}:\\${safeKeyPath}`;
       lines.push(`try {`);
-      lines.push(`    Remove-ItemProperty -Path "Registry::${regPath}" -Name "${entry.valueName}" -ErrorAction Stop`);
-      lines.push(`    Write-Host "  [OK] Removed: ${regPath}\\${entry.valueName}" -ForegroundColor Green`);
+      lines.push(`    Remove-ItemProperty -Path "Registry::${regPath}" -Name "${safeValueName}" -ErrorAction Stop`);
+      lines.push(`    Write-Host "  [OK] Removed: ${regPath}\\${safeValueName}" -ForegroundColor Green`);
       lines.push(`} catch {`);
-      lines.push(`    Write-Host "  [WARN] Could not remove: ${entry.valueName} - $_" -ForegroundColor Yellow`);
+      lines.push('    Write-Host "  [WARN] Could not remove: ' + safeValueName + ' - $_" -ForegroundColor Yellow');
       lines.push(`}`);
     });
     lines.push('');
@@ -84,7 +89,7 @@ function generateRollbackScript(
     lines.push('# NOTE: Some packages may not be restorable without the original Windows media.');
     lines.push('# Consider running: DISM /Online /Add-ProvisionedAppxPackage or reinstalling from the Microsoft Store.');
     removedComponents.forEach((comp) => {
-      lines.push(`Write-Host "  [INFO] Cannot auto-restore: ${comp} — reinstall from Microsoft Store or DISM" -ForegroundColor Yellow`);
+      lines.push(`Write-Host "  [INFO] Cannot auto-restore: ${escapePS(comp)} — reinstall from Microsoft Store or DISM" -ForegroundColor Yellow`);
     });
     lines.push('');
   }
@@ -95,11 +100,12 @@ function generateRollbackScript(
     lines.push('# --- Uninstall Injected Programs (via winget) ---');
     lines.push(`Write-Host "Attempting to uninstall ${allPrograms.length} programs..." -ForegroundColor Cyan`);
     allPrograms.forEach((prog) => {
+      const safeProg = escapePS(prog);
       lines.push(`try {`);
-      lines.push(`    winget uninstall --id "${prog}" --silent --accept-source-agreements 2>$null`);
-      lines.push(`    Write-Host "  [OK] Uninstalled: ${prog}" -ForegroundColor Green`);
+      lines.push('    winget uninstall --id "' + safeProg + '" --silent --accept-source-agreements 2>$null');
+      lines.push(`    Write-Host "  [OK] Uninstalled: ${safeProg}" -ForegroundColor Green`);
       lines.push(`} catch {`);
-      lines.push(`    Write-Host "  [WARN] Could not uninstall: ${prog}" -ForegroundColor Yellow`);
+      lines.push(`    Write-Host "  [WARN] Could not uninstall: ${safeProg}" -ForegroundColor Yellow`);
       lines.push(`}`);
     });
     lines.push('');
@@ -112,7 +118,7 @@ function generateRollbackScript(
     lines.push('# NOTE: Driver removal requires identifying the OEM driver package.');
     lines.push('# Use: pnputil /enum-drivers and pnputil /delete-driver <oem##.inf> /uninstall');
     config.drivers.forEach((drv) => {
-      lines.push(`Write-Host "  [INFO] Review driver: ${drv.name} (${drv.path})" -ForegroundColor Yellow`);
+      lines.push(`Write-Host "  [INFO] Review driver: ${escapePS(drv.name)} (${escapePS(drv.path)})" -ForegroundColor Yellow`);
     });
     lines.push('');
   }
