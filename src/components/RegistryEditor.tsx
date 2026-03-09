@@ -58,6 +58,11 @@ interface RegistryEditorProps {
 
 const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: RegistryEditorProps) => {
   const [entries, setEntries] = useState<RegistryEntry[]>([]);
+  const [showDiffDialog, setShowDiffDialog] = useState(false);
+  const [diffResult, setDiffResult] = useState<RegistryDiff | null>(null);
+  const [importedEntries, setImportedEntries] = useState<RegistryEntry[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const diffFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     onCountChange?.(entries.length);
@@ -73,6 +78,7 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: Regi
       setEntries(toAdd.map(p => ({ ...p, id: crypto.randomUUID() })));
     };
   }, [importRef]);
+
   const [showForm, setShowForm] = useState(false);
   const [expandedPresets, setExpandedPresets] = useState(true);
   const [form, setForm] = useState<Omit<RegistryEntry, 'id'>>({
@@ -83,6 +89,91 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: Regi
     valueData: '',
     description: '',
   });
+
+  const handleImportReg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      const text = await file.text();
+      const parsed = parseRegFile(text);
+      
+      if (parsed.length === 0) {
+        toast.error('No valid registry entries found in file');
+        return;
+      }
+
+      // Filter out duplicates
+      const newEntries = parsed.filter(p => 
+        !entries.some(e => e.hive === p.hive && e.keyPath === p.keyPath && e.valueName === p.valueName)
+      );
+      
+      setEntries(prev => [...prev, ...newEntries]);
+      toast.success(`Imported ${newEntries.length} registry entries (${parsed.length - newEntries.length} duplicates skipped)`);
+    } catch (err) {
+      toast.error('Failed to parse .reg file');
+      console.error(err);
+    }
+    
+    // Reset file input
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleDiffReg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      const text = await file.text();
+      const parsed = parseRegFile(text);
+      
+      if (parsed.length === 0) {
+        toast.error('No valid registry entries found in file');
+        return;
+      }
+
+      const diff = diffRegistryEntries(entries, parsed);
+      setDiffResult(diff);
+      setImportedEntries(parsed);
+      setShowDiffDialog(true);
+    } catch (err) {
+      toast.error('Failed to parse .reg file');
+      console.error(err);
+    }
+    
+    // Reset file input
+    if (diffFileInputRef.current) diffFileInputRef.current.value = '';
+  };
+
+  const applyDiffChanges = (applyAdded: boolean, applyModified: boolean) => {
+    if (!diffResult) return;
+    
+    let newEntries = [...entries];
+    let addedCount = 0;
+    let modifiedCount = 0;
+
+    if (applyAdded) {
+      newEntries = [...newEntries, ...diffResult.added];
+      addedCount = diffResult.added.length;
+    }
+
+    if (applyModified) {
+      diffResult.modified.forEach(mod => {
+        const idx = newEntries.findIndex(e => 
+          e.hive === mod.current.hive && e.keyPath === mod.current.keyPath && e.valueName === mod.current.valueName
+        );
+        if (idx !== -1) {
+          newEntries[idx] = mod.imported;
+          modifiedCount++;
+        }
+      });
+    }
+
+    setEntries(newEntries);
+    setShowDiffDialog(false);
+    setDiffResult(null);
+    toast.success(`Applied ${addedCount} additions, ${modifiedCount} modifications`);
+  };
 
   const addEntry = () => {
     if (!form.keyPath || !form.valueName) {
