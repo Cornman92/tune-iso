@@ -34,6 +34,9 @@ import MarkdownExport from '@/components/MarkdownExport';
 import ScriptValidator from '@/components/ScriptValidator';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import useUndoRedo from '@/hooks/useUndoRedo';
+import UndoRedoTimeline from '@/components/UndoRedoTimeline';
+import ConfigComparison from '@/components/ConfigComparison';
+import RollbackScriptGenerator from '@/components/RollbackScriptGenerator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
