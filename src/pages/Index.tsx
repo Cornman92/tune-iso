@@ -578,6 +578,7 @@ const Index = () => {
         </div>
       </footer>
     </div>
+    </Suspense>
   );
 };
 
