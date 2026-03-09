@@ -430,6 +430,24 @@ const Index = () => {
             <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
 
             <div className="mt-6">
+              <CompatibilityChecker
+                isMounted={isMounted}
+                buildSteps={buildSteps}
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+                driverCount={driverCount}
+                registryCount={registryCount}
+                serviceCount={serviceCount}
+                componentCount={componentCount}
+                updateCount={updateCount}
+              />
+            </div>
+
+            <div className="mt-6">
               <DraggableDashboard
                 customizationCount={customizationCount}
                 driverCount={driverCount}
