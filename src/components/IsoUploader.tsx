@@ -76,6 +76,7 @@ const IsoUploader = ({ onIsoSelect, selectedFile }: IsoUploaderProps) => {
       <input
         type="file"
         accept=".iso"
+        aria-label="Select a Windows ISO file"
         onChange={handleFileSelect}
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
       />

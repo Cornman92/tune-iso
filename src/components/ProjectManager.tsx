@@ -121,6 +121,7 @@ const ProjectManager = ({ onExport, onImport }: ProjectManagerProps) => {
         <input
           type="file"
           accept=".json"
+          aria-label="Import project configuration JSON"
           onChange={handleImport}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
         />
