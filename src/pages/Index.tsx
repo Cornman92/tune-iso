@@ -38,6 +38,7 @@ import UndoRedoTimeline from '@/components/UndoRedoTimeline';
 import ConfigComparison from '@/components/ConfigComparison';
 import RollbackScriptGenerator from '@/components/RollbackScriptGenerator';
 import BatchImageProcessor from '@/components/BatchImageProcessor';
+import CompatibilityChecker from '@/components/CompatibilityChecker';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
@@ -427,6 +428,24 @@ const Index = () => {
               Build Output
             </h2>
             <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
+
+            <div className="mt-6">
+              <CompatibilityChecker
+                isMounted={isMounted}
+                buildSteps={buildSteps}
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+                driverCount={driverCount}
+                registryCount={registryCount}
+                serviceCount={serviceCount}
+                componentCount={componentCount}
+                updateCount={updateCount}
+              />
+            </div>
 
             <div className="mt-6">
               <DraggableDashboard
