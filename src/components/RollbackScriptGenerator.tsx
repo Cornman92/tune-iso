@@ -55,7 +55,7 @@ function generateRollbackScript(
       lines.push(`    Start-Service -Name "${safeSvc}" -ErrorAction SilentlyContinue`);
       lines.push(`    Write-Host "  [OK] Re-enabled: ${safeSvc}" -ForegroundColor Green`);
       lines.push(`} catch {`);
-      lines.push(`    Write-Host "  [WARN] Could not re-enable: ${safeSvc} - `$_" -ForegroundColor Yellow`);
+      lines.push('    Write-Host "  [WARN] Could not re-enable: ' + safeSvc + ' - $_" -ForegroundColor Yellow');
       lines.push(`}`);
     });
     lines.push('');
