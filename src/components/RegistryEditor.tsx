@@ -251,16 +251,153 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: Regi
           <Badge variant="outline" className="text-[10px] font-mono">{entries.length} entries</Badge>
         </div>
         <div className="flex gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".reg"
+            className="hidden"
+            onChange={handleImportReg}
+          />
+          <input
+            ref={diffFileInputRef}
+            type="file"
+            accept=".reg"
+            className="hidden"
+            onChange={handleDiffReg}
+          />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={() => fileInputRef.current?.click()}>
+                <FileUp className="w-3 h-3 mr-1" /> Import
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Import .reg file</TooltipContent>
+          </Tooltip>
           {entries.length > 0 && (
-            <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={exportReg}>
-              <FileDown className="w-3 h-3 mr-1" /> Export .reg
-            </Button>
+            <>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={() => diffFileInputRef.current?.click()}>
+                    <Diff className="w-3 h-3 mr-1" /> Diff
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Compare with .reg file</TooltipContent>
+              </Tooltip>
+              <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={exportReg}>
+                <FileDown className="w-3 h-3 mr-1" /> Export
+              </Button>
+            </>
           )}
           <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={() => setShowForm(!showForm)}>
             <Plus className="w-3 h-3 mr-1" /> Custom
           </Button>
         </div>
       </div>
+
+      {/* Diff Dialog */}
+      <Dialog open={showDiffDialog} onOpenChange={setShowDiffDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle className="font-mono flex items-center gap-2">
+              <Diff className="w-4 h-4 text-primary" />
+              Registry Diff Results
+            </DialogTitle>
+            <DialogDescription>
+              Comparing current entries with imported .reg file
+            </DialogDescription>
+          </DialogHeader>
+          
+          {diffResult && (
+            <ScrollArea className="max-h-[50vh]">
+              <div className="space-y-4">
+                {/* Added entries */}
+                {diffResult.added.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-mono font-medium text-success mb-2 flex items-center gap-2">
+                      <Plus className="w-3 h-3" /> New Entries ({diffResult.added.length})
+                    </h4>
+                    <div className="space-y-1">
+                      {diffResult.added.map((entry, i) => (
+                        <div key={i} className="p-2 rounded border border-success/30 bg-success/5 text-xs font-mono">
+                          <p className="text-foreground">{entry.hive}\{entry.keyPath}</p>
+                          <p className="text-muted-foreground">{entry.valueName} = {entry.valueData || '(empty)'}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Modified entries */}
+                {diffResult.modified.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-mono font-medium text-warning mb-2 flex items-center gap-2">
+                      <Copy className="w-3 h-3" /> Modified Entries ({diffResult.modified.length})
+                    </h4>
+                    <div className="space-y-2">
+                      {diffResult.modified.map((mod, i) => (
+                        <div key={i} className="p-2 rounded border border-warning/30 bg-warning/5 text-xs font-mono space-y-1">
+                          <p className="text-foreground">{mod.current.hive}\{mod.current.keyPath}\{mod.current.valueName}</p>
+                          <p className="text-destructive line-through">Current: {mod.current.valueData || '(empty)'}</p>
+                          <p className="text-success">Imported: {mod.imported.valueData || '(empty)'}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Unchanged entries */}
+                {diffResult.unchanged.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-mono font-medium text-muted-foreground mb-2">
+                      Unchanged ({diffResult.unchanged.length})
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      {diffResult.unchanged.length} entries are identical in both sources
+                    </p>
+                  </div>
+                )}
+
+                {/* Only in current */}
+                {diffResult.onlyInCurrent.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-mono font-medium text-muted-foreground mb-2">
+                      Only in Current ({diffResult.onlyInCurrent.length})
+                    </h4>
+                    <div className="space-y-1">
+                      {diffResult.onlyInCurrent.slice(0, 5).map((entry, i) => (
+                        <div key={i} className="p-2 rounded border border-border/50 bg-muted/20 text-xs font-mono">
+                          <p className="text-muted-foreground">{entry.valueName} = {entry.valueData || '(empty)'}</p>
+                        </div>
+                      ))}
+                      {diffResult.onlyInCurrent.length > 5 && (
+                        <p className="text-xs text-muted-foreground">...and {diffResult.onlyInCurrent.length - 5} more</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          )}
+
+          <div className="flex gap-2 justify-end pt-4 border-t border-border">
+            <Button variant="ghost" size="sm" onClick={() => setShowDiffDialog(false)}>
+              Cancel
+            </Button>
+            {diffResult && (diffResult.added.length > 0 || diffResult.modified.length > 0) && (
+              <>
+                {diffResult.added.length > 0 && (
+                  <Button variant="outline" size="sm" onClick={() => applyDiffChanges(true, false)}>
+                    Add New Only ({diffResult.added.length})
+                  </Button>
+                )}
+                <Button size="sm" onClick={() => applyDiffChanges(true, true)}>
+                  Apply All Changes
+                </Button>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Preset Library */}
       <div className="mb-4">
