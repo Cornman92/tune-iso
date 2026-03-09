@@ -89,7 +89,7 @@ function generateRollbackScript(
     lines.push('# NOTE: Some packages may not be restorable without the original Windows media.');
     lines.push('# Consider running: DISM /Online /Add-ProvisionedAppxPackage or reinstalling from the Microsoft Store.');
     removedComponents.forEach((comp) => {
-      lines.push(`Write-Host "  [INFO] Cannot auto-restore: ${comp} — reinstall from Microsoft Store or DISM" -ForegroundColor Yellow`);
+      lines.push(`Write-Host "  [INFO] Cannot auto-restore: ${escapePS(comp)} — reinstall from Microsoft Store or DISM" -ForegroundColor Yellow`);
     });
     lines.push('');
   }
