@@ -271,9 +271,9 @@ const Index = () => {
               <ThemeToggle toggleRef={themeToggleRef} />
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-muted/50 border border-border cursor-help">
+                  <button type="button" aria-label="Keyboard shortcuts" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-muted/50 border border-border cursor-help">
                     <Keyboard className="w-3.5 h-3.5 text-muted-foreground" />
-                  </div>
+                  </button>
                 </TooltipTrigger>
                  <TooltipContent side="bottom" className="text-xs font-mono space-y-1 p-3">
                   <p><kbd className="px-1.5 py-0.5 rounded bg-muted text-foreground">Ctrl+K</kbd> Global Search</p>
