@@ -1,12 +1,15 @@
-import { useState, useEffect, MutableRefObject } from 'react';
-import { Database, Plus, Trash2, Copy, FileDown, ChevronDown, ChevronRight, FolderTree } from 'lucide-react';
+import { useState, useEffect, MutableRefObject, useRef } from 'react';
+import { Database, Plus, Trash2, Copy, FileDown, FileUp, ChevronDown, ChevronRight, FolderTree, Diff } from 'lucide-react';
 import { escapeRegValue, isValidHex } from '@/lib/sanitize';
+import { parseRegFile, diffRegistryEntries, type RegistryDiff } from '@/lib/regParser';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 
 type RegValueType = 'REG_SZ' | 'REG_DWORD' | 'REG_QWORD' | 'REG_BINARY' | 'REG_MULTI_SZ' | 'REG_EXPAND_SZ' | 'REG_NONE';
@@ -55,6 +58,11 @@ interface RegistryEditorProps {
 
 const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: RegistryEditorProps) => {
   const [entries, setEntries] = useState<RegistryEntry[]>([]);
+  const [showDiffDialog, setShowDiffDialog] = useState(false);
+  const [diffResult, setDiffResult] = useState<RegistryDiff | null>(null);
+  const [importedEntries, setImportedEntries] = useState<RegistryEntry[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const diffFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     onCountChange?.(entries.length);
@@ -70,6 +78,7 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: Regi
       setEntries(toAdd.map(p => ({ ...p, id: crypto.randomUUID() })));
     };
   }, [importRef]);
+
   const [showForm, setShowForm] = useState(false);
   const [expandedPresets, setExpandedPresets] = useState(true);
   const [form, setForm] = useState<Omit<RegistryEntry, 'id'>>({
@@ -80,6 +89,91 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: Regi
     valueData: '',
     description: '',
   });
+
+  const handleImportReg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      const text = await file.text();
+      const parsed = parseRegFile(text);
+      
+      if (parsed.length === 0) {
+        toast.error('No valid registry entries found in file');
+        return;
+      }
+
+      // Filter out duplicates
+      const newEntries = parsed.filter(p => 
+        !entries.some(e => e.hive === p.hive && e.keyPath === p.keyPath && e.valueName === p.valueName)
+      );
+      
+      setEntries(prev => [...prev, ...newEntries]);
+      toast.success(`Imported ${newEntries.length} registry entries (${parsed.length - newEntries.length} duplicates skipped)`);
+    } catch (err) {
+      toast.error('Failed to parse .reg file');
+      console.error(err);
+    }
+    
+    // Reset file input
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleDiffReg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      const text = await file.text();
+      const parsed = parseRegFile(text);
+      
+      if (parsed.length === 0) {
+        toast.error('No valid registry entries found in file');
+        return;
+      }
+
+      const diff = diffRegistryEntries(entries, parsed);
+      setDiffResult(diff);
+      setImportedEntries(parsed);
+      setShowDiffDialog(true);
+    } catch (err) {
+      toast.error('Failed to parse .reg file');
+      console.error(err);
+    }
+    
+    // Reset file input
+    if (diffFileInputRef.current) diffFileInputRef.current.value = '';
+  };
+
+  const applyDiffChanges = (applyAdded: boolean, applyModified: boolean) => {
+    if (!diffResult) return;
+    
+    let newEntries = [...entries];
+    let addedCount = 0;
+    let modifiedCount = 0;
+
+    if (applyAdded) {
+      newEntries = [...newEntries, ...diffResult.added];
+      addedCount = diffResult.added.length;
+    }
+
+    if (applyModified) {
+      diffResult.modified.forEach(mod => {
+        const idx = newEntries.findIndex(e => 
+          e.hive === mod.current.hive && e.keyPath === mod.current.keyPath && e.valueName === mod.current.valueName
+        );
+        if (idx !== -1) {
+          newEntries[idx] = mod.imported;
+          modifiedCount++;
+        }
+      });
+    }
+
+    setEntries(newEntries);
+    setShowDiffDialog(false);
+    setDiffResult(null);
+    toast.success(`Applied ${addedCount} additions, ${modifiedCount} modifications`);
+  };
 
   const addEntry = () => {
     if (!form.keyPath || !form.valueName) {
@@ -157,16 +251,153 @@ const RegistryEditor = ({ isMounted, onCountChange, exportRef, importRef }: Regi
           <Badge variant="outline" className="text-[10px] font-mono">{entries.length} entries</Badge>
         </div>
         <div className="flex gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".reg"
+            className="hidden"
+            onChange={handleImportReg}
+          />
+          <input
+            ref={diffFileInputRef}
+            type="file"
+            accept=".reg"
+            className="hidden"
+            onChange={handleDiffReg}
+          />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={() => fileInputRef.current?.click()}>
+                <FileUp className="w-3 h-3 mr-1" /> Import
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Import .reg file</TooltipContent>
+          </Tooltip>
           {entries.length > 0 && (
-            <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={exportReg}>
-              <FileDown className="w-3 h-3 mr-1" /> Export .reg
-            </Button>
+            <>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={() => diffFileInputRef.current?.click()}>
+                    <Diff className="w-3 h-3 mr-1" /> Diff
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Compare with .reg file</TooltipContent>
+              </Tooltip>
+              <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={exportReg}>
+                <FileDown className="w-3 h-3 mr-1" /> Export
+              </Button>
+            </>
           )}
           <Button size="sm" variant="outline" className="text-xs font-mono h-7" onClick={() => setShowForm(!showForm)}>
             <Plus className="w-3 h-3 mr-1" /> Custom
           </Button>
         </div>
       </div>
+
+      {/* Diff Dialog */}
+      <Dialog open={showDiffDialog} onOpenChange={setShowDiffDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle className="font-mono flex items-center gap-2">
+              <Diff className="w-4 h-4 text-primary" />
+              Registry Diff Results
+            </DialogTitle>
+            <DialogDescription>
+              Comparing current entries with imported .reg file
+            </DialogDescription>
+          </DialogHeader>
+          
+          {diffResult && (
+            <ScrollArea className="max-h-[50vh]">
+              <div className="space-y-4">
+                {/* Added entries */}
+                {diffResult.added.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-mono font-medium text-success mb-2 flex items-center gap-2">
+                      <Plus className="w-3 h-3" /> New Entries ({diffResult.added.length})
+                    </h4>
+                    <div className="space-y-1">
+                      {diffResult.added.map((entry, i) => (
+                        <div key={i} className="p-2 rounded border border-success/30 bg-success/5 text-xs font-mono">
+                          <p className="text-foreground">{entry.hive}\{entry.keyPath}</p>
+                          <p className="text-muted-foreground">{entry.valueName} = {entry.valueData || '(empty)'}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Modified entries */}
+                {diffResult.modified.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-mono font-medium text-warning mb-2 flex items-center gap-2">
+                      <Copy className="w-3 h-3" /> Modified Entries ({diffResult.modified.length})
+                    </h4>
+                    <div className="space-y-2">
+                      {diffResult.modified.map((mod, i) => (
+                        <div key={i} className="p-2 rounded border border-warning/30 bg-warning/5 text-xs font-mono space-y-1">
+                          <p className="text-foreground">{mod.current.hive}\{mod.current.keyPath}\{mod.current.valueName}</p>
+                          <p className="text-destructive line-through">Current: {mod.current.valueData || '(empty)'}</p>
+                          <p className="text-success">Imported: {mod.imported.valueData || '(empty)'}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Unchanged entries */}
+                {diffResult.unchanged.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-mono font-medium text-muted-foreground mb-2">
+                      Unchanged ({diffResult.unchanged.length})
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      {diffResult.unchanged.length} entries are identical in both sources
+                    </p>
+                  </div>
+                )}
+
+                {/* Only in current */}
+                {diffResult.onlyInCurrent.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-mono font-medium text-muted-foreground mb-2">
+                      Only in Current ({diffResult.onlyInCurrent.length})
+                    </h4>
+                    <div className="space-y-1">
+                      {diffResult.onlyInCurrent.slice(0, 5).map((entry, i) => (
+                        <div key={i} className="p-2 rounded border border-border/50 bg-muted/20 text-xs font-mono">
+                          <p className="text-muted-foreground">{entry.valueName} = {entry.valueData || '(empty)'}</p>
+                        </div>
+                      ))}
+                      {diffResult.onlyInCurrent.length > 5 && (
+                        <p className="text-xs text-muted-foreground">...and {diffResult.onlyInCurrent.length - 5} more</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          )}
+
+          <div className="flex gap-2 justify-end pt-4 border-t border-border">
+            <Button variant="ghost" size="sm" onClick={() => setShowDiffDialog(false)}>
+              Cancel
+            </Button>
+            {diffResult && (diffResult.added.length > 0 || diffResult.modified.length > 0) && (
+              <>
+                {diffResult.added.length > 0 && (
+                  <Button variant="outline" size="sm" onClick={() => applyDiffChanges(true, false)}>
+                    Add New Only ({diffResult.added.length})
+                  </Button>
+                )}
+                <Button size="sm" onClick={() => applyDiffChanges(true, true)}>
+                  Apply All Changes
+                </Button>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Preset Library */}
       <div className="mb-4">
