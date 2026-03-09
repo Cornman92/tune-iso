@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { RotateCcw, Copy, Download, Check } from 'lucide-react';
+import { escapePS } from '@/lib/sanitize';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
