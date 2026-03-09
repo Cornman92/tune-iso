@@ -122,7 +122,7 @@ const BatchImageProcessor = ({
     services.length +
     components.length +
     registry.length +
-    features.filter(f => f.enabled !== f.defaultEnabled).length;
+    features.filter(f => f.enabled).length;
 
   const simulateBatch = useCallback(async () => {
     if (selected.length === 0) {

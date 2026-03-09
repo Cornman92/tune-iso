@@ -249,6 +249,16 @@ const Index = () => {
                 exportComponents={exportComponents}
                 exportRegistry={exportRegistry}
               />
+              <BatchImageProcessor
+                isMounted={isMounted}
+                buildSteps={buildSteps}
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+              />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <div className="h-6 w-px bg-border" />
               <ThemeToggle toggleRef={themeToggleRef} />
