@@ -49,12 +49,13 @@ function generateRollbackScript(
     lines.push('# --- Re-enable Disabled Services ---');
     lines.push(`Write-Host "Re-enabling ${disabledServices.length} services..." -ForegroundColor Cyan`);
     disabledServices.forEach((svc) => {
+      const safeSvc = escapePS(svc);
       lines.push(`try {`);
-      lines.push(`    Set-Service -Name "${svc}" -StartupType Automatic -ErrorAction Stop`);
-      lines.push(`    Start-Service -Name "${svc}" -ErrorAction SilentlyContinue`);
-      lines.push(`    Write-Host "  [OK] Re-enabled: ${svc}" -ForegroundColor Green`);
+      lines.push(`    Set-Service -Name "${safeSvc}" -StartupType Automatic -ErrorAction Stop`);
+      lines.push(`    Start-Service -Name "${safeSvc}" -ErrorAction SilentlyContinue`);
+      lines.push(`    Write-Host "  [OK] Re-enabled: ${safeSvc}" -ForegroundColor Green`);
       lines.push(`} catch {`);
-      lines.push(`    Write-Host "  [WARN] Could not re-enable: ${svc} - $_" -ForegroundColor Yellow`);
+      lines.push(`    Write-Host "  [WARN] Could not re-enable: ${safeSvc} - `$_" -ForegroundColor Yellow`);
       lines.push(`}`);
     });
     lines.push('');
