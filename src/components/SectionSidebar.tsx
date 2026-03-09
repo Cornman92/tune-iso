@@ -28,7 +28,7 @@ const SectionSidebar = ({ activeSection, isMounted, hasFile }: SectionSidebarPro
   };
 
   return (
-    <nav className="hidden xl:flex flex-col fixed left-0 top-1/2 -translate-y-1/2 z-40 bg-card/80 backdrop-blur-md border border-border rounded-r-xl py-2 px-1 gap-0.5 shadow-lg">
+    <nav aria-label="Section navigation" className="hidden xl:flex flex-col fixed left-0 top-1/2 -translate-y-1/2 z-40 bg-card/80 backdrop-blur-md border border-border rounded-r-xl py-2 px-1 gap-0.5 shadow-lg">
       {sections.map(section => {
         const Icon = section.icon;
         const isActive = activeSection === section.id;

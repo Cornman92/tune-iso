@@ -39,6 +39,7 @@ const ThemeToggle = ({ toggleRef }: ThemeToggleProps) => {
       size="icon"
       onClick={() => setIsDark(prev => !prev)}
       className="h-9 w-9 rounded-lg"
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDark ? (
         <Sun className="w-4 h-4 text-warning" />
