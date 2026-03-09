@@ -22,7 +22,7 @@ import ServicesManager from '@/components/ServicesManager';
 import ComponentRemoval from '@/components/ComponentRemoval';
 import IsoMetadataEditor from '@/components/IsoMetadataEditor';
 import SectionSidebar from '@/components/SectionSidebar';
-import SummaryDashboard from '@/components/SummaryDashboard';
+import DraggableDashboard from '@/components/DraggableDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
 import PowerShellExport from '@/components/PowerShellExport';
 import BuildStepReorder, { type BuildStep, DEFAULT_STEPS } from '@/components/BuildStepReorder';
