@@ -194,6 +194,7 @@ const Index = () => {
   });
 
   return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
     <div className="min-h-screen bg-background">
       <SectionSidebar activeSection={activeSection} isMounted={isMounted} hasFile={!!selectedFile} />
 
