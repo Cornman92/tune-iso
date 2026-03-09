@@ -76,7 +76,7 @@ function generateRollbackScript(
       lines.push(`    Remove-ItemProperty -Path "Registry::${regPath}" -Name "${safeValueName}" -ErrorAction Stop`);
       lines.push(`    Write-Host "  [OK] Removed: ${regPath}\\${safeValueName}" -ForegroundColor Green`);
       lines.push(`} catch {`);
-      lines.push(`    Write-Host "  [WARN] Could not remove: ${safeValueName} - `$_" -ForegroundColor Yellow`);
+      lines.push('    Write-Host "  [WARN] Could not remove: ' + safeValueName + ' - $_" -ForegroundColor Yellow');
       lines.push(`}`);
     });
     lines.push('');
