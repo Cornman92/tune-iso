@@ -1,12 +1,15 @@
-import { useState, useEffect, MutableRefObject } from 'react';
-import { Database, Plus, Trash2, Copy, FileDown, ChevronDown, ChevronRight, FolderTree } from 'lucide-react';
+import { useState, useEffect, MutableRefObject, useRef } from 'react';
+import { Database, Plus, Trash2, Copy, FileDown, FileUp, ChevronDown, ChevronRight, FolderTree, Diff } from 'lucide-react';
 import { escapeRegValue, isValidHex } from '@/lib/sanitize';
+import { parseRegFile, diffRegistryEntries, type RegistryDiff } from '@/lib/regParser';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 
 type RegValueType = 'REG_SZ' | 'REG_DWORD' | 'REG_QWORD' | 'REG_BINARY' | 'REG_MULTI_SZ' | 'REG_EXPAND_SZ' | 'REG_NONE';
