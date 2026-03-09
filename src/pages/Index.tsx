@@ -37,6 +37,7 @@ import useUndoRedo from '@/hooks/useUndoRedo';
 import UndoRedoTimeline from '@/components/UndoRedoTimeline';
 import ConfigComparison from '@/components/ConfigComparison';
 import RollbackScriptGenerator from '@/components/RollbackScriptGenerator';
+import BatchImageProcessor from '@/components/BatchImageProcessor';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
