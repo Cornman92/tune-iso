@@ -68,12 +68,15 @@ function generateRollbackScript(
     lines.push('# NOTE: This removes the values set by ISO Forge. If the original values were different,');
     lines.push('# you may need to manually restore them from a registry backup.');
     registryEntries.forEach((entry) => {
-      const regPath = `${entry.hive}:\\${entry.keyPath}`;
+      const safeHive = escapePS(entry.hive);
+      const safeKeyPath = escapePS(entry.keyPath);
+      const safeValueName = escapePS(entry.valueName);
+      const regPath = `${safeHive}:\\${safeKeyPath}`;
       lines.push(`try {`);
-      lines.push(`    Remove-ItemProperty -Path "Registry::${regPath}" -Name "${entry.valueName}" -ErrorAction Stop`);
-      lines.push(`    Write-Host "  [OK] Removed: ${regPath}\\${entry.valueName}" -ForegroundColor Green`);
+      lines.push(`    Remove-ItemProperty -Path "Registry::${regPath}" -Name "${safeValueName}" -ErrorAction Stop`);
+      lines.push(`    Write-Host "  [OK] Removed: ${regPath}\\${safeValueName}" -ForegroundColor Green`);
       lines.push(`} catch {`);
-      lines.push(`    Write-Host "  [WARN] Could not remove: ${entry.valueName} - $_" -ForegroundColor Yellow`);
+      lines.push(`    Write-Host "  [WARN] Could not remove: ${safeValueName} - `$_" -ForegroundColor Yellow`);
       lines.push(`}`);
     });
     lines.push('');
