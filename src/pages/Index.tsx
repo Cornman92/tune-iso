@@ -161,7 +161,7 @@ const Index = () => {
     if (snapshot.buildSteps) setBuildSteps(snapshot.buildSteps);
   }, []);
 
-  const { pushState, undo, redo } = useUndoRedo<ProjectData>({
+  const { pushState, undo, redo, jumpTo, canUndo, canRedo, getHistory, historyVersion } = useUndoRedo<ProjectData>({
     getSnapshot,
     applySnapshot,
   });
