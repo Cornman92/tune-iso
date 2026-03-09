@@ -34,6 +34,9 @@ import MarkdownExport from '@/components/MarkdownExport';
 import ScriptValidator from '@/components/ScriptValidator';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import useUndoRedo from '@/hooks/useUndoRedo';
+import UndoRedoTimeline from '@/components/UndoRedoTimeline';
+import ConfigComparison from '@/components/ConfigComparison';
+import RollbackScriptGenerator from '@/components/RollbackScriptGenerator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
@@ -158,7 +161,7 @@ const Index = () => {
     if (snapshot.buildSteps) setBuildSteps(snapshot.buildSteps);
   }, []);
 
-  const { pushState, undo, redo } = useUndoRedo<ProjectData>({
+  const { pushState, undo, redo, jumpTo, canUndo, canRedo, getHistory, historyVersion } = useUndoRedo<ProjectData>({
     getSnapshot,
     applySnapshot,
   });
@@ -238,6 +241,13 @@ const Index = () => {
                 isMounted={isMounted}
               />
               <div className="h-6 w-px bg-border" />
+              <ConfigComparison onGetCurrentConfig={handleExport} />
+              <RollbackScriptGenerator
+                onGetCurrentConfig={handleExport}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+              />
               <TemplateManager onExport={handleExport} onImport={handleImport} />
               <div className="h-6 w-px bg-border" />
               <ThemeToggle toggleRef={themeToggleRef} />
@@ -459,6 +469,18 @@ const Index = () => {
 
             <div className="mt-6">
               <BuildStepReorder steps={buildSteps} onReorder={setBuildSteps} />
+            </div>
+
+            <div className="mt-6">
+              <UndoRedoTimeline
+                history={getHistory()}
+                historyVersion={historyVersion}
+                onUndo={undo}
+                onRedo={redo}
+                onJumpTo={jumpTo}
+                canUndo={canUndo()}
+                canRedo={canRedo()}
+              />
             </div>
 
             <div className="mt-6">
