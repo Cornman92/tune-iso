@@ -472,6 +472,18 @@ const Index = () => {
             </div>
 
             <div className="mt-6">
+              <UndoRedoTimeline
+                history={getHistory()}
+                historyVersion={historyVersion}
+                onUndo={undo}
+                onRedo={redo}
+                onJumpTo={jumpTo}
+                canUndo={canUndo()}
+                canRedo={canRedo()}
+              />
+            </div>
+
+            <div className="mt-6">
               <LiveScriptPreview
                 exportCustomizations={exportCustomizations}
                 exportDrivers={exportDrivers}
