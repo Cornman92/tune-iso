@@ -215,17 +215,65 @@ const PowerShellExport = ({
         add(`# STEP ${stepNum++}: Apply Customizations`);
         add('# ══════════════════════════════════════════════════════════');
         add('Write-Step "Applying Customizations"');
+
+        // Programs → winget install commands (for SetupComplete.cmd / first-boot)
         if (customizations.programs.length > 0) {
-          add(`Write-Host "  Programs to integrate: ${customizations.programs.length}" -ForegroundColor Yellow`);
-          customizations.programs.forEach(p => add(`Write-Host "    - ${escapePS(p)}" -ForegroundColor DarkGray`));
+          add(`Write-Host "  Installing ${customizations.programs.length} program(s) via winget" -ForegroundColor Yellow`);
+          add('# Note: winget commands run on first boot (SetupComplete.cmd)');
+          customizations.programs.forEach(p => {
+            const wid = wingetIds[p];
+            if (wid) {
+              add(`Write-Host "    Installing: ${escapePS(p)} (${escapePS(wid)})" -ForegroundColor DarkGray`);
+              add(`# winget install --id ${escapePS(wid)} --accept-source-agreements --accept-package-agreements --silent`);
+            } else {
+              add(`Write-Host "    Skipping: ${escapePS(p)} (no winget ID)" -ForegroundColor DarkYellow`);
+            }
+          });
+          blank();
+          add('# Create SetupComplete.cmd for first-boot program installation');
+          add('$setupDir = "$MountDir\\Windows\\Setup\\Scripts"');
+          add('if (-not (Test-Path $setupDir)) { New-Item -ItemType Directory -Path $setupDir -Force | Out-Null }');
+          add('$setupScript = @"');
+          add('@echo off');
+          add('echo Installing programs via winget...');
+          customizations.programs.forEach(p => {
+            const wid = wingetIds[p];
+            if (wid) {
+              add(`winget install --id ${wid} --accept-source-agreements --accept-package-agreements --silent`);
+            }
+          });
+          add('echo Program installation complete.');
+          add('"@');
+          add('$setupScript | Out-File -FilePath "$setupDir\\SetupComplete.cmd" -Encoding ASCII');
+          add('Write-Host "  SetupComplete.cmd created" -ForegroundColor Green');
         }
+
+        // Tweaks → real registry commands
         if (customizations.tweaks.length > 0) {
-          add(`Write-Host "  Tweaks enabled: ${customizations.tweaks.length}" -ForegroundColor Yellow`);
-          customizations.tweaks.forEach(t => add(`Write-Host "    - ${escapePS(t)}" -ForegroundColor DarkGray`));
+          add(`Write-Host "  Applying ${customizations.tweaks.length} tweak(s)" -ForegroundColor Yellow`);
+          customizations.tweaks.forEach(t => {
+            const cmds = tweakScripts[t];
+            if (cmds) {
+              add(`Write-Host "    ${escapePS(t)}" -ForegroundColor DarkGray`);
+              cmds.forEach(c => add(c));
+            } else {
+              add(`Write-Host "    ${escapePS(t)} — no script mapped" -ForegroundColor DarkYellow`);
+            }
+          });
         }
+
+        // Optimizations → real commands
         if (customizations.optimizations.length > 0) {
-          add(`Write-Host "  Optimizations enabled: ${customizations.optimizations.length}" -ForegroundColor Yellow`);
-          customizations.optimizations.forEach(o => add(`Write-Host "    - ${escapePS(o)}" -ForegroundColor DarkGray`));
+          add(`Write-Host "  Applying ${customizations.optimizations.length} optimization(s)" -ForegroundColor Yellow`);
+          customizations.optimizations.forEach(o => {
+            const cmds = optimizationScripts[o];
+            if (cmds) {
+              add(`Write-Host "    ${escapePS(o)}" -ForegroundColor DarkGray`);
+              cmds.forEach(c => add(c));
+            } else {
+              add(`Write-Host "    ${escapePS(o)} — no script mapped" -ForegroundColor DarkYellow`);
+            }
+          });
         }
         blank();
       },
