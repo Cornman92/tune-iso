@@ -448,9 +448,33 @@ const PowerShellExport = ({
         add('echo.');
         add('echo ══► Applying Customizations');
         add('echo ────────────────────────────────────────────────────');
-        customizations.programs.forEach(p => add(`echo   Program: ${escapeBatch(p)}`));
-        customizations.tweaks.forEach(t => add(`echo   Tweak: ${escapeBatch(t)}`));
-        customizations.optimizations.forEach(o => add(`echo   Optimization: ${escapeBatch(o)}`));
+
+        // Tweaks
+        customizations.tweaks.forEach(t => {
+          const cmds = tweakScripts[t];
+          if (cmds) {
+            add(`echo   Tweak: ${escapeBatch(t)}`);
+            cmds.forEach(c => {
+              if (!c.startsWith('#')) add(c.replace(/\|.*$/, '>nul'));
+            });
+          }
+        });
+
+        // Optimizations
+        customizations.optimizations.forEach(o => {
+          const cmds = optimizationScripts[o];
+          if (cmds) {
+            add(`echo   Optimization: ${escapeBatch(o)}`);
+            cmds.forEach(c => {
+              if (!c.startsWith('#')) add(c.replace(/\|.*$/, '>nul'));
+            });
+          }
+        });
+
+        // Programs (winget)
+        if (customizations.programs.length > 0) {
+          add('echo   Programs will be installed via SetupComplete.cmd on first boot');
+        }
         blank();
       },
     };

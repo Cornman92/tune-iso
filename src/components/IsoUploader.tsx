@@ -92,13 +92,20 @@ const IsoUploader = ({ onIsoSelect, selectedFile }: IsoUploaderProps) => {
         }
       `}
     >
-      <input
-        type="file"
-        accept=".iso"
-        aria-label="Select a Windows ISO file"
-        onChange={handleFileSelect}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-      />
+      {isElectron() ? (
+        <div
+          className="absolute inset-0 w-full h-full cursor-pointer"
+          onClick={handleNativeDialog}
+        />
+      ) : (
+        <input
+          type="file"
+          accept=".iso"
+          aria-label="Select a Windows ISO file"
+          onChange={handleFileSelect}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+      )}
       <div className="flex flex-col items-center gap-4">
         <div className={`
           w-16 h-16 rounded-xl flex items-center justify-center transition-all duration-300
