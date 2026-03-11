@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { HardDrive, Upload, CheckCircle2 } from 'lucide-react';
+import { isElectron, openFileDialog } from '@/lib/electronBridge';
 
 interface IsoUploaderProps {
   onIsoSelect: (file: File | null) => void;
