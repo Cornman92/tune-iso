@@ -36,6 +36,24 @@ const IsoUploader = ({ onIsoSelect, selectedFile }: IsoUploaderProps) => {
     }
   };
 
+  const handleNativeDialog = useCallback(async () => {
+    if (!isElectron()) return;
+    const paths = await openFileDialog({
+      title: 'Select Windows ISO',
+      filters: [{ name: 'ISO Images', extensions: ['iso'] }],
+      properties: ['openFile'],
+    });
+    if (paths && paths.length > 0) {
+      // Create a pseudo-File from the path for compatibility
+      const filePath = paths[0];
+      const name = filePath.split(/[\\/]/).pop() || 'image.iso';
+      const pseudoFile = new File([], name, { type: 'application/x-iso-image' });
+      // Attach the real path for Electron use
+      (pseudoFile as any).__electronPath = filePath;
+      onIsoSelect(pseudoFile);
+    }
+  }, [onIsoSelect]);
+
   if (selectedFile) {
     return (
       <div className="bg-card border border-primary/30 rounded-lg p-6 glow-primary animate-fade-in">
