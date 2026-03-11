@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import type { BuildStep } from '@/components/BuildStepReorder';
 import type { WimFeatureExport } from '@/components/WimEditor';
 import { escapePS } from '@/lib/sanitize';
+import { wingetIds, tweakScripts, optimizationScripts } from '@/data/scriptCommands';
 
 interface LiveScriptPreviewProps {
   exportCustomizations: MutableRefObject<() => { programs: string[]; tweaks: string[]; optimizations: string[] }>;
@@ -118,14 +119,44 @@ const LiveScriptPreview = ({
         const total = customizations.programs.length + customizations.tweaks.length + customizations.optimizations.length;
         if (total === 0) return;
         add(`# ── Customizations (${total}) ──`);
+
+        // Programs → winget install commands
         if (customizations.programs.length > 0) {
-          add(`# Programs: ${customizations.programs.join(', ')}`);
+          add('# Programs (installed via winget on first boot)');
+          customizations.programs.forEach(p => {
+            const wid = wingetIds[p];
+            if (wid) {
+              add(`winget install --id ${wid} --accept-source-agreements --accept-package-agreements --silent`);
+            } else {
+              add(`# ${p} — no winget ID mapped, install manually`);
+            }
+          });
         }
+
+        // Tweaks → actual registry commands
         if (customizations.tweaks.length > 0) {
-          add(`# Tweaks: ${customizations.tweaks.join(', ')}`);
+          add('# Tweaks (offline registry modifications)');
+          customizations.tweaks.forEach(t => {
+            const cmds = tweakScripts[t];
+            if (cmds) {
+              cmds.forEach(c => add(c));
+            } else {
+              add(`# ${t} — no script mapped`);
+            }
+          });
         }
+
+        // Optimizations → actual commands
         if (customizations.optimizations.length > 0) {
-          add(`# Optimizations: ${customizations.optimizations.join(', ')}`);
+          add('# Optimizations (offline registry modifications)');
+          customizations.optimizations.forEach(o => {
+            const cmds = optimizationScripts[o];
+            if (cmds) {
+              cmds.forEach(c => add(c));
+            } else {
+              add(`# ${o} — no script mapped`);
+            }
+          });
         }
         blank();
       },

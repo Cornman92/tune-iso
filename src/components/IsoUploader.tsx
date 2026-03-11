@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { HardDrive, Upload, CheckCircle2 } from 'lucide-react';
+import { isElectron, openFileDialog } from '@/lib/electronBridge';
 
 interface IsoUploaderProps {
   onIsoSelect: (file: File | null) => void;
@@ -34,6 +35,24 @@ const IsoUploader = ({ onIsoSelect, selectedFile }: IsoUploaderProps) => {
       onIsoSelect(file);
     }
   };
+
+  const handleNativeDialog = useCallback(async () => {
+    if (!isElectron()) return;
+    const paths = await openFileDialog({
+      title: 'Select Windows ISO',
+      filters: [{ name: 'ISO Images', extensions: ['iso'] }],
+      properties: ['openFile'],
+    });
+    if (paths && paths.length > 0) {
+      // Create a pseudo-File from the path for compatibility
+      const filePath = paths[0];
+      const name = filePath.split(/[\\/]/).pop() || 'image.iso';
+      const pseudoFile = new File([], name, { type: 'application/x-iso-image' });
+      // Attach the real path for Electron use
+      (pseudoFile as any).__electronPath = filePath;
+      onIsoSelect(pseudoFile);
+    }
+  }, [onIsoSelect]);
 
   if (selectedFile) {
     return (
@@ -73,13 +92,20 @@ const IsoUploader = ({ onIsoSelect, selectedFile }: IsoUploaderProps) => {
         }
       `}
     >
-      <input
-        type="file"
-        accept=".iso"
-        aria-label="Select a Windows ISO file"
-        onChange={handleFileSelect}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-      />
+      {isElectron() ? (
+        <div
+          className="absolute inset-0 w-full h-full cursor-pointer"
+          onClick={handleNativeDialog}
+        />
+      ) : (
+        <input
+          type="file"
+          accept=".iso"
+          aria-label="Select a Windows ISO file"
+          onChange={handleFileSelect}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+      )}
       <div className="flex flex-col items-center gap-4">
         <div className={`
           w-16 h-16 rounded-xl flex items-center justify-center transition-all duration-300
