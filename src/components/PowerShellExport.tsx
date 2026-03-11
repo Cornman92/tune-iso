@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { escapePS, escapeBatch } from '@/lib/sanitize';
+import { wingetIds, tweakScripts, optimizationScripts } from '@/data/scriptCommands';
 
 interface ExportData {
   customizations: { programs: string[]; tweaks: string[]; optimizations: string[] };
