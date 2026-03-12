@@ -524,6 +524,13 @@ const Index = () => {
             </div>
 
             <div className="mt-6">
+              <SetupCompleteEditor
+                exportCustomizations={exportCustomizations}
+                changeTrigger={scriptChangeTrigger}
+              />
+            </div>
+
+            <div className="mt-6">
               <LiveScriptPreview
                 exportCustomizations={exportCustomizations}
                 exportDrivers={exportDrivers}
@@ -535,6 +542,10 @@ const Index = () => {
                 buildSteps={buildSteps}
                 changeTrigger={scriptChangeTrigger}
               />
+            </div>
+
+            <div className="mt-6">
+              <DismExecutionPanel isMounted={isMounted} />
             </div>
 
             <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
