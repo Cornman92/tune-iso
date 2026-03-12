@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { toast } from 'sonner';
 import { escapePS, escapeBatch } from '@/lib/sanitize';
 import { wingetIds, tweakScripts, optimizationScripts } from '@/data/scriptCommands';
+import { isElectron, saveFileDialog, writeFile } from '@/lib/electronBridge';
 
 interface ExportData {
   customizations: { programs: string[]; tweaks: string[]; optimizations: string[] };
