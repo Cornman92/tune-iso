@@ -45,6 +45,8 @@ const ConfigComparison = lazy(() => import('@/components/ConfigComparison'));
 const RollbackScriptGenerator = lazy(() => import('@/components/RollbackScriptGenerator'));
 const BatchImageProcessor = lazy(() => import('@/components/BatchImageProcessor'));
 const CompatibilityChecker = lazy(() => import('@/components/CompatibilityChecker'));
+const DismExecutionPanel = lazy(() => import('@/components/DismExecutionPanel'));
+const SetupCompleteEditor = lazy(() => import('@/components/SetupCompleteEditor'));
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
@@ -522,6 +524,13 @@ const Index = () => {
             </div>
 
             <div className="mt-6">
+              <SetupCompleteEditor
+                exportCustomizations={exportCustomizations}
+                changeTrigger={scriptChangeTrigger}
+              />
+            </div>
+
+            <div className="mt-6">
               <LiveScriptPreview
                 exportCustomizations={exportCustomizations}
                 exportDrivers={exportDrivers}
@@ -533,6 +542,10 @@ const Index = () => {
                 buildSteps={buildSteps}
                 changeTrigger={scriptChangeTrigger}
               />
+            </div>
+
+            <div className="mt-6">
+              <DismExecutionPanel isMounted={isMounted} />
             </div>
 
             <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">

@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { toast } from 'sonner';
 import { escapePS, escapeBatch } from '@/lib/sanitize';
 import { wingetIds, tweakScripts, optimizationScripts } from '@/data/scriptCommands';
+import { isElectron, saveFileDialog, writeFile } from '@/lib/electronBridge';
 
 interface ExportData {
   customizations: { programs: string[]; tweaks: string[]; optimizations: string[] };
@@ -509,23 +510,35 @@ const PowerShellExport = ({
     return lines.join('\r\n');
   }, [exportCustomizations, exportDrivers, exportUpdates, exportServices, exportComponents, exportRegistry, exportFeatures, buildSteps]);
 
-  const downloadFile = (content: string, filename: string) => {
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+  const downloadFile = async (content: string, filename: string, filters: { name: string; extensions: string[] }[]) => {
+    if (isElectron()) {
+      const filePath = await saveFileDialog({ title: 'Save Script', defaultPath: filename, filters });
+      if (filePath) {
+        const success = await writeFile(filePath, content);
+        if (success) {
+          toast.success(`Script saved to ${filePath}`);
+        } else {
+          toast.error('Failed to save script');
+        }
+      }
+    } else {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   };
 
   const handleExportPS1 = () => {
-    downloadFile(generateScript(), 'ISO_Forge_Build.ps1');
+    downloadFile(generateScript(), 'ISO_Forge_Build.ps1', [{ name: 'PowerShell Script', extensions: ['ps1'] }]);
     toast.success('PowerShell script exported');
   };
 
   const handleExportBAT = () => {
-    downloadFile(generateBatch(), 'ISO_Forge_Build.bat');
+    downloadFile(generateBatch(), 'ISO_Forge_Build.bat', [{ name: 'Batch Script', extensions: ['bat', 'cmd'] }]);
     toast.success('Batch script exported');
   };
 
