@@ -45,6 +45,8 @@ const ConfigComparison = lazy(() => import('@/components/ConfigComparison'));
 const RollbackScriptGenerator = lazy(() => import('@/components/RollbackScriptGenerator'));
 const BatchImageProcessor = lazy(() => import('@/components/BatchImageProcessor'));
 const CompatibilityChecker = lazy(() => import('@/components/CompatibilityChecker'));
+const DismExecutionPanel = lazy(() => import('@/components/DismExecutionPanel'));
+const SetupCompleteEditor = lazy(() => import('@/components/SetupCompleteEditor'));
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
