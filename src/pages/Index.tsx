@@ -47,6 +47,12 @@ const BatchImageProcessor = lazy(() => import('@/components/BatchImageProcessor'
 const CompatibilityChecker = lazy(() => import('@/components/CompatibilityChecker'));
 const DismExecutionPanel = lazy(() => import('@/components/DismExecutionPanel'));
 const SetupCompleteEditor = lazy(() => import('@/components/SetupCompleteEditor'));
+const PresetLibrary = lazy(() => import('@/components/PresetLibrary'));
+const GroupPolicyEditor = lazy(() => import('@/components/GroupPolicyEditor'));
+const HostsFileEditor = lazy(() => import('@/components/HostsFileEditor'));
+const PowerPlanEditor = lazy(() => import('@/components/PowerPlanEditor'));
+const FirewallRulesEditor = lazy(() => import('@/components/FirewallRulesEditor'));
+const TaskSchedulerEditor = lazy(() => import('@/components/TaskSchedulerEditor'));
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
 
