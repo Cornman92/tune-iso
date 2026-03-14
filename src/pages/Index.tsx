@@ -454,7 +454,6 @@ const Index = () => {
               </h2>
               <PowerPlanEditor />
             </section>
-            </section>
 
             {/* 9. Windows Update */}
             <section id="section-updates">
