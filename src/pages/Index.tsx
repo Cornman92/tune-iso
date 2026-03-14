@@ -47,8 +47,14 @@ const BatchImageProcessor = lazy(() => import('@/components/BatchImageProcessor'
 const CompatibilityChecker = lazy(() => import('@/components/CompatibilityChecker'));
 const DismExecutionPanel = lazy(() => import('@/components/DismExecutionPanel'));
 const SetupCompleteEditor = lazy(() => import('@/components/SetupCompleteEditor'));
+const PresetLibrary = lazy(() => import('@/components/PresetLibrary'));
+const GroupPolicyEditor = lazy(() => import('@/components/GroupPolicyEditor'));
+const HostsFileEditor = lazy(() => import('@/components/HostsFileEditor'));
+const PowerPlanEditor = lazy(() => import('@/components/PowerPlanEditor'));
+const FirewallRulesEditor = lazy(() => import('@/components/FirewallRulesEditor'));
+const TaskSchedulerEditor = lazy(() => import('@/components/TaskSchedulerEditor'));
 
-const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
+const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'group-policy', 'hosts', 'scheduled-tasks', 'firewall', 'power-plan', 'updates', 'unattend', 'build'];
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -62,6 +68,10 @@ const Index = () => {
   const [unattendCount, setUnattendCount] = useState(0);
   const [activeSection, setActiveSection] = useState('source');
   const [buildSteps, setBuildSteps] = useState<BuildStep[]>(() => DEFAULT_STEPS.map(s => ({ ...s })));
+  const [gpoPolicyCount, setGpoPolicyCount] = useState(0);
+  const [hostsCount, setHostsCount] = useState(0);
+  const [scheduledTaskCount, setScheduledTaskCount] = useState(0);
+  const [firewallRuleCount, setFirewallRuleCount] = useState(0);
 
   // Refs for keyboard shortcuts
   const themeToggleRef = useRef<() => void>(() => {});
@@ -400,6 +410,51 @@ const Index = () => {
               <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} exportRef={exportComponents} importRef={importComponents} />
             </section>
 
+            {/* 8b. Group Policy */}
+            <section id="section-group-policy">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">9</span>
+                Group Policy Editor
+              </h2>
+              <GroupPolicyEditor isMounted={isMounted} onCountChange={setGpoPolicyCount} />
+            </section>
+
+            {/* 8c. Hosts File */}
+            <section id="section-hosts">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">10</span>
+                Hosts File Editor
+              </h2>
+              <HostsFileEditor isMounted={isMounted} onCountChange={setHostsCount} />
+            </section>
+
+            {/* 8d. Scheduled Tasks */}
+            <section id="section-scheduled-tasks">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">11</span>
+                Scheduled Tasks
+              </h2>
+              <TaskSchedulerEditor isMounted={isMounted} onCountChange={setScheduledTaskCount} />
+            </section>
+
+            {/* 8e. Firewall Rules */}
+            <section id="section-firewall">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">12</span>
+                Firewall Rules
+              </h2>
+              <FirewallRulesEditor onCountChange={setFirewallRuleCount} />
+            </section>
+
+            {/* 8f. Power Plan */}
+            <section id="section-power-plan">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">13</span>
+                Power Plan
+              </h2>
+              <PowerPlanEditor />
+            </section>
+
             {/* 9. Windows Update */}
             <section id="section-updates">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -436,6 +491,14 @@ const Index = () => {
               Build Output
             </h2>
             <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
+
+            <div className="mt-6">
+              <PresetLibrary
+                onApplyPreset={(preset) => {
+                  importCustomizations.current(preset);
+                }}
+              />
+            </div>
 
             <div className="mt-6">
               <CompatibilityChecker
