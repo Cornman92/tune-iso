@@ -493,6 +493,14 @@ const Index = () => {
             <CommitPanel isMounted={isMounted} customizationCount={customizationCount} />
 
             <div className="mt-6">
+              <PresetLibrary
+                onApplyPreset={(preset) => {
+                  importCustomizations.current(preset);
+                }}
+              />
+            </div>
+
+            <div className="mt-6">
               <CompatibilityChecker
                 isMounted={isMounted}
                 buildSteps={buildSteps}
