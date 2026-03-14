@@ -54,7 +54,7 @@ const PowerPlanEditor = lazy(() => import('@/components/PowerPlanEditor'));
 const FirewallRulesEditor = lazy(() => import('@/components/FirewallRulesEditor'));
 const TaskSchedulerEditor = lazy(() => import('@/components/TaskSchedulerEditor'));
 
-const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'updates', 'unattend', 'build'];
+const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'group-policy', 'hosts', 'scheduled-tasks', 'firewall', 'power-plan', 'updates', 'unattend', 'build'];
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
