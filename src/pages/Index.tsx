@@ -410,6 +410,52 @@ const Index = () => {
               <ComponentRemoval isMounted={isMounted} onCountChange={setComponentCount} exportRef={exportComponents} importRef={importComponents} />
             </section>
 
+            {/* 8b. Group Policy */}
+            <section id="section-group-policy">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">9</span>
+                Group Policy Editor
+              </h2>
+              <GroupPolicyEditor isMounted={isMounted} onCountChange={setGpoPolicyCount} />
+            </section>
+
+            {/* 8c. Hosts File */}
+            <section id="section-hosts">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">10</span>
+                Hosts File Editor
+              </h2>
+              <HostsFileEditor isMounted={isMounted} onCountChange={setHostsCount} />
+            </section>
+
+            {/* 8d. Scheduled Tasks */}
+            <section id="section-scheduled-tasks">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">11</span>
+                Scheduled Tasks
+              </h2>
+              <TaskSchedulerEditor isMounted={isMounted} onCountChange={setScheduledTaskCount} />
+            </section>
+
+            {/* 8e. Firewall Rules */}
+            <section id="section-firewall">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">12</span>
+                Firewall Rules
+              </h2>
+              <FirewallRulesEditor onCountChange={setFirewallRuleCount} />
+            </section>
+
+            {/* 8f. Power Plan */}
+            <section id="section-power-plan">
+              <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-xs">13</span>
+                Power Plan
+              </h2>
+              <PowerPlanEditor />
+            </section>
+            </section>
+
             {/* 9. Windows Update */}
             <section id="section-updates">
               <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
