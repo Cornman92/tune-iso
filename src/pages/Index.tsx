@@ -68,6 +68,10 @@ const Index = () => {
   const [unattendCount, setUnattendCount] = useState(0);
   const [activeSection, setActiveSection] = useState('source');
   const [buildSteps, setBuildSteps] = useState<BuildStep[]>(() => DEFAULT_STEPS.map(s => ({ ...s })));
+  const [gpoPolicyCount, setGpoPolicyCount] = useState(0);
+  const [hostsCount, setHostsCount] = useState(0);
+  const [scheduledTaskCount, setScheduledTaskCount] = useState(0);
+  const [firewallRuleCount, setFirewallRuleCount] = useState(0);
 
   // Refs for keyboard shortcuts
   const themeToggleRef = useRef<() => void>(() => {});
