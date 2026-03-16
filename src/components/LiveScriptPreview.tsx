@@ -36,140 +36,17 @@ const LiveScriptPreview = ({
   const codeRef = useRef<HTMLPreElement>(null);
 
   const script = useMemo(() => {
-    const customizations = exportCustomizations.current();
-    const drivers = exportDrivers.current();
-    const updates = exportUpdates.current();
-    const services = exportServices.current();
-    const components = exportComponents.current();
-    const registry = exportRegistry.current();
-    const features = exportFeatures.current();
-
-    const lines: string[] = [];
-    const add = (s: string) => lines.push(s);
-    const blank = () => lines.push('');
-
-    add('#Requires -RunAsAdministrator');
-    add('$ErrorActionPreference = "Stop"');
-    add('$MountDir = "C:\\Mount"');
-    add('$WimIndex = 6');
-    blank();
-    add('# ── Mount ──');
-    add('DISM /Mount-Wim /WimFile:install.wim /Index:$WimIndex /MountDir:$MountDir');
-    blank();
-
-    const enabledSteps = buildSteps.filter(s => s.enabled);
-
-    const sectionGenerators: Record<string, () => void> = {
-      features: () => {
-        if (features.length === 0) return;
-        const toEnable = features.filter(f => f.enabled);
-        const toDisable = features.filter(f => !f.enabled);
-        if (toEnable.length > 0 || toDisable.length > 0) {
-          add(`# ── Features (${toEnable.length}↑ ${toDisable.length}↓) ──`);
-          toEnable.forEach(f => add(`DISM /Image:$MountDir /Enable-Feature /FeatureName:"${escapePS(f.id)}" /All`));
-          toDisable.forEach(f => add(`DISM /Image:$MountDir /Disable-Feature /FeatureName:"${escapePS(f.id)}"`));
-          blank();
-        }
-      },
-      components: () => {
-        if (components.length === 0) return;
-        add(`# ── Remove Components (${components.length}) ──`);
-        components.forEach(c => add(`DISM /Image:$MountDir /Remove-ProvisionedAppxPackage /PackageName:"*${escapePS(c)}*"`));
-        blank();
-      },
-      services: () => {
-        if (services.length === 0) return;
-        add(`# ── Disable Services (${services.length}) ──`);
-        services.forEach(s => add(`REG ADD "HKLM\\SYSTEM\\ControlSet001\\Services\\${escapePS(s)}" /v Start /t REG_DWORD /d 4 /f`));
-        blank();
-      },
-      registry: () => {
-        if (registry.length === 0) return;
-        add(`# ── Registry (${registry.length}) ──`);
-        add('REG LOAD "HKLM\\OFFLINE_SW" "$MountDir\\Windows\\System32\\config\\SOFTWARE"');
-        registry.forEach(r => {
-          add(`REG ADD "${escapePS(r.hive)}\\${escapePS(r.keyPath)}" /v "${escapePS(r.valueName)}" /t ${r.valueType} /d "${escapePS(r.valueData)}" /f`);
-        });
-        add('REG UNLOAD "HKLM\\OFFLINE_SW"');
-        blank();
-      },
-      drivers: () => {
-        if (drivers.length === 0) return;
-        add(`# ── Drivers (${drivers.length}) ──`);
-        drivers.forEach(d => {
-          if (d.type === 'folder') {
-            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${escapePS(d.path)}" /Recurse`);
-          } else {
-            add(`DISM /Image:$MountDir /Add-Driver /Driver:"${escapePS(d.path)}"`);
-          }
-        });
-        blank();
-      },
-      updates: () => {
-        if (updates.length === 0) return;
-        add(`# ── Updates (${updates.length}) ──`);
-        updates.forEach(u => {
-          const path = u.filePath || `C:\\Updates\\${escapePS(u.kb)}.msu`;
-          add(`DISM /Image:$MountDir /Add-Package /PackagePath:"${escapePS(path)}"`);
-        });
-        blank();
-      },
-      customizations: () => {
-        const total = customizations.programs.length + customizations.tweaks.length + customizations.optimizations.length;
-        if (total === 0) return;
-        add(`# ── Customizations (${total}) ──`);
-
-        // Programs → winget install commands
-        if (customizations.programs.length > 0) {
-          add('# Programs (installed via winget on first boot)');
-          customizations.programs.forEach(p => {
-            const wid = wingetIds[p];
-            if (wid) {
-              add(`winget install --id ${wid} --accept-source-agreements --accept-package-agreements --silent`);
-            } else {
-              add(`# ${p} — no winget ID mapped, install manually`);
-            }
-          });
-        }
-
-        // Tweaks → actual registry commands
-        if (customizations.tweaks.length > 0) {
-          add('# Tweaks (offline registry modifications)');
-          customizations.tweaks.forEach(t => {
-            const cmds = tweakScripts[t];
-            if (cmds) {
-              cmds.forEach(c => add(c));
-            } else {
-              add(`# ${t} — no script mapped`);
-            }
-          });
-        }
-
-        // Optimizations → actual commands
-        if (customizations.optimizations.length > 0) {
-          add('# Optimizations (offline registry modifications)');
-          customizations.optimizations.forEach(o => {
-            const cmds = optimizationScripts[o];
-            if (cmds) {
-              cmds.forEach(c => add(c));
-            } else {
-              add(`# ${o} — no script mapped`);
-            }
-          });
-        }
-        blank();
-      },
+    const input: ScriptInput = {
+      customizations: exportCustomizations.current(),
+      drivers: exportDrivers.current(),
+      updates: exportUpdates.current(),
+      services: exportServices.current(),
+      components: exportComponents.current(),
+      registry: exportRegistry.current(),
+      features: exportFeatures.current(),
+      buildSteps,
     };
-
-    enabledSteps.forEach(step => {
-      sectionGenerators[step.id]?.();
-    });
-
-    add('# ── Cleanup & Commit ──');
-    add('DISM /Image:$MountDir /Cleanup-Image /StartComponentCleanup /ResetBase');
-    add('DISM /Unmount-Wim /MountDir:$MountDir /Commit');
-
-    return lines.join('\n');
+    return generateScriptText(input);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changeTrigger, buildSteps]);
 
