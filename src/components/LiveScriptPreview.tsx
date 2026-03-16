@@ -5,8 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import type { BuildStep } from '@/components/BuildStepReorder';
 import type { WimFeatureExport } from '@/components/WimEditor';
-import { escapePS } from '@/lib/sanitize';
-import { wingetIds, tweakScripts, optimizationScripts } from '@/data/scriptCommands';
+import { generateScriptText, type ScriptInput } from '@/lib/scriptGenerator';
 
 interface LiveScriptPreviewProps {
   exportCustomizations: MutableRefObject<() => { programs: string[]; tweaks: string[]; optimizations: string[] }>;
