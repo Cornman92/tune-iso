@@ -616,6 +616,26 @@ const Index = () => {
             </div>
 
             <div className="mt-6">
+              <ScriptSimulator
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportUpdates={exportUpdates}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+                buildSteps={buildSteps}
+                changeTrigger={scriptChangeTrigger}
+              />
+            </div>
+
+            <div className="mt-6">
+              <BuildHistory
+                onRestore={handleImport}
+                onGetCurrentConfig={handleExport}
+              />
+
+            <div className="mt-6">
               <DismExecutionPanel isMounted={isMounted} />
             </div>
 
