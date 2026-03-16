@@ -53,6 +53,10 @@ const HostsFileEditor = lazy(() => import('@/components/HostsFileEditor'));
 const PowerPlanEditor = lazy(() => import('@/components/PowerPlanEditor'));
 const FirewallRulesEditor = lazy(() => import('@/components/FirewallRulesEditor'));
 const TaskSchedulerEditor = lazy(() => import('@/components/TaskSchedulerEditor'));
+const ScriptSimulator = lazy(() => import('@/components/ScriptSimulator'));
+const OnboardingWizard = lazy(() => import('@/components/OnboardingWizard'));
+const BuildHistory = lazy(() => import('@/components/BuildHistory'));
+const ChecksumVerifier = lazy(() => import('@/components/ChecksumVerifier'));
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'group-policy', 'hosts', 'scheduled-tasks', 'firewall', 'power-plan', 'updates', 'unattend', 'build'];
 
