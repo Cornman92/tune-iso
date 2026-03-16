@@ -634,7 +634,7 @@ const Index = () => {
                 onRestore={handleImport}
                 onGetCurrentConfig={handleExport}
               />
-
+            </div>
             <div className="mt-6">
               <DismExecutionPanel isMounted={isMounted} />
             </div>
