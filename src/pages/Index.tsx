@@ -53,6 +53,10 @@ const HostsFileEditor = lazy(() => import('@/components/HostsFileEditor'));
 const PowerPlanEditor = lazy(() => import('@/components/PowerPlanEditor'));
 const FirewallRulesEditor = lazy(() => import('@/components/FirewallRulesEditor'));
 const TaskSchedulerEditor = lazy(() => import('@/components/TaskSchedulerEditor'));
+const ScriptSimulator = lazy(() => import('@/components/ScriptSimulator'));
+const OnboardingWizard = lazy(() => import('@/components/OnboardingWizard'));
+const BuildHistory = lazy(() => import('@/components/BuildHistory'));
+const ChecksumVerifier = lazy(() => import('@/components/ChecksumVerifier'));
 
 const SECTION_IDS = ['source', 'mount', 'wim', 'iso-metadata', 'customizations', 'drivers', 'registry', 'services', 'components', 'group-policy', 'hosts', 'scheduled-tasks', 'firewall', 'power-plan', 'updates', 'unattend', 'build'];
 
@@ -207,6 +211,7 @@ const Index = () => {
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-background" />}>
+    <OnboardingWizard onApplyPreset={(preset) => importCustomizations.current(preset)} />
     <div className="min-h-screen bg-background">
       <SectionSidebar activeSection={activeSection} isMounted={isMounted} hasFile={!!selectedFile} />
 
@@ -319,6 +324,9 @@ const Index = () => {
                 Source Image
               </h2>
               <IsoUploader selectedFile={selectedFile} onIsoSelect={setSelectedFile} />
+              <div className="mt-3">
+                <ChecksumVerifier selectedFile={selectedFile} />
+              </div>
             </section>
 
             {/* 2. Mount */}
@@ -607,6 +615,26 @@ const Index = () => {
               />
             </div>
 
+            <div className="mt-6">
+              <ScriptSimulator
+                exportCustomizations={exportCustomizations}
+                exportDrivers={exportDrivers}
+                exportUpdates={exportUpdates}
+                exportServices={exportServices}
+                exportComponents={exportComponents}
+                exportRegistry={exportRegistry}
+                exportFeatures={exportFeatures}
+                buildSteps={buildSteps}
+                changeTrigger={scriptChangeTrigger}
+              />
+            </div>
+
+            <div className="mt-6">
+              <BuildHistory
+                onRestore={handleImport}
+                onGetCurrentConfig={handleExport}
+              />
+            </div>
             <div className="mt-6">
               <DismExecutionPanel isMounted={isMounted} />
             </div>
