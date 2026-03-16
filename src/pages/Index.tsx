@@ -211,6 +211,7 @@ const Index = () => {
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-background" />}>
+    <OnboardingWizard onApplyPreset={(preset) => importCustomizations.current(preset)} />
     <div className="min-h-screen bg-background">
       <SectionSidebar activeSection={activeSection} isMounted={isMounted} hasFile={!!selectedFile} />
 
