@@ -324,6 +324,9 @@ const Index = () => {
                 Source Image
               </h2>
               <IsoUploader selectedFile={selectedFile} onIsoSelect={setSelectedFile} />
+              <div className="mt-3">
+                <ChecksumVerifier selectedFile={selectedFile} />
+              </div>
             </section>
 
             {/* 2. Mount */}
